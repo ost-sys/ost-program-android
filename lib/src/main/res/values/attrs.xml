@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="roundedCorners" format="integer">
+        <flag name="none" value="0x00000000" />
+        <flag name="all" value="0x0000000f" />
+        <flag name="top_left" value="0x00000001" />
+        <flag name="top_right" value="0x00000002" />
+        <flag name="bottom_left" value="0x00000004" />
+        <flag name="bottom_right" value="0x00000008" />
+    </attr>
+
+    <!-- Custom Views -->
+    <declare-styleable name="RoundFrameLayout">
+        <attr name="roundedCorners" />
+    </declare-styleable>
+
+    <declare-styleable name="RoundLinearLayout">
+        <attr name="roundedCorners" />
+    </declare-styleable>
+
+    <declare-styleable name="RelatedCard">
+        <attr name="title" />
+    </declare-styleable>
+
+    <!-- Custom Preferences -->
+    <declare-styleable name="ColorPickerPreference">
+        <attr name="showAlphaSlider" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="DescriptionPreference">
+        <attr name="android:layout" />
+        <attr name="roundedCorners" />
+        <attr name="positionMode" format="integer">
+            <flag name="first_item" value="1" />
+            <flag name="normal" value="0" />
+            <flag name="subheader_item" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="InsetPreferenceCategory">
+        <attr name="height" />
+        <attr name="roundedCorners" />
+    </declare-styleable>
+
+    <attr name="seekBarPreferenceProStyle" format="reference"/>
+
+    <declare-styleable name="SeekBarPreferencePro">
+        <!-- Set seekbar to only put tick marks at the start, center and end.
+       The center point is 0.
+       This will ignore seekBarMode value and will use level_bar mode instead-->
+        <attr name="centerBasedSeekBar"  format="boolean" />
+        <attr name="leftLabelName"  format="string" />
+        <attr name="overlapPoint" format="integer" />
+        <attr name="rightLabelName" format="string"/>
+        <attr name="seamlessSeekBar" format="boolean"/>
+        <!-- Defaults to level_bar.
+         Note: This does not apply when centerBasedSeekBar is true-->
+        <attr name="seekBarMode">
+            <enum name="standard" value="0" />
+            <enum name="expand" value="5" />
+            <enum name="level_bar" value="8" />
+        </attr>
+        <!-- Note: This does not apply when centerBasedSeekBar is true-->
+        <attr name="showTickMark" format="boolean" />
+        <attr name="units" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="HorizontalRadioPreference">
+        <attr name="entriesImage" format="reference" />
+        <attr name="entries" />
+        <attr name="entriesSubtitle" format="reference" />
+        <attr name="entryValues" />
+        <attr name="viewType" format="integer">
+            <enum name="image" value="0" />
+            <enum name="noImage" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <!-- Custom Layouts -->
+    <declare-styleable name="ToolbarLayout">
+        <attr name="android:layout" />
+        <!--Enable or disable the expanding toolbar. The default is true.-->
+        <attr name="expandable" format="boolean" />
+        <!--The initial state of the toolbar.-->
+        <attr name="expanded" format="boolean" />
+        <!--The toolbar's navigation icon. Don't forget to add a tooltip programmatically with setNavigationButtonTooltip(CharSequence).-->
+        <attr name="navigationIcon" format="reference" />
+        <!--The toolbar's collapsed and expanded title.-->
+        <attr name="title" format="string" />
+        <!--The toolbar's expanded title.-->
+        <attr name="subtitle" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="ToolbarLayoutParams">
+        <!--The location of the ToolbarLayout children views.-->
+        <attr name="layout_location">
+            <enum name="main_content" value="0" />
+            <enum name="appbar_header" value="1" />
+            <enum name="footer" value="2" />
+            <enum name="root" value="3" />
+            <enum name="drawer_header" value="4" />
+            <enum name="drawer_panel" value="5" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="SplashLayout">
+        <!--Set the behavior of the splash screen. The default is true.-->
+        <attr name="animated" format="boolean" />
+        <!--The splash screen's title. If not specified, your App's name will be used.-->
+        <attr name="title" />
+        <!--The image resource for the static splash screen.-->
+        <attr name="image" format="reference|color" />
+        <!--The foreground layer resource for the animated splash screen.-->
+        <attr name="foreground_image" format="reference|color" />
+        <!--The background layer resource for the animated splash screen.-->
+        <attr name="background_image" format="reference|color" />
+        <!--A custom animation for the animated splash screen-->
+        <attr name="animation" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="SeekBarPlus">
+        <!-- Set seekbar to only put tick marks at the start, center and end.
+        The center point is 0.
+        This will ignore seekBarMode value and will use level_bar mode instead-->
+        <attr name="centerBasedBar"  format="boolean" />
+        <!-- Allow the thumb to be draggable seamlessly-->
+        <attr name="seamless" format="boolean"/>
+    </declare-styleable>
+</resources>

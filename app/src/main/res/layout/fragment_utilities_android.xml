@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.utilities.UtilitiesAndroidFragment">
+
+    <dev.oneuiproject.oneui.widget.RoundLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/oui_background_color"
+        android:orientation="vertical">
+
+        <com.ost.application.ui.widget.CardView
+            android:id="@+id/utilities_android_chrome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:TitleText="Chrome"
+            app:SummaryText="@string/chrome_info"/>
+
+        <com.ost.application.ui.widget.CardView
+            android:id="@+id/utilities_android_termux"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:TitleText="Termux Monet"
+            app:SummaryText="@string/termux_info"
+            app:isDividerViewVisible="true"/>
+
+        <com.ost.application.ui.widget.CardView
+            android:id="@+id/utilities_android_tgmonet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:TitleText="Telegram Monet"
+            app:SummaryText="@string/tgmonet_info"
+            app:isDividerViewVisible="true"/>
+
+        <com.ost.application.ui.widget.CardView
+            android:id="@+id/utilities_android_appmanager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:TitleText="App manager"
+            app:SummaryText="@string/appmanager_info"
+            app:isDividerViewVisible="true"/>
+
+        <com.ost.application.ui.widget.CardView
+            android:id="@+id/utilities_android_totalcmd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:TitleText="Total Commander"
+            app:SummaryText="@string/totalcmd_info"
+            app:isDividerViewVisible="true"/>
+
+        <com.ost.application.ui.widget.CardView
+            android:id="@+id/utilities_android_spacedesk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:TitleText="SpaceDesk"
+            app:SummaryText="@string/spacedesk_info"
+            app:isDividerViewVisible="true"/>
+
+        <com.ost.application.ui.widget.CardView
+            android:id="@+id/utilities_android_gmsflags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:TitleText="GMS Flags"
+            app:SummaryText="@string/gmsflags_info"
+            app:isDividerViewVisible="true"/>
+
+        <com.ost.application.ui.widget.CardView
+            android:id="@+id/utilities_android_kdeconnect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:TitleText="KDE Connect"
+            app:SummaryText="@string/kdeconnect_info"
+            app:isDividerViewVisible="true"/>
+
+
+    </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+</FrameLayout>

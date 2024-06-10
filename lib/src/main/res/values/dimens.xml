@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- RelatedCard -->
+    <dimen name="oui_relative_link_gap_height">20.0dip</dimen>
+    <dimen name="oui_relative_link_view_margin_start_end">24.0dip</dimen>
+    <dimen name="oui_relative_link_view_margin_top_bottom">20.0dip</dimen>
+    <dimen name="oui_relative_link_view_margin_start_tip">18.0dip</dimen>
+    <dimen name="oui_relative_link_title_text_size">18.0sp</dimen>
+    <dimen name="oui_relative_link_title_text_margin_bottom">10.0dip</dimen>
+    <dimen name="oui_relative_link_text_margin_start">8.0dip</dimen>
+    <dimen name="oui_relative_link_text_padding_side">16.0dip</dimen>
+    <dimen name="oui_relative_link_text_padding_top">6.0dip</dimen>
+    <dimen name="oui_relative_link_text_size">17.0sp</dimen>
+
+    <!-- UnclickablePreference -->
+    <dimen name="oui_unclickablepref_text_padding_start_end">24.0dip</dimen>
+    <dimen name="oui_unclickablepref_margin_bottom">20.0dip</dimen>
+    <dimen name="oui_unclickablepref_margin_top">20.0dip</dimen>
+    <dimen name="oui_unclickablepref_first_margin_bottom">20.0dip</dimen>
+    <dimen name="oui_unclickablepref_first_margin_top">0.0dip</dimen>
+    <dimen name="oui_unclickablepref_subheader_margin_bottom">20.0dip</dimen>
+    <dimen name="oui_unclickablepref_subheader_margin_top">6.0dip</dimen>
+
+    <!-- MarginsTabLayout -->
+    <dimen name="oui_tab_layout_default_padding">24.0dip</dimen>
+
+    <!-- GridMenuDialog -->
+    <dimen name="oui_grid_menu_dialog_horizontal_padding">16.0dip</dimen>
+    <dimen name="oui_grid_menu_dialog_vertical_padding">20.0dip</dimen>
+    <dimen name="oui_grid_menu_dialog_item_gap">8.0dip</dimen>
+
+    <!-- ToolbarLayout -->
+    <dimen name="oui_n_badge_view_size">17.0dip</dimen>
+    <dimen name="oui_n_badge_default_width">13.0dip</dimen>
+    <dimen name="oui_n_badge_additional_width">4.0dip</dimen>
+    <dimen name="oui_n_badge_text_size">11.0dip</dimen>
+
+    <!-- DrawerLayout -->
+    <dimen name="oui_drawerlayout_drawer_top_margin">16.0dip</dimen>
+
+    <!-- HorizontalRadioPreference -->
+    <dimen name="oui_horizontalradiopref_padding_start_end">8.0dip</dimen>
+    <dimen name="oui_horizontalradiopref_padding_top">18.0dip</dimen>
+    <dimen name="oui_horizontalradiopref_padding_bottom">14.0dip</dimen>
+
+    <!-- TipPopup -->
+    <dimen name="sem_tip_popup_balloon_action_text_size">15sp</dimen>
+    <dimen name="sem_tip_popup_balloon_arrow_height">12dp</dimen>
+    <dimen name="sem_tip_popup_balloon_arrow_width">16dp</dimen>
+    <dimen name="sem_tip_popup_balloon_background_minwidth">24dp</dimen>
+    <dimen name="sem_tip_popup_balloon_button_minheight">36dp</dimen>
+    <dimen name="sem_tip_popup_balloon_button_minwidth">0dp</dimen>
+    <dimen name="sem_tip_popup_balloon_message_margin_horizontal">18dp</dimen>
+    <dimen name="sem_tip_popup_balloon_message_margin_vertical">16dp</dimen>
+    <dimen name="sem_tip_popup_balloon_message_text_size">15sp</dimen>
+    <dimen name="sem_tip_popup_bubble_height">31dp</dimen>
+    <dimen name="sem_tip_popup_bubble_height_translucent">31dp</dimen>
+    <dimen name="sem_tip_popup_bubble_width">31dp</dimen>
+    <dimen name="sem_tip_popup_bubble_width_translucent">31dp</dimen>
+    <dimen name="sem_tip_popup_button_inset_horizontal">0dp</dimen>
+    <dimen name="sem_tip_popup_button_inset_vertical">0dp</dimen>
+    <dimen name="sem_tip_popup_button_padding_horizontal">9dp</dimen>
+    <dimen name="sem_tip_popup_button_padding_vertical">8dp</dimen>
+    <dimen name="sem_tip_popup_scale_margin">10dp</dimen>
+    <dimen name="sem_tip_popup_side_margin">10dp</dimen>
+
+</resources>

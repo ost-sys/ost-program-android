@@ -1,0 +1,142 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="app_name" translatable="false">OST program</string>
+    <string name="github" translatable="false">GitHub</string>
+    <string name="gemini" translatable="false">Gemini</string>
+    <string name="settings">Settings</string>
+    <string name="about_app">About</string>
+    <string name="version">Version</string>
+    <string name="math_game">Math game</string>
+    <string name="gemini_subtitle">Your AI helper</string>
+    <string name="menu_about_gemini">About Gemini</string>
+    <string name="about_gemini">What am I?\n\n* I am a large language model, also known as a conversational AI or chatbot, created by Google AI. \n* I am powered by one of Google\'s most advanced large language models (LLMs), which have been trained on a massive dataset of text and code. This allows me to generate text, translate languages, write different kinds of creative content, and answer your questions in an informative way.\n\nWhat can I do?\n\n* I can communicate and generate human-like text in response to a wide range of prompts and questions. For instance, I can provide summaries of factual topics or create stories.\n* I am still under development, but I have learned to perform many kinds of tasks, including\n\n    * I can answer your questions in an informative way, even if they are open ended, challenging, or strange.\n    * I can generate different creative text formats,  like poems, code, scripts, musical pieces, email, letters, etc. I will try my best to fulfill all your requirements.\n\nWhat are my limitations?\n\n* It\'s important to remember that I am still under development, and I am always learning. I may not always be able to perfectly understand your questions or requests, and my responses may not always be factually accurate.\n* I cannot perform actions in the real world, such as driving, eating, or having close relationships.\n* I don\'t have deep emotions or real-world experiences, so I can\'t claim to understand the world in the same way that a human does.\n\nWhat is my purpose?\n\n* My goal is to assist users with their questions and requests to the best of my ability, using the knowledge and information that I have been trained on.\n* I hope to be a tool that can help people learn new things, explore their creativity, and be more productive.</string>
+    <string name="text_view_info_text">Some information about the creator and the project is stored here!</string>
+    <string name="text_view_friends_text">My friends can be found here! Maybe you already know someone?</string>
+    <string name="text_view_utilities_text">Stores Programs (So far for Android), Windows activation keys, Magisk modules, Themes, wallpapers, etc.</string>
+    <string name="openvk" translatable="false">OpenVK</string>
+    <string name="telegram" translatable="false">Telegram</string>
+    <string name="youtube" translatable="false">YouTube</string>
+    <string name="donation_alerts" translatable="false">Donation Alerts</string>
+    <string name="windows_7" translatable="false">Windows 7</string>
+    <string name="windows_8" translatable="false">Windows 8</string>
+    <string name="windows_10_11" translatable="false">Windows 10/11</string>
+    <string name="commands">Commands</string>
+    <string name="gemini_request_field">Request field</string>
+    <string name="enterprise">Enterprise</string>
+    <string name="professional">Professional</string>
+    <string name="core" translatable="false">Core</string>
+    <string name="home_win">Home</string>
+    <string name="home">Home</string>
+    <string name="wallpapers">Wallpapers</string>
+    <string name="sounds">System sounds</string>
+    <string name="music">Music</string>
+    <string name="useful_programs">Useful programs</string>
+    <string name="magisk_manager" translatable="false">Magisk Manager</string>
+    <string name="pixelify" translatable="false">Pixelify</string>
+    <string name="ad_blocker">Ad blocker</string>
+    <string name="safetynet_fix" translatable="false">SafetyNet Fix</string>
+    <string name="knox_patch" translatable="false">KnoxPatch</string>
+    <string name="trueAnswer">True</string>
+    <string name="falseAnswer">False</string>
+    <string name="resultButton">Result</string>
+    <string name="clearButton">Clear</string>
+    <string name="answerEditText">Your answer here</string>
+    <string name="cleanText">Cleaned!</string>
+    <string name="menu_about">Information</string>
+    <string name="nullAnswer">The answer input field is empty or contains invalid characters</string>
+    <string name="trueAnswerBox">True</string>
+    <string name="falseAnswerBox">False</string>
+    <string name="refreshQuestion">The task has been updated</string>
+    <string name="refreshQuestionButton">Update task</string>
+    <string name="magisk_app_info">An open source Android utility that allows you to gain, manage, and hide root access on your system.</string>
+    <string name="pixelify_info">Magisk module to enables pixel exclusive features and UI</string>
+    <string name="adblocker_info">Magisk module to block ads on android</string>
+    <string name="safety_net_info">Google SafetyNet attestation workarounds for Magisk</string>
+    <string name="knox_patch_info">LSPosed module to get Samsung apps/features working again in your rooted Galaxy device.</string>
+    <string name="ultra_ux_theme_patcher" translatable="false">Ultra UX Theme Patcher</string>
+    <string name="sharex" translatable="false">ShareX</string>
+    <string name="useful_links">Useful links</string>
+    <string name="open_source_licenses">Open source licenses</string>
+    <string name="one_ui_design_developers">One UI Design developers</string>
+    <string name="developer">Developer</string>
+    <string name="gemini_hint_text">Answer on your request will appear here</string>
+    <string name="gemini_input_text_request_field">Input your request here</string>
+    <string name="gemini_ask_button">Ask Gemini</string>
+    <string name="name">Name</string>
+    <string name="user_name">Gadji</string>
+    <string name="nickname">Nickname</string>
+    <string name="operating_system_tester" translatable="false">Operating System Tester</string>
+    <string name="age">Age</string>
+    <string name="location">Location</string>
+    <string name="location_info">Russia, Dagestan</string>
+    <string name="birthday">Birthday</string>
+    <string name="birthday_info">September 16, 2007</string>
+    <string name="timezone">Timezone</string>
+    <string name="cpu">CPU</string>
+    <string name="gpu">GPU</string>
+    <string name="ram">RAM</string>
+    <string name="rom">ROM</string>
+    <string name="board">Board</string>
+    <string name="model">Model</string>
+    <string name="android" translatable="false">Android</string>
+    <string name="camera">Camera</string>
+    <string name="shell">Shell</string>
+    <string name="display">Display</string>
+    <string name="battery">Battery</string>
+    <string name="vm" translatable="false">VM</string>
+    <string name="video_editing_tool">Video editing tool</string>
+    <string name="video_reconding_tool">Video recording tool</string>
+    <string name="preview_tool">Preview tool</string>
+    <string name="dsys1100_info">Nanostreamer, guy xd.</string>
+    <string name="nerok_info">An ordinary schoolboy from Ukraine who is interested in IT</string>
+    <string name="DimaLQ_info">I am Dmitry, a half-coder, I like to suffer with bullshit. I run my own TikTok channel, I am not a tech blogger! I am a simple person</string>
+    <string name="bohdan_info">I interested in tech, especially in phones and computers. I like dig into oses</string>
+    <string name="kernel64_info">I like experimenting with computers and phones.</string>
+    <string name="danielm_info">A completely ordinary person</string>
+    <string name="tinelix_info">I am Dmitry. I work on YouTube, I have been programming in various languages since 2018.</string>
+    <string name="hackuser_info">Andrey, Kyiv, I\'m interested in computers and OS, hackintosh fan</string>
+    <string name="ertor_info">My name is Ertorik! I am interested in programming, hardware and everything that is somehow related to IT</string>
+    <string name="happywin8_info">Hello, I am a very ordinary person, I shoot videos, and play games. xD</string>
+    <string name="osmixup_info">An ordinary person who creates his own website and develops various programs in the C# programming language. Self-education in this area.</string>
+    <string name="clyt_info">Hi! I\'m CreeperLifeYT. And I love old computer hardware and software, including Web 1.0</string>
+    <string name="milosoft_info">An ordinary person with nothing to do</string>
+    <string name="utilities">Utilities</string>
+    <string name="friends">Friends</string>
+    <string name="information">Information</string>
+    <string name="social_links">Social links</string>
+    <string name="show_basic_inforamtion">Show basic inforamtion</string>
+    <string name="show_video_programs">Show video programs</string>
+    <string name="show_my_current_pc">Show my current PC</string>
+    <string name="show_my_current_smartphone">Show my current smartphone</string>
+    <string name="basic_information">Basic information</string>
+    <string name="video_programs">Video programs</string>
+    <string name="my_current_pc">My current PC</string>
+    <string name="my_current_smartphone">My current smartphone (Galaxy S21 5G)</string>
+    <string name="programs_for_android">Programs for Android</string>
+    <string name="programs_for_android_info">Useful programs for phones based on Android OS</string>
+    <string name="magisk_modules">Magisk modules</string>
+    <string name="magisk_modules_info">Magisk modules that can fix something or add new useful features</string>
+    <string name="customization">Customization</string>
+    <string name="customization_info">Themes, beautiful wallpapers, cursors and such are stored here</string>
+    <string name="product_keys_for_windows">Product keys for Windows</string>
+    <string name="product_keys_for_windows_info">Activation keys for Windows, starting with Windows 7 and ending with Windows 11</string>
+    <string name="chrome_info">A browser developed by Google based on the free Chromium browser and the Blink engine</string>
+    <string name="termux_info">Terminal for Android with Material You design</string>
+    <string name="tgmonet_info">With this application, you can create themes for Tg and TgX clients. It uses Android Material3 Color (as in Play Market)</string>
+    <string name="appmanager_info">A convenient utility for managing all applications on your phone</string>
+    <string name="totalcmd_info">Fast and convenient file manager for your phone</string>
+    <string name="spacedesk_info">The spacedesk Video Wall Software Engine enables convenient and inexpensive setup of display walls using a single PC.</string>
+    <string name="gmsflags_info">GMS Flags is a tool for changing parameters in Google services to activate or deactivate certain functionality in Google applications</string>
+    <string name="kdeconnect_info">Multi-platform app that allows your devices to communicate</string>
+    <string name="friends_info">List of all my friends</string>
+    <string name="utilities_info">Section of programs and modules that I use</string>
+    <string name="information_info">Information about me</string>
+    <string name="switches">Switches</string>
+    <string name="settings_system_default">System default</string>
+    <string name="dark_mode_settings">Dark mode settings</string>
+    <string name="anton_info">Anton is like Anton, what can I say, I like to play CS2 and walk, and watch TikToks</string>
+    <string name="tranlators">Translators</string>
+    <string name="translated_to_ukr">Translated the program into Ukrainian</string>
+    <string name="translated_to_kk">Translated the program into Kazakh</string>
+    <string name="gemini_typing">Gemini is typing...</string>
+
+</resources>

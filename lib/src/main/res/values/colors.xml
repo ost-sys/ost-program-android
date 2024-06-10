@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="oui_round_and_bgcolor">@color/sesl_round_and_bgcolor_light</color>
+    <color name="oui_background_color">@color/sesl_background_color_light</color>
+    <color name="oui_primary_text_color">#ff010101</color>
+    <color name="oui_primary_icon_color">@color/oui_primary_text_color</color>
+
+    <color name="oui_list_divider_color">@color/sesl_list_divider_color_light</color>
+
+    <color name="oui_functional_green_color">@color/sesl_functional_green_light</color>
+    <color name="oui_functional_orange_color">@color/sesl_functional_orange_light</color>
+    <color name="oui_functional_red_color">@color/sesl_functional_red_light</color>
+
+    <!-- Buttons -->
+    <color name="oui_btn_border_color">#66252525</color>
+    <color name="oui_btn_text_color">#666666</color>
+
+    <!-- RelatedCard -->
+    <color name="oui_relative_link_title_text_color">#ff252525</color>
+
+    <!-- UnclickablePreference -->
+    <color name="oui_unclickablepref_text_color">#ff252525</color>
+    <color name="oui_unclickablepref_link_text_color">#ff3b3b3b</color>
+
+    <!-- SeekBar -->
+    <color name="oui_seekbar_overlap_color_default">
+        @color/sesl_seekbar_overlap_color_default_light
+    </color>
+    <color name="oui_seekbar_legacy_overlap_color_default">#fffcb69b</color>
+    <color name="oui_seekbar_overlap_color_activated">
+        @color/sesl_seekbar_overlap_color_activated_light
+    </color>
+
+    <color name="oui_seekbar_circle_marker_color">#ff9c9c9c</color>
+
+    <color name="oui_widget_seekbar_preference_label_text_color">#4d4d52</color>
+
+    <!-- ProgressDialog -->
+    <color name="oui_progress_dialog_text_color">#ff252525</color>
+    <color name="oui_progress_dialog_horizontal_text_color">#ff505050</color>
+
+    <!-- GridMenuDialog -->
+    <color name="oui_grid_menu_dialog_item_ripple_color">#1a000000</color>
+    <color name="oui_grid_menu_dialog_item_icon_text_color">#ff252525</color>
+
+    <!-- ToolbarLayout -->
+    <color name="oui_n_badge_background_color">#ffef5e16</color>
+    <color name="oui_n_badge_text_color">@color/sesl_white</color>
+
+    <!-- DrawerLayout -->
+    <color name="oui_drawerlayout_drawer_dim_color">#33000000</color>
+    <color name="oui_drawerlayout_header_icon_color">#ff676768</color>
+
+    <!-- AppInfoLayout -->
+    <color name="oui_appinfolayout_info_text_color">#ff8c8c8c</color>
+    <color name="oui_appinfolayout_button_bg_color">#ffebebeb</color>
+    <color name="oui_appinfolayout_button_default_text">#ff252525</color>
+    <color name="oui_appinfolayout_button_primary_text">#fffafafa</color>
+
+    <!-- TipsCardPreference -->
+    <color name="oui_tipscardpref_bg_color">#fffcfcfc</color>
+
+    <!-- HorizontalRadioPreference -->
+    <color name="oui_horizontalradiopref_text_unselected_color">#ff858585</color>
+
+    <!-- TipPopup -->
+    <color name="sem_tip_popup_background_color">#ff474747</color>
+    <color name="sem_tip_popup_text_color">#fffafafa</color>
+    <color name="sem_tip_popup_text_color_translucent">#fffafafa</color>
+
+</resources>

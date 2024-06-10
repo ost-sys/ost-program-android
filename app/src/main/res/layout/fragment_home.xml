@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.home.HomeFragment"
+    android:orientation="vertical">
+
+    <dev.oneuiproject.oneui.widget.RoundLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@color/oui_background_color"
+        android:orientation="vertical">
+
+        <com.ost.application.ui.widget.CardView
+            android:id="@+id/home_bottom_utilities"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:IconDrawable="@drawable/ic_oui_folder"
+            app:TitleText="@string/utilities"
+            app:SummaryText="@string/text_view_utilities_text"/>
+
+        <com.ost.application.ui.widget.CardView
+            android:id="@+id/home_bottom_friends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:IconDrawable="@drawable/ic_oui_group"
+            app:TitleText="@string/friends"
+            app:SummaryText="@string/text_view_friends_text"
+            app:isDividerViewVisible="true"/>
+
+        <com.ost.application.ui.widget.CardView
+            android:id="@+id/home_bottom_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:IconDrawable="@drawable/ic_oui_info"
+            app:TitleText="@string/information"
+            app:SummaryText="@string/text_view_info_text"
+            app:isDividerViewVisible="true"/>
+
+    </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+    <dev.oneuiproject.oneui.widget.RelatedCard
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        app:title="@string/social_links">
+
+        <TextView
+            android:id="@+id/home_bottom_relative_ost_youtube"
+            style="@style/OneUI.RelativeLinkTextViewStyle"
+            android:text="@string/youtube" />
+
+        <TextView
+            android:id="@+id/home_bottom_relative_ost_telegram"
+            style="@style/OneUI.RelativeLinkTextViewStyle"
+            android:text="@string/telegram" />
+
+        <TextView
+            android:id="@+id/home_bottom_relative_ost_openvk"
+            style="@style/OneUI.RelativeLinkTextViewStyle"
+            android:text="@string/openvk" />
+
+        <TextView
+            android:id="@+id/home_bottom_relative_ost_github"
+            style="@style/OneUI.RelativeLinkTextViewStyle"
+            android:text="@string/github" />
+
+        <TextView
+            android:id="@+id/home_bottom_relative_ost_da"
+            style="@style/OneUI.RelativeLinkTextViewStyle"
+            android:text="@string/donation_alerts" />
+
+    </dev.oneuiproject.oneui.widget.RelatedCard>
+
+</LinearLayout>

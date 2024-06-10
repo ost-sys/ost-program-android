@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.utilities.UtilitiesCustomizationFragment"
+    android:orientation="vertical">
+
+    <dev.oneuiproject.oneui.widget.RoundLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/oui_background_color"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
+
+        <com.ost.application.ui.widget.CardView
+            android:id="@+id/utilities_customization_wallpapers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:IconDrawable="@drawable/ic_oui_wallpaper"
+            app:TitleText="@string/wallpapers"/>
+
+        <com.ost.application.ui.widget.CardView
+            android:id="@+id/utilities_customization_music"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:IconDrawable="@drawable/ic_oui_audio"
+            app:TitleText="@string/music"
+            app:isDividerViewVisible="true"/>
+
+        <com.ost.application.ui.widget.CardView
+            android:id="@+id/utilities_customization_sounds"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:IconDrawable="@drawable/ic_oui_sound"
+            app:TitleText="@string/sounds"
+            app:isDividerViewVisible="true"/>
+
+    </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+    <dev.oneuiproject.oneui.widget.RelatedCard
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/useful_programs">
+
+        <TextView
+            android:id="@+id/utilities_customization_ux_patcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ultra_ux_theme_patcher"/>
+
+        <TextView
+            android:id="@+id/utilities_customization_sharex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sharex"/>
+
+    </dev.oneuiproject.oneui.widget.RelatedCard>
+
+</LinearLayout>
