@@ -141,7 +141,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginStart="4dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -155,7 +154,7 @@
                             android:layout_height="match_parent"
                             android:padding="4dp"
                             android:textSize="14sp"
-                            android:text="HDD 1 TB (Files)"/>
+                            android:text="HDD 1 TB"/>
 
                     </LinearLayout>
 
@@ -170,22 +169,7 @@
                             android:layout_height="match_parent"
                             android:padding="4dp"
                             android:textSize="14sp"
-                            android:text="HDD 1 TB (Other)"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="4dp"
-                            android:textSize="14sp"
-                            android:text="NVME Hynix 256 GB"/>
+                            android:text="M2_2 SATA Micron 256 GB"/>
 
                     </LinearLayout>
 
