@@ -107,7 +107,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginStart="4dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -208,7 +207,7 @@
                         android:layout_height="match_parent"
                         android:padding="4dp"
                         android:textSize="14sp"
-                        android:text="1080 * 2400 (6,2 inch) - 120 Hz (Adaptive)"/>
+                        android:text="1080 * 2400 (6,2 inch) - 120 Hz"/>
 
                 </LinearLayout>
 
