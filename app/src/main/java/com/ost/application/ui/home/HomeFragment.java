@@ -48,17 +48,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         binding.homeBottomRelativeOstDa.setOnClickListener(this);
     }
 
-    private void setBottomContentEnabled(boolean enabled) {
-        binding.homeBottomUtilities.setEnabled(enabled);
-        binding.homeBottomFriends.setEnabled(enabled);
-        binding.homeBottomInfo.setEnabled(enabled);
-        binding.homeBottomRelativeOstYoutube.setEnabled(enabled);
-        binding.homeBottomRelativeOstTelegram.setEnabled(enabled);
-        binding.homeBottomRelativeOstGithub.setEnabled(enabled);
-        binding.homeBottomRelativeOstOpenvk.setEnabled(enabled);
-        binding.homeBottomRelativeOstDa.setEnabled(enabled);
-    }
-
     @Override
     public void onClick(View v) {
         long uptimeMillis = SystemClock.uptimeMillis();

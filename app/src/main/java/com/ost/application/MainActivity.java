@@ -2,6 +2,7 @@ package com.ost.application;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.ost.application.databinding.ActivityMainBinding;
 import com.ost.application.ui.friends.FriendsFragment;
 import com.ost.application.ui.home.HomeFragment;
 import com.ost.application.ui.info.InfoFragment;
@@ -25,7 +27,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import dev.oneuiproject.oneui.layout.ToolbarLayout;
 
 public class MainActivity extends AppCompatActivity {
-
     private final String[] facts = {
             "Android was originally developed as an OS for digital cameras",
             "Bill Gates originally planned to name Windows as 'Interface Manager'",
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         toolbarLayout.setTitle(getString(R.string.home));
         toolbarLayout.setExpandedSubtitle(randomFact);
+        toolbarLayout.setNavigationButtonOnClickListener(v -> onBackPressed());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.nav_host_fragment_activity_main, new HomeFragment()).commit();

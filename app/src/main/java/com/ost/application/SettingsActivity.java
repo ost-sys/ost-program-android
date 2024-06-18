@@ -123,7 +123,7 @@ public class SettingsActivity extends AppCompatActivity {
             switch (preference.getKey()) {
                 case "dark_mode":
                     if (currentDarkMode != newValue) {
-                        DarkModeUtils.setDarkMode((AppCompatActivity) requireActivity(), ((String) newValue).equals("0")
+                        DarkModeUtils.setDarkMode((AppCompatActivity) requireActivity(), newValue.equals("0")
                                 ? DarkModeUtils.DARK_MODE_DISABLED
                                 : DarkModeUtils.DARK_MODE_ENABLED);
                     }

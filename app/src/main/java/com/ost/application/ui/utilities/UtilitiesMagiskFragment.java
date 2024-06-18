@@ -39,14 +39,6 @@ public class UtilitiesMagiskFragment extends Fragment implements View.OnClickLis
         binding.utilitiesMagiskKnoxPatch.setOnClickListener(this);
     }
 
-    private void setBottomContentEnabled(boolean enabled) {
-        binding.utilitiesMagiskManager.setEnabled(enabled);
-        binding.utilitiesMagiskPixelify.setEnabled(enabled);
-        binding.utilitiesMagiskAdBlocker.setEnabled(enabled);
-        binding.utilitiesMagiskSafetynetFix.setEnabled(enabled);
-        binding.utilitiesMagiskKnoxPatch.setEnabled(enabled);
-    }
-
     @Override
     public void onClick(View v) {
         long uptimeMillis = SystemClock.uptimeMillis();

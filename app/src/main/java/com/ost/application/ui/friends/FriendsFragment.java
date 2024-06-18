@@ -43,7 +43,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
         binding.friendsHackuser.setOnClickListener(this);
         binding.friendsErtor.setOnClickListener(this);
         binding.friendsHappywin8.setOnClickListener(this);
-        binding.friendsOsmixup.setOnClickListener(this);
+        binding.friendsRivixal.setOnClickListener(this);
         binding.friendsClyt.setOnClickListener(this);
         binding.friendsMilosoft.setOnClickListener(this);
         binding.friendsAnton.setOnClickListener(this);
@@ -74,7 +74,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 url = "https://ertorworld.com/";
             } else if (v.getId() == binding.friendsHappywin8.getId()) {
                 url = "https://www.youtube.com/channel/UCEUf6E02RlsxKlAxIbNzBfA";
-            } else if (v.getId() == binding.friendsOsmixup.getId()) {
+            } else if (v.getId() == binding.friendsRivixal.getId()) {
                 url = "https://rivixal.github.io/";
             } else if (v.getId() == binding.friendsClyt.getId()) {
                 url = "https://p.kirillka.ru/n.html";

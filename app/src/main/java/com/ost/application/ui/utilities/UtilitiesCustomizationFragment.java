@@ -42,14 +42,6 @@ public class UtilitiesCustomizationFragment extends Fragment implements View.OnC
         binding.utilitiesCustomizationSharex.setOnClickListener(this);
     }
 
-    private void setBottomContentEnabled(boolean enabled) {
-        binding.utilitiesCustomizationWallpapers.setEnabled(enabled);
-        binding.utilitiesCustomizationMusic.setEnabled(enabled);
-        binding.utilitiesCustomizationSounds.setEnabled(enabled);
-        binding.utilitiesCustomizationUxPatcher.setEnabled(enabled);
-        binding.utilitiesCustomizationSharex.setEnabled(enabled);
-    }
-
     @Override
     public void onClick(View v) {
         long uptimeMillis = SystemClock.uptimeMillis();

@@ -39,17 +39,6 @@ public class UtilitiesAndroidFragment extends Fragment implements View.OnClickLi
         binding.utilitiesAndroidKdeconnect.setOnClickListener(this);
     }
 
-    private void setBottomContentEnabled(boolean enabled) {
-        binding.utilitiesAndroidChrome.setEnabled(enabled);
-        binding.utilitiesAndroidTermux.setEnabled(enabled);
-        binding.utilitiesAndroidTgmonet.setEnabled(enabled);
-        binding.utilitiesAndroidAppmanager.setEnabled(enabled);
-        binding.utilitiesAndroidTotalcmd.setEnabled(enabled);
-        binding.utilitiesAndroidSpacedesk.setEnabled(enabled);
-        binding.utilitiesAndroidGmsflags.setEnabled(enabled);
-        binding.utilitiesAndroidKdeconnect.setEnabled(enabled);
-    }
-
     @Override
     public void onClick(View v) {
         long uptimeMillis = SystemClock.uptimeMillis();

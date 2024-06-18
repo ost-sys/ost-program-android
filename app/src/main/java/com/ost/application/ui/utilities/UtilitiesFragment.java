@@ -34,13 +34,6 @@ public class UtilitiesFragment extends Fragment implements View.OnClickListener 
         binding.utilitiesProductKeys.setOnClickListener(this);
     }
 
-    private void setBottomContentEnabled(boolean enabled) {
-        binding.utilitiesAndroid.setEnabled(enabled);
-        binding.utilitiesMagisk.setEnabled(enabled);
-        binding.utilitiesCustomization.setEnabled(enabled);
-        binding.utilitiesProductKeys.setEnabled(enabled);
-    }
-
     @Override
     public void onClick(View v) {
         long uptimeMillis = SystemClock.uptimeMillis();
