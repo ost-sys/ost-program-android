@@ -148,7 +148,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:IconDrawable="@drawable/anton"
-            app:TitleText="Антон Шуроповёрт"
+            app:TitleText="Антон Шуруповёрт"
             app:SummaryText="@string/anton_info"
             app:isDividerViewVisible="true"/>
 
