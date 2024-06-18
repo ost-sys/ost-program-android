@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:IconDrawable="@drawable/anton"
-                app:TitleText="Антон Шуроповёрт"
+                app:TitleText="Антон Шуруповёрт"
                 app:SummaryText="@string/translated_to_ukr"/>
 
             <com.ost.application.ui.widget.CardView
