@@ -113,12 +113,12 @@
             app:isDividerViewVisible="true"/>
 
         <com.ost.application.ui.widget.CardView
-            android:id="@+id/friends_osmixup"
+            android:id="@+id/friends_rivixal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:IconDrawable="@drawable/osmixup"
-            app:TitleText="OSMixUp"
+            app:IconDrawable="@drawable/rivixal"
+            app:TitleText="Rivixal"
             app:SummaryText="@string/osmixup_info"
             app:isDividerViewVisible="true"/>
 

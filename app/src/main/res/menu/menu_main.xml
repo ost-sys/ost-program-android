@@ -6,22 +6,26 @@
 
     <item
         android:id="@+id/menu_math_game"
+        android:icon="@drawable/ic_oui_calculation"
         android:title="@string/math_game"
-        android:showAsAction="never" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_gemini"
+        android:icon="@drawable/ic_oui_star_outline"
         android:title="@string/gemini"
-        android:showAsAction="never" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_settings"
+        android:icon="@drawable/ic_oui_settings_outline"
         android:title="@string/settings"
-        android:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_about_app"
+        android:icon="@drawable/ic_oui_info_outline"
         android:title="@string/about_app"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
 </menu>

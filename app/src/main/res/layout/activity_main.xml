@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         android:layout_marginBottom="60dp"
+        app:navigationIcon="@drawable/ic_oui_back"
         app:title="@string/app_name">
 
         <androidx.core.widget.NestedScrollView
