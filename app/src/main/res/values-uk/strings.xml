@@ -116,7 +116,21 @@
     <string name="dark_mode_settings">Налаштування темного режиму</string>
     <string name="anton_info">Антон як Антон, що сказати, люблю грати в CS2 і гуляти, і тиктоки дивитись</string>
     <string name="tranlators">Перекладачі</string>
-    <string name="translated_to_kk">Перевел программу на казахстанский язык</string>
+    <string name="translated_to_kk">Переклав програму казахстанською мовою</string>
     <string name="translated_to_ukr">Переклав застосунок на українську мову</string>
     <string name="gemini_typing">Gemini друкує...</string>
+    <string name="checking_for_updates">Перевірка оновлень...</string>
+    <string name="error_getting_version_information">Помилка при отриманні даних про версію</string>
+    <string name="update_available">Доступне оновлення!</string>
+    <string name="latest_version_installed">Встановлено останню версію</string>
+    <string name="downloading_update">Завантаження оновлення...</string>
+    <string name="update">Оновлення</string>
+    <string name="cancel">Скасувати</string>
+    <string name="download_canceled">Завантаження скасовано</string>
+    <string name="update_file_not_found">Файл оновлення не знайдено.</string>
+    <string name="write_to_external_storage_permission">Дозвіл на запис у внутрішнє сховище необхідний для завантаження оновлення</string>
+    <string name="access_to_all_files_permission">Дозвіл на доступ до всіх файлів необхідний для завантаження оновлення</string>
+    <string name="notification_permission">Дозвіл на повідомлення необхідний для оновлення</string>
+    <string name="install_unknown_apps_permission">Дозвіл на встановлення невідомих додатків необхідний для оновлення</string>
+    <string name="check_for_updates">Перевірити наявність оновлень</string>
 </resources>

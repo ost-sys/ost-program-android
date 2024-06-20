@@ -10,8 +10,8 @@ android {
         applicationId = "com.ost.application"
         minSdk = 28
         targetSdk = 34
-        versionCode = 101
-        versionName = "1.0.1"
+        versionCode = 102
+        versionName = "1.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
@@ -62,9 +62,10 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    implementation("sesl.androidx.core:core-ktx:1.7.0-beta01+1.0.28-sesl6+rev0")
-    implementation("sesl.androidx.fragment:fragment:1.7.0-rc01+1.0.0-sesl6+rev0")
-    implementation("sesl.androidx.appcompat:appcompat:1.7.0-alpha03+1.0.28-sesl6+rev1")
+    implementation("sesl.androidx.core:core:1.13.1+1.0.0-sesl6+rev0")
+    implementation("sesl.androidx.core:core-ktx:1.13.1+1.0.0-sesl6+rev0")
+    implementation("sesl.androidx.fragment:fragment:1.8.0+1.0.0-sesl6+rev0")
+    implementation("sesl.androidx.appcompat:appcompat:1.7.0+1.0.28-sesl6+rev0")
     implementation("sesl.androidx.picker:picker-basic:1.0.16+1.0.16-sesl6+rev0")
     implementation("sesl.androidx.picker:picker-color:1.0.6+1.0.6-sesl6+rev1")
     implementation("sesl.androidx.preference:preference:1.2.1+1.0.4-sesl6+rev0")
@@ -72,8 +73,8 @@ dependencies {
     implementation("sesl.androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01+1.0.0-sesl6+rev0")
     implementation("sesl.androidx.apppickerview:apppickerview:1.0.1+1.0.1-sesl6+rev0")
     implementation("sesl.androidx.indexscroll:indexscroll:1.0.3+1.0.3-sesl6+rev0")
-    implementation("sesl.com.google.android.material:material:1.12.0-rc01+1.0.18-sesl6+rev0")
-    implementation("sesl.androidx.viewpager2:viewpager2:1.1.0-beta02+1.0.0-sesl6+rev0")
+    implementation("sesl.com.google.android.material:material:1.12.0+1.0.18-sesl6+rev0")
+    implementation("sesl.androidx.viewpager2:viewpager2:1.1.0+1.0.0-sesl6+rev0")
 
     implementation(project(":lib"))
 
@@ -85,6 +86,7 @@ dependencies {
     implementation("com.google.ai.client.generativeai:generativeai:0.6.0")
     implementation("com.google.guava:guava:31.0.1-android")
     implementation("org.reactivestreams:reactive-streams:1.0.4")
+    implementation("androidx.webkit:webkit:1.11.0")
 
 //    implementation("io.github.oneuiproject:design:1.2.7-beta1")
 

@@ -28,7 +28,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:IconDrawable="@drawable/ost_logo"
-                app:TitleText="@string/operating_system_tester"/>
+                app:TitleText="@string/operating_system_tester" />
+
+            <com.ost.application.ui.widget.CardView
+                android:id="@+id/about_update"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:IconDrawable="@drawable/ic_oui_refresh"
+                app:TitleText="@string/check_for_updates"
+                app:isDividerViewVisible="true"/>
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 

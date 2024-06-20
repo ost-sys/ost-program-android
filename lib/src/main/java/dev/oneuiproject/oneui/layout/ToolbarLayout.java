@@ -1,5 +1,6 @@
 package dev.oneuiproject.oneui.layout;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -492,6 +493,7 @@ public class ToolbarLayout extends LinearLayout {
     /**
      * Set the badge of a Toolbar MenuItem. Only use this for MenuItems which show as action! It won't work for overflow items.
      */
+    @SuppressLint("RestrictedApi")
     public void setMenuItemBadgeText(@IdRes int id, String text) {
         for (int i = 0; i < mMainToolbar.getChildCount(); i++) {
             View v1 = mMainToolbar.getChildAt(i);
@@ -1045,6 +1047,7 @@ public class ToolbarLayout extends LinearLayout {
     }
 
     private class AppBarOffsetListener implements AppBarLayout.OnOffsetChangedListener {
+        @SuppressLint("Range")
         @Override
         public void onOffsetChanged(AppBarLayout layout, int verticalOffset) {
             if (mActionModeToolbar.getVisibility() == View.VISIBLE) {

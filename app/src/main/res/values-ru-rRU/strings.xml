@@ -119,4 +119,18 @@
     <string name="translated_to_kk">Перевел программу на казахстанский язык</string>
     <string name="translated_to_ukr">Перевёл программу на украинский язык</string>
     <string name="gemini_typing">Gemini печатает...</string>
+    <string name="access_to_all_files_permission">Разрешение на доступ ко всем файлам необходимо для загрузки обновления</string>
+    <string name="checking_for_updates">Проверка обновлений...</string>
+    <string name="error_getting_version_information">Ошибка при получении данных о версии</string>
+    <string name="update_available">Доступно обновление!</string>
+    <string name="latest_version_installed">Установлена последняя версия</string>
+    <string name="downloading_update">Загрузка обновления...</string>
+    <string name="update">Обновление</string>
+    <string name="cancel">Отмена</string>
+    <string name="download_canceled">Загрузка отменена</string>
+    <string name="update_file_not_found">Файл обновления не найден</string>
+    <string name="write_to_external_storage_permission">Разрешение на запись во внешнее хранилище необходимо для загрузки обновления</string>
+    <string name="install_unknown_apps_permission">Разрешение на установку неизвестных приложений необходимо для обновления</string>
+    <string name="notification_permission">Разрешение на уведомления необходимо для обновления</string>
+    <string name="check_for_updates">Проверить наличие обновления</string>
 </resources>

@@ -18,14 +18,14 @@
             android:id="@+id/utilities_customization_wallpapers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:IconDrawable="@drawable/ic_oui_wallpaper"
+            app:IconDrawable="@drawable/ic_oui_category_display"
             app:TitleText="@string/wallpapers"/>
 
         <com.ost.application.ui.widget.CardView
             android:id="@+id/utilities_customization_music"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:IconDrawable="@drawable/ic_oui_audio"
+            app:IconDrawable="@drawable/ic_oui_category_music"
             app:TitleText="@string/music"
             app:isDividerViewVisible="true"/>
 
@@ -33,7 +33,7 @@
             android:id="@+id/utilities_customization_sounds"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:IconDrawable="@drawable/ic_oui_sound"
+            app:IconDrawable="@drawable/ic_oui_category_sounds"
             app:TitleText="@string/sounds"
             app:isDividerViewVisible="true"/>
 

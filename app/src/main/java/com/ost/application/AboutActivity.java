@@ -1,40 +1,73 @@
 package com.ost.application;
 
+import android.Manifest;
+import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import com.ost.application.R;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.TooltipCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.ost.application.databinding.ActivityAboutBinding;
 import com.ost.application.databinding.ActivityAboutContentBinding;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import dev.oneuiproject.oneui.utils.ViewUtils;
 import dev.oneuiproject.oneui.utils.internal.ToolbarLayoutUtils;
 import dev.oneuiproject.oneui.widget.Toast;
 
-public class AboutActivity extends AppCompatActivity
-        implements View.OnClickListener {
+public class AboutActivity extends AppCompatActivity implements View.OnClickListener {
     private boolean mEnableBackToHeader;
     private long mLastClickTime;
-
     private ActivityAboutBinding mBinding;
     private ActivityAboutContentBinding mBottomContent;
-
-    private AboutAppBarListener mAppBarListener = new AboutAppBarListener();
+    private final AboutAppBarListener mAppBarListener = new AboutAppBarListener();
+    private static final String TAG = "MainActivity";
+    private static final int PERMISSION_REQUEST_STORAGE = 1;
+    private static final int PERMISSION_REQUEST_ALL_FILES = 2;
+    private static final int PERMISSION_REQUEST_UNKNOWN_APPS = 3;
+    private static final int PERMISSION_REQUEST_NOTIFICATION = 4;
+    private String latestVersionName;
+    private String apkUrl;
+    private ProgressDialog progressDialog;
+    private long downloadId;
+    private AlertDialog downloadDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +83,257 @@ public class AboutActivity extends AppCompatActivity
 
         resetAppBar(getResources().getConfiguration());
         initContent();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions();
+        }
+    }
+    private void requestPermissions() {
+        // Запрос разрешения на запись во внешнее хранилище
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    PERMISSION_REQUEST_STORAGE);
+        }
+
+        // Запрос разрешения на доступ ко всем файлам (Android 11+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    PERMISSION_REQUEST_ALL_FILES);
+        }
+
+        // Запрос разрешения на установку неизвестных приложений (Android 11+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, PERMISSION_REQUEST_UNKNOWN_APPS);
+            }
+        }
+
+        // Запрос разрешения на уведомления
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                    PERMISSION_REQUEST_NOTIFICATION);
+        }
     }
 
+    private void checkUpdate() {
+        new FetchLatestVersionTask().execute();
+    }
+
+    private class FetchLatestVersionTask extends AsyncTask<Void, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            String checking_for_updates = getString(R.string.checking_for_updates);
+            progressDialog = new ProgressDialog(AboutActivity.this);
+            progressDialog.setMessage(checking_for_updates);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            try {
+                URL url = new URL("https://api.github.com/repos/ost-sys/ost-program-android/releases");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                reader.close();
+
+                // Парсим JSON ответ
+                JSONArray releases = new JSONArray(response.toString());
+                JSONObject latestRelease = releases.getJSONObject(0);
+                latestVersionName = latestRelease.getString("tag_name");
+                apkUrl = latestRelease.getJSONArray("assets").getJSONObject(0).getString("browser_download_url");
+
+                return latestVersionName;
+
+            } catch (IOException | JSONException e) {
+                Log.e(TAG, getString(Integer.parseInt("Error getting version information:")) + e.getMessage());
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+
+            if (result == null) {
+                mBottomContent.aboutUpdate.setSummaryText(getString(R.string.error_getting_version_information));
+                Toast.makeText(AboutActivity.this, R.string.error_getting_version_information, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String currentVersionName = getCurrentVersionName();
+
+            if (result.compareTo(currentVersionName) > 0) {
+                mBottomContent.aboutUpdate.setSummaryText(getString(R.string.update_available));
+                Toast.makeText(AboutActivity.this, R.string.update_available, Toast.LENGTH_SHORT).show();
+                startDownload();
+            } else {
+                // Установлена последняя версия
+                mBottomContent.aboutUpdate.setSummaryText(getString(R.string.latest_version_installed));
+                Toast.makeText(AboutActivity.this, R.string.latest_version_installed, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private String getCurrentVersionName() {
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            return packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, "Error getting current version: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private void startDownload() {
+        // Создание запроса на загрузку
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl));
+        request.setDescription(getString(R.string.downloading_update));
+        request.setTitle(getString(R.string.update));
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "ost-program-android.apk");
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setVisibleInDownloadsUi(true);
+
+        // Запуск загрузки
+        DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        downloadId = downloadManager.enqueue(request);
+
+        // Создание AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(AboutActivity.this);
+        builder.setTitle(getString(R.string.downloading_update))
+                .setMessage(getString(R.string.downloading_update))
+                .setCancelable(false)
+                .setNegativeButton(R.string.cancel, (dialog, id) -> {
+                    // Отменяем загрузку
+                    downloadManager.remove(downloadId);
+                    Toast.makeText(AboutActivity.this, getString(R.string.download_canceled), Toast.LENGTH_SHORT).show();
+                });
+        downloadDialog = builder.create();
+        downloadDialog.show();
+
+        // Получение состояния загрузки
+        new DownloadStatusTask().execute();
+    }
+
+    private class DownloadStatusTask extends AsyncTask<Void, Long, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+
+            while (true) {
+                DownloadManager.Query query = new DownloadManager.Query();
+                query.setFilterById(downloadId);
+                Cursor cursor = downloadManager.query(query);
+                if (cursor.moveToFirst()) {
+                    int bytesDownloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                    int bytesTotal = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                    int progress = (bytesDownloaded * 100) / bytesTotal;
+                    publishProgress((long) progress);
+
+                    if (bytesDownloaded == bytesTotal) {
+                        // Загрузка завершена, выходим из цикла
+                        break;
+                    }
+                }
+                cursor.close();
+                try {
+                    Thread.sleep(100); // Пауза для обновления прогресса
+                } catch (InterruptedException e) {
+                    Log.e(TAG, "Error updating progress: " + e.getMessage());
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Long... values) {
+            super.onProgressUpdate(values);
+            downloadDialog.setMessage(getString(R.string.downloading_update) + values[0] + "%");
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            File apkFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "ost-program-android.apk");
+            if (apkFile.exists()) {
+                Uri apkUri = FileProvider.getUriForFile(AboutActivity.this, "com.ost.application.fileprovider", apkFile);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(intent);
+            } else {
+                Toast.makeText(AboutActivity.this, getString(R.string.update_file_not_found), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case PERMISSION_REQUEST_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Разрешение на запись во внешнее хранилище предоставлено
+                } else {
+                    // Разрешение на запись во внешнее хранилище не предоставлено
+                    Toast.makeText(AboutActivity.this, getString(R.string.write_to_external_storage_permission), Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case PERMISSION_REQUEST_ALL_FILES:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Разрешение на доступ ко всем файлам предоставлено
+                } else {
+                    // Разрешение на доступ ко всем файлам не предоставлено
+                    Toast.makeText(AboutActivity.this, getString(R.string.access_to_all_files_permission), Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case PERMISSION_REQUEST_UNKNOWN_APPS:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Разрешение на установку неизвестных приложений предоставлено
+                } else {
+                    // Разрешение на установку неизвестных приложений не предоставлено
+                    Toast.makeText(AboutActivity.this, getString(R.string.install_unknown_apps_permission), Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case PERMISSION_REQUEST_NOTIFICATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Разрешение на уведомления предоставлено
+                } else {
+                    // Разрешение на уведомления не предоставлено
+                    Toast.makeText(AboutActivity.this, getString(R.string.notification_permission), Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PERMISSION_REQUEST_UNKNOWN_APPS) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && Settings.canDrawOverlays(this)) {
+                // Разрешение на установку неизвестных приложений предоставлено
+            } else {
+                // Разрешение на установку неизвестных приложений не предоставлено
+                Toast.makeText(AboutActivity.this, getString(R.string.install_unknown_apps_permission), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
     @Override
     public void onBackPressed() {
         if (mEnableBackToHeader && mBinding.aboutAppBar.seslIsCollapsed()) {
@@ -98,7 +380,6 @@ public class AboutActivity extends AppCompatActivity
     public boolean isInMultiWindowMode() {
         return Build.VERSION.SDK_INT >= 24 && super.isInMultiWindowMode();
     }
-
     private void resetAppBar(Configuration config) {
         ToolbarLayoutUtils.hideStatusBarForLandscape(this, config.orientation);
         ToolbarLayoutUtils.updateListBothSideMargin(this,
@@ -115,8 +396,8 @@ public class AboutActivity extends AppCompatActivity
             lp.height = getResources().getDisplayMetrics().heightPixels / 2;
         } else {
             mBinding.aboutAppBar.setExpanded(false, false);
-            mEnableBackToHeader = false;
             mBinding.aboutAppBar.seslSetCustomHeightProportion(true, 0);
+            mEnableBackToHeader = false;
             mBinding.aboutAppBar.removeOnOffsetChangedListener(mAppBarListener);
             mBinding.aboutBottomContainer.setAlpha(1f);
             setBottomContentEnabled(true);
@@ -147,6 +428,7 @@ public class AboutActivity extends AppCompatActivity
         TooltipCompat.setTooltipText(mBinding.aboutHeaderYoutube, getString(R.string.youtube));
 
         mBottomContent.aboutBottomOst.setOnClickListener(this);
+        mBottomContent.aboutUpdate.setOnClickListener(v -> checkUpdate());
 
         mBottomContent.translatorUk.setOnClickListener(this);
         mBottomContent.translatorKk.setOnClickListener(this);
@@ -169,6 +451,7 @@ public class AboutActivity extends AppCompatActivity
         mBinding.aboutHeaderTelegram.setEnabled(!enabled);
         mBinding.aboutHeaderYoutube.setEnabled(!enabled);
         mBottomContent.aboutBottomOst.setEnabled(enabled);
+        mBottomContent.aboutUpdate.setEnabled(enabled);
         mBottomContent.translatorUk.setEnabled(enabled);
         mBottomContent.translatorKk.setEnabled(enabled);
         mBottomContent.aboutBottomDevYann.setEnabled(enabled);
