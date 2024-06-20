@@ -1,6 +1,7 @@
 package com.ost.application;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -23,9 +24,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import com.ost.application.R;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.TooltipCompat;
@@ -47,6 +48,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Objects;
 
 import dev.oneuiproject.oneui.utils.ViewUtils;
 import dev.oneuiproject.oneui.utils.internal.ToolbarLayoutUtils;
@@ -63,7 +65,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
     private static final int PERMISSION_REQUEST_ALL_FILES = 2;
     private static final int PERMISSION_REQUEST_UNKNOWN_APPS = 3;
     private static final int PERMISSION_REQUEST_NOTIFICATION = 4;
-    private String latestVersionName;
     private String apkUrl;
     private ProgressDialog progressDialog;
     private long downloadId;
@@ -77,7 +78,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         mBottomContent = mBinding.aboutBottomContent;
 
         setSupportActionBar(mBinding.aboutToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         mBinding.aboutToolbar.setNavigationOnClickListener(v -> onBackPressed());
 
@@ -85,18 +86,19 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         initContent();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requestPermissions();
+            }
         }
     }
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     private void requestPermissions() {
-        // Запрос разрешения на запись во внешнее хранилище
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     PERMISSION_REQUEST_STORAGE);
         }
 
-        // Запрос разрешения на доступ ко всем файлам (Android 11+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -104,7 +106,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                     PERMISSION_REQUEST_ALL_FILES);
         }
 
-        // Запрос разрешения на установку неизвестных приложений (Android 11+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (!Settings.canDrawOverlays(this)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
@@ -112,7 +113,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
             }
         }
 
-        // Запрос разрешения на уведомления
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.POST_NOTIFICATIONS},
@@ -124,6 +124,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         new FetchLatestVersionTask().execute();
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class FetchLatestVersionTask extends AsyncTask<Void, Void, String> {
         @Override
         protected void onPreExecute() {
@@ -150,10 +151,9 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 }
                 reader.close();
 
-                // Парсим JSON ответ
                 JSONArray releases = new JSONArray(response.toString());
                 JSONObject latestRelease = releases.getJSONObject(0);
-                latestVersionName = latestRelease.getString("tag_name");
+                String latestVersionName = latestRelease.getString("tag_name");
                 apkUrl = latestRelease.getJSONArray("assets").getJSONObject(0).getString("browser_download_url");
 
                 return latestVersionName;
@@ -182,7 +182,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 Toast.makeText(AboutActivity.this, R.string.update_available, Toast.LENGTH_SHORT).show();
                 startDownload();
             } else {
-                // Установлена последняя версия
                 mBottomContent.aboutUpdate.setSummaryText(getString(R.string.latest_version_installed));
                 Toast.makeText(AboutActivity.this, R.string.latest_version_installed, Toast.LENGTH_SHORT).show();
             }
@@ -200,7 +199,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void startDownload() {
-        // Создание запроса на загрузку
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl));
         request.setDescription(getString(R.string.downloading_update));
         request.setTitle(getString(R.string.update));
@@ -208,27 +206,24 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setVisibleInDownloadsUi(true);
 
-        // Запуск загрузки
         DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         downloadId = downloadManager.enqueue(request);
 
-        // Создание AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(AboutActivity.this);
         builder.setTitle(getString(R.string.downloading_update))
                 .setMessage(getString(R.string.downloading_update))
                 .setCancelable(false)
                 .setNegativeButton(R.string.cancel, (dialog, id) -> {
-                    // Отменяем загрузку
                     downloadManager.remove(downloadId);
                     Toast.makeText(AboutActivity.this, getString(R.string.download_canceled), Toast.LENGTH_SHORT).show();
                 });
         downloadDialog = builder.create();
         downloadDialog.show();
 
-        // Получение состояния загрузки
         new DownloadStatusTask().execute();
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class DownloadStatusTask extends AsyncTask<Void, Long, Void> {
 
         @Override
@@ -246,13 +241,12 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                     publishProgress((long) progress);
 
                     if (bytesDownloaded == bytesTotal) {
-                        // Загрузка завершена, выходим из цикла
                         break;
                     }
                 }
                 cursor.close();
                 try {
-                    Thread.sleep(100); // Пауза для обновления прогресса
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     Log.e(TAG, "Error updating progress: " + e.getMessage());
                 }
@@ -282,39 +276,35 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode) {
             case PERMISSION_REQUEST_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Разрешение на запись во внешнее хранилище предоставлено
+
                 } else {
-                    // Разрешение на запись во внешнее хранилище не предоставлено
                     Toast.makeText(AboutActivity.this, getString(R.string.write_to_external_storage_permission), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case PERMISSION_REQUEST_ALL_FILES:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Разрешение на доступ ко всем файлам предоставлено
+
                 } else {
-                    // Разрешение на доступ ко всем файлам не предоставлено
                     Toast.makeText(AboutActivity.this, getString(R.string.access_to_all_files_permission), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case PERMISSION_REQUEST_UNKNOWN_APPS:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Разрешение на установку неизвестных приложений предоставлено
+
                 } else {
-                    // Разрешение на установку неизвестных приложений не предоставлено
                     Toast.makeText(AboutActivity.this, getString(R.string.install_unknown_apps_permission), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case PERMISSION_REQUEST_NOTIFICATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Разрешение на уведомления предоставлено
+
                 } else {
-                    // Разрешение на уведомления не предоставлено
                     Toast.makeText(AboutActivity.this, getString(R.string.notification_permission), Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -327,9 +317,8 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
 
         if (requestCode == PERMISSION_REQUEST_UNKNOWN_APPS) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && Settings.canDrawOverlays(this)) {
-                // Разрешение на установку неизвестных приложений предоставлено
+
             } else {
-                // Разрешение на установку неизвестных приложений не предоставлено
                 Toast.makeText(AboutActivity.this, getString(R.string.install_unknown_apps_permission), Toast.LENGTH_SHORT).show();
             }
         }
@@ -405,6 +394,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void initContent() {
         ViewUtils.semSetRoundedCorners(
                 mBinding.aboutBottomContent.getRoot(),
@@ -413,7 +403,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 ViewUtils.SEM_ROUNDED_CORNER_TOP_LEFT | ViewUtils.SEM_ROUNDED_CORNER_TOP_RIGHT,
                 getColor(R.color.oui_round_and_bgcolor));
 
-        Drawable appIcon = getDrawable(R.mipmap.ic_launcher);
+        @SuppressLint("UseCompatLoadingForDrawables") Drawable appIcon = getDrawable(R.mipmap.ic_launcher);
         mBinding.aboutHeaderAppIcon.setImageDrawable(appIcon);
         mBinding.aboutBottomAppIcon.setImageDrawable(appIcon);
 
