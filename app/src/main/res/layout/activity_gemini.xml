@@ -63,12 +63,32 @@
                         android:hint="@string/gemini_input_text_request_field"
                         android:layout_marginBottom="12dp"/>
 
-                    <Button
-                        android:id="@+id/gemini_ask_button"
-                        style="@style/OneUI.ButtonStyleTransparent"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/gemini_ask_button"/>
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:id="@+id/gemini_ask_button"
+                            style="@style/OneUI.ButtonStyleColored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            android:text="@string/gemini_ask_button"/>
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/gemini_ask_button_voice"
+                            style="?buttonStyle"
+                            android:src="@drawable/ic_oui_voice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:text="Голосовой ввод"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 

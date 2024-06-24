@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ost.application.GeminiActivity;
 import com.ost.application.R;
 import com.ost.application.databinding.FragmentUtilitiesBinding;
 import com.ost.application.databinding.FragmentUtilitiesMagiskBinding;
@@ -37,6 +38,12 @@ public class UtilitiesMagiskFragment extends Fragment implements View.OnClickLis
         binding.utilitiesMagiskAdBlocker.setOnClickListener(this);
         binding.utilitiesMagiskSafetynetFix.setOnClickListener(this);
         binding.utilitiesMagiskKnoxPatch.setOnClickListener(this);
+        binding.geminiMagiskInfo.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), GeminiActivity.class);
+            String textToInsert = getString(R.string.what_is_magisk_ask);
+            intent.putExtra("textToInsert", textToInsert);
+            startActivity(intent);
+        });
     }
 
     @Override

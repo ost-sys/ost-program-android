@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1"
 }
 
 android {
@@ -10,8 +11,8 @@ android {
         applicationId = "com.ost.application"
         minSdk = 28
         targetSdk = 34
-        versionCode = 102
-        versionName = "1.0.2"
+        versionCode = 110
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
@@ -28,6 +29,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     buildFeatures {
+        compose = true
         buildConfig = true
         viewBinding = true
         dataBinding = true
@@ -37,6 +39,12 @@ android {
         includeInBundle = true
     }
     buildToolsVersion = "34.0.0"
+}
+
+buildscript {
+    dependencies {
+        classpath("com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:<version>-SNAPSHOT")
+    }
 }
 
 configurations.implementation {
@@ -86,7 +94,10 @@ dependencies {
     implementation("com.google.ai.client.generativeai:generativeai:0.6.0")
     implementation("com.google.guava:guava:31.0.1-android")
     implementation("org.reactivestreams:reactive-streams:1.0.4")
-    implementation("androidx.webkit:webkit:1.11.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.asynclayoutinflater:asynclayoutinflater:1.0.0")
+
+    implementation("com.google.code.gson:gson:2.10.1")
 
 //    implementation("io.github.oneuiproject:design:1.2.7-beta1")
 

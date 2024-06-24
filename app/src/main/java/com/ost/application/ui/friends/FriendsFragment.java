@@ -1,7 +1,6 @@
 package com.ost.application.ui.friends;
 
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,9 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.ost.application.databinding.FragmentFriendsBinding;
-import com.ost.application.databinding.FragmentHomeBinding;
-
-import dev.oneuiproject.oneui.widget.Toast;
 
 public class FriendsFragment extends Fragment implements View.OnClickListener {
 
@@ -47,6 +43,7 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
         binding.friendsClyt.setOnClickListener(this);
         binding.friendsMilosoft.setOnClickListener(this);
         binding.friendsAnton.setOnClickListener(this);
+        binding.friendsTu4wkl.setOnClickListener(this);
     }
 
     @Override
@@ -82,6 +79,8 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
                 url = "https://www.youtube.com/@Mazurobi";
             } else if (v.getId() == binding.friendsAnton.getId()) {
                 url = "https://github.com/Anton-Aboba1234";
+            } else if (v.getId() == binding.friendsTu4wkl.getId()) {
+                url = "https://pachdomenic.github.io";
             }
             if (url != null) {
                 try {

@@ -4,12 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context=".ui.utilities.UtilitiesMagiskFragment">
 
     <dev.oneuiproject.oneui.widget.RoundLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/oui_background_color"
+        android:layout_marginBottom="20dp"
         android:orientation="vertical">
 
         <com.ost.application.ui.widget.CardView
@@ -52,5 +54,17 @@
             app:isDividerViewVisible="true"/>
 
     </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+    <dev.oneuiproject.oneui.widget.RelatedCard
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="Ask Gemini">
+
+        <TextView
+            android:id="@+id/gemini_magisk_info"
+            style="@style/OneUI.RelativeLinkTextViewStyle"
+            android:text="@string/what_is_magisk"/>
+
+    </dev.oneuiproject.oneui.widget.RelatedCard>
 
 </LinearLayout>

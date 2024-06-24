@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <dev.oneuiproject.oneui.widget.MarginsTabLayout
+        android:id="@+id/dialog_tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60.0dip" />
+
+    <com.ost.application.sudoku.utils.DynamicViewPager
+        android:id="@+id/dialog_viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:overScrollMode="never" />
+
+</LinearLayout>

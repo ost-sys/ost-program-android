@@ -55,8 +55,8 @@
                 android:id="@+id/translator_uk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:IconDrawable="@drawable/anton"
-                app:TitleText="Антон Шуруповёрт"
+                app:IconDrawable="@drawable/bohdan"
+                app:TitleText="Bohdan"
                 app:SummaryText="@string/translated_to_ukr"/>
 
             <com.ost.application.ui.widget.CardView
@@ -94,6 +94,14 @@
                 android:layout_height="wrap_content"
                 app:IconDrawable="@drawable/about_page_avatar_mesa"
                 app:TitleText="BlackMesa123"
+                app:isDividerViewVisible="true" />
+
+            <com.ost.application.ui.widget.CardView
+                android:id="@+id/about_bottom_dev_tribalfs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:IconDrawable="@drawable/about_page_avatar_tribalfs"
+                app:TitleText="Tribalfs"
                 app:isDividerViewVisible="true" />
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>

@@ -152,6 +152,16 @@
             app:SummaryText="@string/anton_info"
             app:isDividerViewVisible="true"/>
 
+        <com.ost.application.ui.widget.CardView
+            android:id="@+id/friends_tu4wkl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:IconDrawable="@drawable/tu4wkl"
+            app:TitleText="pachadomenic"
+            app:SummaryText="@string/tu4wkl_info"
+            app:isDividerViewVisible="true"/>
+
     </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 
 </LinearLayout>

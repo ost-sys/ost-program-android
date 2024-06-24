@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:alpha="0.9"
+    android:background="@drawable/sesl_menu_popup_background"
+    android:backgroundTint="@color/oui_background_color"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <GridLayout
+        android:id="@+id/popup_notes_grid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" />
+
+    <ImageView
+        android:id="@+id/drag_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:src="@drawable/ic_oui_drawer" />
+
+</LinearLayout>

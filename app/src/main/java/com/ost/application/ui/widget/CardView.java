@@ -125,4 +125,16 @@ public class CardView extends LinearLayout {
     public void setDividerVisible(boolean visible) {
         mDividerView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
+
+    public void setIconDrawable(Drawable iconDrawable) {
+        mIconDrawable = iconDrawable;
+        if (mIsIconView) {
+            mIconImageView.setImageDrawable(iconDrawable);
+            if (mIconColor != -1) {
+                mIconImageView.getDrawable().setTint(mIconColor);
+            }
+        } else {
+            init();
+        }
+    }
 }

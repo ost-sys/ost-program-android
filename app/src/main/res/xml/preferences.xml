@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/general">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="keep_screen_on"
+            android:summary="@string/keep_screen_on_summary"
+            android:title="@string/keep_screen_on" />
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="@string/appearance">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="grid_box_colors"
+            android:summary="@string/grid_box_colors_summary"
+            android:title="@string/grid_box_colors" />
+
+        <SwitchPreference
+            android:key="invert_colors"
+            android:summary="@string/invert_colors_summary"
+            android:title="@string/invert_colors" />
+
+        <!--<ColorPickerPreference
+            android:key="hint_color"
+            android:summary="@string/hint_color_summary"
+            android:title="@string/hint_color"
+            app:pickerType="classic" />
+
+        <ColorPickerPreference
+            android:key="error_color"
+            android:summary="@string/error_color_summary"
+            android:title="@string/error_color"
+            app:pickerType="classic" />-->
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:key="dev_options"
+        android:title="@string/dev_options">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="secure_flag"
+            android:summary="@string/secure_flag_summary"
+            android:title="@string/secure_flag" />
+    </PreferenceCategory>
+
+
+    <PreferenceCategory>
+        <PreferenceScreen
+            android:key="how_to_play"
+            android:title="@string/how_to_play" />
+
+        <PreferenceScreen
+            android:key="restore_all_settings"
+            android:title="@string/restore_all_settings" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

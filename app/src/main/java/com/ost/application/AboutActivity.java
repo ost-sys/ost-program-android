@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -37,6 +38,7 @@ import androidx.core.content.FileProvider;
 import com.google.android.material.appbar.AppBarLayout;
 import com.ost.application.databinding.ActivityAboutBinding;
 import com.ost.application.databinding.ActivityAboutContentBinding;
+import com.ost.application.ui.widget.CardView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -180,9 +182,14 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
             if (result.compareTo(currentVersionName) > 0) {
                 mBottomContent.aboutUpdate.setSummaryText(getString(R.string.update_available));
                 Toast.makeText(AboutActivity.this, R.string.update_available, Toast.LENGTH_SHORT).show();
-                startDownload();
+                new AlertDialog.Builder(AboutActivity.this)
+                        .setTitle(getString(R.string.update_available))
+                        .setMessage(R.string.install_update_q)
+                        .setPositiveButton(R.string.install, (dialog, id) -> startDownload())
+                        .setNegativeButton(getString(R.string.cancel), null)
+                        .show();
             } else {
-                mBottomContent.aboutUpdate.setSummaryText(getString(R.string.latest_version_installed));
+                mBottomContent.aboutUpdate.setSummaryText(getString(R.string.latest_version_installed) + ": " + BuildConfig.VERSION_NAME);
                 Toast.makeText(AboutActivity.this, R.string.latest_version_installed, Toast.LENGTH_SHORT).show();
             }
         }
@@ -425,6 +432,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
 
         mBottomContent.aboutBottomDevYann.setOnClickListener(this);
         mBottomContent.aboutBottomDevMesa.setOnClickListener(this);
+        mBottomContent.aboutBottomDevTribalfs.setOnClickListener(this);
 
         mBottomContent.aboutBottomOssProgram.setOnClickListener(this);
         mBottomContent.aboutBottomOssApache.setOnClickListener(this);
@@ -446,6 +454,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         mBottomContent.translatorKk.setEnabled(enabled);
         mBottomContent.aboutBottomDevYann.setEnabled(enabled);
         mBottomContent.aboutBottomDevMesa.setEnabled(enabled);
+        mBottomContent.aboutBottomDevTribalfs.setEnabled(enabled);
         mBottomContent.aboutBottomOssProgram.setEnabled(enabled);
         mBottomContent.aboutBottomOssApache.setEnabled(enabled);
         mBottomContent.aboutBottomOssMit.setEnabled(enabled);
@@ -469,13 +478,15 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
             } else if (v.getId() == mBottomContent.aboutBottomOst.getId()) {
                 url = "https://github.com/ost-sys/";
             } else if (v.getId() == mBottomContent.translatorUk.getId()) {
-                url = "https://github.com/Anton-Aboba1234";
+                url = "https://Bohdan157.github.io";
             } else if (v.getId() == mBottomContent.translatorKk.getId()) {
                 url = "https://www.youtube.com/@Mazurobi";
             } else if (v.getId() == mBottomContent.aboutBottomDevYann.getId()) {
                 url = "https://github.com/Yanndroid";
             } else if (v.getId() == mBottomContent.aboutBottomDevMesa.getId()) {
                 url = "https://github.com/XDABlackMesa123";
+            } else if (v.getId() == mBottomContent.aboutBottomDevTribalfs.getId()) {
+                url = "https://github.com/tribalfs";
             } else if (v.getId() == mBottomContent.aboutBottomOssProgram.getId()) {
                 url = "https://github.com/ost-sys/ost-program-android";
             } else if (v.getId() == mBottomContent.aboutBottomOssApache.getId()) {

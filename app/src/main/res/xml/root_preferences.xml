@@ -14,7 +14,7 @@
 
         <SwitchPreferenceCompat
             android:key="dark_mode_auto"
-            android:title="@string/settings_system_default" />
+            android:title="@string/system_default" />
 
     </PreferenceCategory>
 

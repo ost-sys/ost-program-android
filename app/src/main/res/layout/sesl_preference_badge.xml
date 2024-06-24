@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="@dimen/sesl_menu_item_badge_size"
+        android:layout_height="@dimen/sesl_menu_item_badge_size"
+        android:background="@drawable/sesl_noti_badge"
+        android:clickable="false"
+        android:duplicateParentState="true"
+        android:focusable="false"
+        android:gravity="center"
+        android:importantForAccessibility="no"
+        android:text="N"
+        android:textColor="@color/sesl_menu_badge_text_color"
+        android:textSize="@dimen/sesl_menu_item_badge_text_size" />
+</LinearLayout>

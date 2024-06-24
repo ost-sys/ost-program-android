@@ -6,8 +6,14 @@
 
     <item
         android:id="@+id/menu_math_game"
-        android:icon="@drawable/ic_oui_calculation"
+        android:icon="@drawable/ic_oui_game"
         android:title="@string/math_game"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_sudoku"
+        android:icon="@drawable/ic_oui_game_outline"
+        android:title="Sudoku"
         app:showAsAction="always" />
 
     <item
