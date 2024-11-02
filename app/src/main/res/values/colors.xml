@@ -16,5 +16,6 @@
     <color name="cyan">#ff00BFA5</color>
     <color name="magenta">#ffC51162</color>
     <color name="white">#ffffffff</color>
+    <color name="black">#000000</color>
 
 </resources>

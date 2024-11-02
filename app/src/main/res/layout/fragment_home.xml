@@ -1,43 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.home.HomeFragment"
+    tools:context=".ui.fragment.HomeFragment"
     android:orientation="vertical">
+
+    <dev.oneuiproject.oneui.widget.Separator
+        android:id="@+id/separator_power_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/power_menu"/>
 
     <dev.oneuiproject.oneui.widget.RoundLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         android:background="@color/oui_background_color"
+        android:layout_marginBottom="20dp"
         android:orientation="vertical">
 
-        <com.ost.application.ui.widget.CardView
-            android:id="@+id/home_bottom_utilities"
+        <com.ost.application.ui.core.widget.CardView
+            android:id="@+id/power_off"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:IconDrawable="@drawable/ic_oui_folder"
-            app:TitleText="@string/utilities"
-            app:SummaryText="@string/text_view_utilities_text"/>
+            app:IconDrawable="@drawable/ic_oui_power"
+            app:TitleText="@string/turn_off"
+            app:SummaryText="@string/turn_off_s"/>
 
-        <com.ost.application.ui.widget.CardView
-            android:id="@+id/home_bottom_friends"
+        <com.ost.application.ui.core.widget.CardView
+            android:id="@+id/reboot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:IconDrawable="@drawable/ic_oui_group"
-            app:TitleText="@string/friends"
-            app:SummaryText="@string/text_view_friends_text"
+            app:IconDrawable="@drawable/ic_oui_restart"
+            app:TitleText="@string/reboot"
+            app:SummaryText="@string/reboot_system_s"
             app:isDividerViewVisible="true"/>
 
-        <com.ost.application.ui.widget.CardView
-            android:id="@+id/home_bottom_info"
+        <com.ost.application.ui.core.widget.CardView
+            android:id="@+id/recovery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:IconDrawable="@drawable/ic_oui_info"
-            app:TitleText="@string/information"
-            app:SummaryText="@string/text_view_info_text"
+            app:IconDrawable="@drawable/ic_oui_restart"
+            app:TitleText="@string/reboot_recovery"
+            app:SummaryText="@string/reboot_recovery_s"
+            app:isDividerViewVisible="true"/>
+
+        <com.ost.application.ui.core.widget.CardView
+            android:id="@+id/download_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:IconDrawable="@drawable/ic_oui_restart"
+            app:TitleText="@string/reboot_download"
+            app:SummaryText="@string/reboot_download_s"
+            app:isDividerViewVisible="true"/>
+
+        <com.ost.application.ui.core.widget.CardView
+            android:id="@+id/fastboot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:IconDrawable="@drawable/ic_oui_restart"
+            app:TitleText="@string/reboot_fastboot"
+            app:SummaryText="@string/reboot_fastboot_s"
+            app:isDividerViewVisible="true"/>
+
+        <com.ost.application.ui.core.widget.CardView
+            android:id="@+id/fastbootd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:IconDrawable="@drawable/ic_oui_restart"
+            app:TitleText="@string/reboot_fastbootd"
+            app:SummaryText="@string/reboot_fastbootd_s"
             app:isDividerViewVisible="true"/>
 
     </dev.oneuiproject.oneui.widget.RoundLinearLayout>
@@ -61,7 +95,7 @@
         <TextView
             android:id="@+id/home_bottom_relative_ost_openvk"
             style="@style/OneUI.RelativeLinkTextViewStyle"
-            android:text="@string/openvk" />
+            android:text="OpenVK" />
 
         <TextView
             android:id="@+id/home_bottom_relative_ost_github"
@@ -71,7 +105,7 @@
         <TextView
             android:id="@+id/home_bottom_relative_ost_da"
             style="@style/OneUI.RelativeLinkTextViewStyle"
-            android:text="@string/donation_alerts" />
+            android:text="Donation Alerts" />
 
     </dev.oneuiproject.oneui.widget.RelatedCard>
 

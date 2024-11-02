@@ -32,4 +32,8 @@
         <item name="android:windowExitAnimation">@anim/sesl_menu_popup_exit</item>
     </style>
 
+    <style name="color">
+        <item name="color">@color/white</item>
+    </style>
+
 </resources>

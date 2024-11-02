@@ -4,34 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="AppCompatResource">
 
-    <item
-        android:id="@+id/menu_math_game"
-        android:icon="@drawable/ic_oui_game"
-        android:title="@string/math_game"
-        app:showAsAction="always" />
+    <group>
 
-    <item
-        android:id="@+id/menu_sudoku"
-        android:icon="@drawable/ic_oui_game_outline"
-        android:title="Sudoku"
-        app:showAsAction="always" />
+        <item
+            android:id="@+id/menu_apppicker_system"
+            android:title="Show system apps"
+            android:visible="false"
+            app:showAsAction="never" />
 
-    <item
-        android:id="@+id/menu_gemini"
-        android:icon="@drawable/ic_oui_star_outline"
-        android:title="@string/gemini"
-        app:showAsAction="always" />
+        <item
+            android:id="@+id/menu_app_refresh"
+            android:title="Refresh"
+            android:icon="@drawable/ic_oui_refresh"
+            android:visible="false"
+            app:showAsAction="always"/>
 
-    <item
-        android:id="@+id/menu_settings"
-        android:icon="@drawable/ic_oui_settings_outline"
-        android:title="@string/settings"
-        app:showAsAction="ifRoom" />
+    </group>
 
-    <item
-        android:id="@+id/menu_about_app"
-        android:icon="@drawable/ic_oui_info_outline"
-        android:title="@string/about_app"
-        app:showAsAction="ifRoom" />
+    <group>
+
+        <item
+            android:id="@+id/menu_check_root"
+            android:title="Check ROOT"
+            app:showAsAction="never"/>
+
+    </group>
 
 </menu>

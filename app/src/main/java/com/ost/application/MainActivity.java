@@ -11,120 +11,88 @@ import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.ost.application.sudoku.SudokuActivity;
-import com.ost.application.ui.friends.FriendsFragment;
-import com.ost.application.ui.home.HomeFragment;
-import com.ost.application.ui.info.InfoFragment;
-import com.ost.application.ui.utilities.UtilitiesFragment;
+import com.ost.application.databinding.ActivityMainBinding;
+import com.ost.application.ui.core.drawer.DrawerListAdapter;
+import com.ost.application.ui.fragment.AppListFragment;
+import com.ost.application.ui.fragment.FriendsFragment;
+import com.ost.application.ui.fragment.HomeFragment;
+import com.ost.application.ui.fragment.InfoFragment;
+import com.topjohnwu.superuser.Shell;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.oneuiproject.oneui.layout.ToolbarLayout;
+import com.ost.application.ui.core.base.FragmentInfo;
+import dev.oneuiproject.oneui.utils.ActivityUtils;
+import dev.oneuiproject.oneui.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
-    private final String[] facts = {
-            "Android was originally developed as an OS for digital cameras",
-            "Bill Gates originally planned to name Windows as 'Interface Manager'",
-            "But it was many times better before, don't you think?",
-            "Samsung says it started One UI development from scratch...",
-            "Windows 1.0 was less than 1MB in size and had a 16-bit color interface",
-            "ERR_FACTS_DID_NOT_LOAD",
-            "Will we wait for the day when Samsung completely abandons Exynos? Or they make it better...",
-            "Shell.HyperOS == Shell.MIUI",
-            "The design of the first prototype Android smartphone was very similar to the Blackberry.",
-            "There are statues of Android on the grounds of Google headquarters that refer to each version of the OS.",
-            "Turn the Mi logo upside down. You get the character '心', which translates to 'heart'.",
-            "Windows 10 wallpapers are not computer graphics. The logo was photographed!"
-    };
-    int randomIndex = (int) (Math.random() * facts.length);
-    String randomFact = facts[randomIndex];
-    BottomNavigationView bottomNavigationView;
-    ToolbarLayout toolbarLayout;
+public class MainActivity extends AppCompatActivity implements DrawerListAdapter.DrawerListener {
+
+    private ActivityMainBinding mBinding;
+    private FragmentManager mFragmentManager;
+    private final List<Fragment> fragments = new ArrayList<>();
 
     @SuppressLint({"ShowToast", "MissingInflatedId", "WrongThread"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
 
-        bottomNavigationView = findViewById(R.id.tabs_bottomnav_icon);
-        toolbarLayout = findViewById(R.id.toolbarLayout);
+        initFragmentList();
+        initDrawer();
+        initFragments();
 
-        ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
+//        ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
+//
+//        Intent geminiShortcut = new Intent(this, GeminiActivity.class);
+//        geminiShortcut.setAction(Intent.ACTION_VIEW);
+//
+//        ShortcutInfo gemini = new ShortcutInfo.Builder(this, "shortcut_gemini")
+//                .setShortLabel(getString(R.string.gemini))
+//                .setLongLabel(getString(R.string.gemini))
+//                .setIcon(Icon.createWithResource(this, R.drawable.gemini_ask_btn_shortcut))
+//                .setIntent(geminiShortcut)
+//                .build();
+//
+//        List<ShortcutInfo> shortcutInfoList = new ArrayList<>();
+//        shortcutInfoList.add(gemini);
+//        shortcutManager.setDynamicShortcuts(shortcutInfoList);
 
-        Intent geminiShortcut = new Intent(this, GeminiActivity.class);
-        geminiShortcut.setAction(Intent.ACTION_VIEW);
-        Intent sudokuShortcut = new Intent(this, SudokuActivity.class);
-        sudokuShortcut.setAction(Intent.ACTION_VIEW);
-
-        ShortcutInfo gemini = new ShortcutInfo.Builder(this, "shortcut_gemini")
-                .setShortLabel(getString(R.string.gemini))
-                .setLongLabel(getString(R.string.gemini))
-                .setIcon(Icon.createWithResource(this, R.drawable.gemini_ask_btn_shortcut))
-                .setIntent(geminiShortcut)
-                .build();
-
-        ShortcutInfo sudoku = new ShortcutInfo.Builder(this, "shortcut_sudoku_new")
-                .setShortLabel("Sudoku")
-                .setLongLabel("Sudoku")
-                .setIcon(Icon.createWithResource(this, R.drawable.sudoku_shortcut_new_sudoku))
-                .setIntent(sudokuShortcut)
-                .build();
-
-        List<ShortcutInfo> shortcutInfoList = new ArrayList<>();
-        shortcutInfoList.add(gemini);
-        shortcutInfoList.add(sudoku);
-        shortcutManager.setDynamicShortcuts(shortcutInfoList);
-
-        toolbarLayout.setTitle(getString(R.string.home));
-        toolbarLayout.setExpandedSubtitle(randomFact);
-        toolbarLayout.setNavigationButtonOnClickListener(v -> onBackPressed());
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.nav_host_fragment_activity_main, new HomeFragment()).commit();
-
-        bottomNavigationView.setOnItemSelectedListener(menuItem -> {
-            Fragment fragment = getFragmentBottomNavView(menuItem);
-            if (fragment != null) {
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.nav_host_fragment_activity_main, fragment);
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                transaction.commit();
-            }
-            return true;
-        });
     }
-    public Fragment getFragmentBottomNavView(MenuItem menuItem) {
-        toolbarLayout.findViewById(R.id.toolbarLayout);
-        Fragment fragment = null;
-        int itemId = menuItem.getItemId();
-        if (itemId == R.id.navigation_home) {
-            toolbarLayout.setTitle(getString(R.string.home));
-            toolbarLayout.setExpandedSubtitle(randomFact);
-            fragment = new HomeFragment();
-        } else if (itemId == R.id.navigation_utilities) {
-            toolbarLayout.setTitle(getString(R.string.utilities));
-            toolbarLayout.setExpandedSubtitle(getString(R.string.utilities_info));
-            fragment = new UtilitiesFragment();
-        } else if (itemId == R.id.navigation_friends) {
-            toolbarLayout.setTitle(getString(R.string.friends));
-            toolbarLayout.setExpandedSubtitle(getString(R.string.friends_info));
-            fragment = new FriendsFragment();
-        } else if (itemId == R.id.navigation_info) {
-            toolbarLayout.setTitle(getString(R.string.information));
-            toolbarLayout.setExpandedSubtitle(getString(R.string.information_info));
-            fragment = new InfoFragment();
-        }
-        return fragment;
+
+    private void initFragmentList() {
+        fragments.add(new HomeFragment());
+        fragments.add(new AppListFragment());
+        fragments.add(null);
+        fragments.add(new FriendsFragment());
+        fragments.add(new InfoFragment());
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void initDrawer() {
+        mBinding.drawerLayout.setDrawerButtonIcon(getDrawable(dev.oneuiproject.oneui.R.drawable.ic_oui_settings_outline));
+        mBinding.drawerLayout.setDrawerButtonTooltip(getString(R.string.settings));
+        mBinding.drawerLayout.setDrawerButtonOnClickListener(v ->
+                ActivityUtils.startPopOverActivity(this,
+                        new Intent(MainActivity.this, SettingsActivity.class),
+                        null,
+                        ActivityUtils.POP_OVER_POSITION_TOP | ActivityUtils.POP_OVER_POSITION_CENTER_HORIZONTAL));
+
+        mBinding.drawerListView.setLayoutManager(new LinearLayoutManager(this));
+        mBinding.drawerListView.setAdapter(new DrawerListAdapter(this, fragments, this));
+        mBinding.drawerListView.setItemAnimator(null);
+        mBinding.drawerListView.setHasFixedSize(true);
+        mBinding.drawerListView.seslSetLastRoundedCorner(false);
     }
 
     @Override
@@ -136,17 +104,61 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_about_app) {
-            startActivity(new Intent(this, AboutActivity.class));
-        } else if (item.getItemId() == R.id.menu_gemini) {
-            startActivity(new Intent(this, GeminiActivity.class));
-        } else if (item.getItemId() == R.id.menu_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
-        } else if (item.getItemId() == R.id.menu_math_game) {
-            startActivity(new Intent(this, MathGame.class));
-        } else if (item.getItemId() == R.id.menu_sudoku) {
-            startActivity(new Intent(this, SudokuActivity.class));
+        if (item.getItemId() == R.id.menu_check_root) {
+            Shell.Result result = Shell.cmd("su").exec();
+            if (result.isSuccess()) {
+                Toast.makeText(this, R.string.success, Toast.LENGTH_SHORT);
+            } else {
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle(getString(R.string.power_menu))
+                        .setMessage(getString(R.string.feature_unavailable_root))
+                        .setNegativeButton("OK", null)
+                        .create()
+                        .show();
+            }
         }
         return false;
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
+    }
+
+    private void initFragments() {
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        for (Fragment fragment : fragments) {
+            if (fragment != null) transaction.add(R.id.main_content, fragment);
+        }
+        transaction.commit();
+        mFragmentManager.executePendingTransactions();
+
+        onDrawerItemSelected(0);
+    }
+
+    @Override
+    public boolean onDrawerItemSelected(int position) {
+        Fragment newFragment = fragments.get(position);
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        for (Fragment fragment : mFragmentManager.getFragments()) {
+            transaction.hide(fragment);
+        }
+        transaction.show(newFragment).commit();
+
+        if (newFragment instanceof FragmentInfo) {
+            if (!((FragmentInfo) newFragment).isAppBarEnabled()) {
+                mBinding.drawerLayout.setExpanded(false, false);
+                mBinding.drawerLayout.setExpandable(false);
+            } else {
+                mBinding.drawerLayout.setExpandable(true);
+                mBinding.drawerLayout.setExpanded(false, false);
+            }
+            mBinding.drawerLayout.setTitle(getString(R.string.app_name), ((FragmentInfo) newFragment).getTitle());
+            mBinding.drawerLayout.setExpandedSubtitle(((FragmentInfo) newFragment).getTitle());
+        }
+        mBinding.drawerLayout.setDrawerOpen(false, true);
+
+        return true;
     }
 }

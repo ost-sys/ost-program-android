@@ -23,50 +23,12 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
-            <com.ost.application.ui.widget.CardView
+            <com.ost.application.ui.core.widget.CardView
                 android:id="@+id/about_bottom_ost"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:IconDrawable="@drawable/ost_logo"
                 app:TitleText="@string/operating_system_tester" />
-
-            <com.ost.application.ui.widget.CardView
-                android:id="@+id/about_update"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:IconDrawable="@drawable/ic_oui_refresh"
-                app:TitleText="@string/check_for_updates"
-                app:isDividerViewVisible="true"/>
-
-        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
-
-        <dev.oneuiproject.oneui.widget.Separator
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/tranlators"/>
-
-        <dev.oneuiproject.oneui.widget.RoundLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/oui_background_color"
-            android:orientation="vertical">
-
-            <com.ost.application.ui.widget.CardView
-                android:id="@+id/translator_uk"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:IconDrawable="@drawable/bohdan"
-                app:TitleText="Bohdan"
-                app:SummaryText="@string/translated_to_ukr"/>
-
-            <com.ost.application.ui.widget.CardView
-                android:id="@+id/translator_kk"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:IconDrawable="@drawable/milosoft"
-                app:TitleText="Milosoft"
-                app:SummaryText="@string/translated_to_kk"
-                app:isDividerViewVisible="true"/>
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 
@@ -81,22 +43,22 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
-            <com.ost.application.ui.widget.CardView
+            <com.ost.application.ui.core.widget.CardView
                 android:id="@+id/about_bottom_dev_yann"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:IconDrawable="@drawable/about_page_avatar_yann"
                 app:TitleText="Yanndroid" />
 
-            <com.ost.application.ui.widget.CardView
-                android:id="@+id/about_bottom_dev_mesa"
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/about_bottom_dev_salvo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:IconDrawable="@drawable/about_page_avatar_mesa"
-                app:TitleText="BlackMesa123"
+                app:IconDrawable="@drawable/about_page_avatar_salvo"
+                app:TitleText="Salvo Giangreco"
                 app:isDividerViewVisible="true" />
 
-            <com.ost.application.ui.widget.CardView
+            <com.ost.application.ui.core.widget.CardView
                 android:id="@+id/about_bottom_dev_tribalfs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -118,22 +80,22 @@
             android:layout_marginBottom="20dp"
             android:orientation="vertical">
 
-            <com.ost.application.ui.widget.CardView
+            <com.ost.application.ui.core.widget.CardView
                 android:id="@+id/about_bottom_oss_program"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="Open Source Program"
+                app:TitleText="@string/open_source_program"
                 app:SummaryText="Open source code of this application"/>
 
-            <com.ost.application.ui.widget.CardView
+            <com.ost.application.ui.core.widget.CardView
                 android:id="@+id/about_bottom_oss_apache"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:TitleText="Apache License 2.0"
-                app:SummaryText="androidx  •  material-components  •  lottie"
+                app:SummaryText="androidx  •  material-components-android • sesl-androidx  •  sesl-material-components-android  •  lottie"
                 app:isDividerViewVisible="true" />
 
-            <com.ost.application.ui.widget.CardView
+            <com.ost.application.ui.core.widget.CardView
                 android:id="@+id/about_bottom_oss_mit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -150,11 +112,6 @@
             app:title="@string/useful_links">
 
             <TextView
-                android:id="@+id/about_bottom_relative_ost_github"
-                style="@style/OneUI.RelativeLinkTextViewStyle"
-                android:text="@string/github" />
-
-            <TextView
                 android:id="@+id/about_bottom_relative_jetpack"
                 style="@style/OneUI.RelativeLinkTextViewStyle"
                 android:text="Android Jetpack" />
@@ -165,9 +122,19 @@
                 android:text="Material Components" />
 
             <TextView
-                android:id="@+id/about_bottom_relative_ouip"
+                android:id="@+id/about_bottom_relative_sesl_androidx"
                 style="@style/OneUI.RelativeLinkTextViewStyle"
-                android:text="OneUI Project" />
+                android:text="SESL Android Jetpack (Unofficial)" />
+
+            <TextView
+                android:id="@+id/about_bottom_relative_sesl_material"
+                style="@style/OneUI.RelativeLinkTextViewStyle"
+                android:text="SESL Material Components for Android (Unofficial)" />
+
+            <TextView
+                android:id="@+id/about_bottom_relative_design6"
+                style="@style/OneUI.RelativeLinkTextViewStyle"
+                android:text="OneUI6 Design Lib" />" />
 
         </dev.oneuiproject.oneui.widget.RelatedCard>
 

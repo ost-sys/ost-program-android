@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name" translatable="false">OST program</string>
+    <string name="app_name" translatable="false">OST Tools</string>
     <string name="github" translatable="false">GitHub</string>
     <string name="gemini" translatable="false">Gemini</string>
     <string name="settings">Settings</string>
@@ -9,51 +9,6 @@
     <string name="gemini_subtitle">Your AI helper</string>
     <string name="menu_about_gemini">About Gemini</string>
     <string name="about_gemini">What am I?\n\n* I am a large language model, also known as a conversational AI or chatbot, created by Google AI. \n* I am powered by one of Google\'s most advanced large language models (LLMs), which have been trained on a massive dataset of text and code. This allows me to generate text, translate languages, write different kinds of creative content, and answer your questions in an informative way.\n\nWhat can I do?\n\n* I can communicate and generate human-like text in response to a wide range of prompts and questions. For instance, I can provide summaries of factual topics or create stories.\n* I am still under development, but I have learned to perform many kinds of tasks, including\n\n    * I can answer your questions in an informative way, even if they are open ended, challenging, or strange.\n    * I can generate different creative text formats,  like poems, code, scripts, musical pieces, email, letters, etc. I will try my best to fulfill all your requirements.\n\nWhat are my limitations?\n\n* It\'s important to remember that I am still under development, and I am always learning. I may not always be able to perfectly understand your questions or requests, and my responses may not always be factually accurate.\n* I cannot perform actions in the real world, such as driving, eating, or having close relationships.\n* I don\'t have deep emotions or real-world experiences, so I can\'t claim to understand the world in the same way that a human does.\n\nWhat is my purpose?\n\n* My goal is to assist users with their questions and requests to the best of my ability, using the knowledge and information that I have been trained on.\n* I hope to be a tool that can help people learn new things, explore their creativity, and be more productive.</string>
-    <string name="text_view_info_text">Some information about the creator and the project is stored here!</string>
-    <string name="text_view_friends_text">My friends can be found here! Maybe you already know someone?</string>
-    <string name="text_view_utilities_text">Stores Programs (So far for Android), Windows activation keys, Magisk modules, Themes, wallpapers, etc.</string>
-    <string name="openvk" translatable="false">OpenVK</string>
-    <string name="telegram" translatable="false">Telegram</string>
-    <string name="youtube" translatable="false">YouTube</string>
-    <string name="donation_alerts" translatable="false">Donation Alerts</string>
-    <string name="windows_7" translatable="false">Windows 7</string>
-    <string name="windows_8" translatable="false">Windows 8</string>
-    <string name="windows_10_11" translatable="false">Windows 10/11</string>
-    <string name="commands">Commands</string>
-    <string name="gemini_request_field">Request field</string>
-    <string name="enterprise">Enterprise</string>
-    <string name="professional">Professional</string>
-    <string name="core" translatable="false">Core</string>
-    <string name="home_win">Home</string>
-    <string name="home">Home</string>
-    <string name="wallpapers">Wallpapers</string>
-    <string name="sounds">System sounds</string>
-    <string name="music">Music</string>
-    <string name="useful_programs">Useful programs</string>
-    <string name="magisk_manager" translatable="false">Magisk Manager</string>
-    <string name="pixelify" translatable="false">Pixelify</string>
-    <string name="ad_blocker">Ad blocker</string>
-    <string name="safetynet_fix" translatable="false">SafetyNet Fix</string>
-    <string name="knox_patch" translatable="false">KnoxPatch</string>
-    <string name="trueAnswer">True</string>
-    <string name="falseAnswer">False</string>
-    <string name="resultButton">Result</string>
-    <string name="clearButton">Clear</string>
-    <string name="answerEditText">Your answer here</string>
-    <string name="cleanText">Cleaned!</string>
-    <string name="menu_about">Information</string>
-    <string name="nullAnswer">The answer input field is empty or contains invalid characters</string>
-    <string name="trueAnswerBox">True</string>
-    <string name="falseAnswerBox">False</string>
-    <string name="refreshQuestion">The task has been updated</string>
-    <string name="refreshQuestionButton">Update task</string>
-    <string name="magisk_app_info">An open source Android utility that allows you to gain, manage, and hide root access on your system.</string>
-    <string name="pixelify_info">Magisk module to enables pixel exclusive features and UI</string>
-    <string name="adblocker_info">Magisk module to block ads on android</string>
-    <string name="safety_net_info">Google SafetyNet attestation workarounds for Magisk</string>
-    <string name="knox_patch_info">LSPosed module to get Samsung apps/features working again in your rooted Galaxy device.</string>
-    <string name="ultra_ux_theme_patcher" translatable="false">Ultra UX Theme Patcher</string>
-    <string name="sharex" translatable="false">ShareX</string>
     <string name="useful_links">Useful links</string>
     <string name="open_source_licenses">Open source licenses</string>
     <string name="one_ui_design_developers">One UI Design developers</string>
@@ -61,30 +16,9 @@
     <string name="gemini_hint_text">Answer on your request will appear here</string>
     <string name="gemini_input_text_request_field">Input your request here</string>
     <string name="gemini_ask_button">Ask Gemini</string>
-    <string name="name">Name</string>
-    <string name="user_name">Gadji</string>
-    <string name="nickname">Nickname</string>
-    <string name="operating_system_tester" translatable="false">Operating System Tester</string>
-    <string name="age">Age</string>
-    <string name="location">Location</string>
-    <string name="location_info">Russia, Dagestan</string>
-    <string name="birthday">Birthday</string>
-    <string name="birthday_info">September 16, 2007</string>
-    <string name="timezone">Timezone</string>
-    <string name="cpu">CPU</string>
-    <string name="gpu">GPU</string>
-    <string name="ram">RAM</string>
-    <string name="rom">ROM</string>
-    <string name="board">Board</string>
-    <string name="model">Model</string>
-    <string name="android" translatable="false">Android</string>
-    <string name="camera">Camera</string>
-    <string name="shell">Shell</string>
-    <string name="display">Display</string>
-    <string name="battery">Battery</string>
     <string name="vm" translatable="false">VM</string>
     <string name="video_editing_tool">Video editing tool</string>
-    <string name="video_reconding_tool">Video recording tool</string>
+    <string name="video_recording_tool">Video recording tool</string>
     <string name="preview_tool">Preview tool</string>
     <string name="dsys1100_info">Nanostreamer, guy xd.</string>
     <string name="nerok_info">An ordinary schoolboy from Ukraine who is interested in IT</string>
@@ -93,56 +27,24 @@
     <string name="kernel64_info">I like experimenting with computers and phones.</string>
     <string name="danielm_info">A completely ordinary person</string>
     <string name="tinelix_info">I am Dmitry. I work on YouTube, I have been programming in various languages since 2018.</string>
-    <string name="hackuser_info">Andrey, Kyiv, I\'m interested in computers and OS, hackintosh fan</string>
+    <string name="hackuser_info">An ordinary person who is interested in technology.</string>
     <string name="ertor_info">My name is Ertorik! I am interested in programming, hardware and everything that is somehow related to IT</string>
     <string name="happywin8_info">Hello, I am a very ordinary person, I shoot videos, and play games. xD</string>
     <string name="osmixup_info">An ordinary person who creates his own website and develops various programs in the C# programming language. Self-education in this area.</string>
-    <string name="clyt_info">Hi! I\'m CreeperLifeYT. And I love old computer hardware and software, including Web 1.0</string>
-    <string name="milosoft_info">An ordinary person with nothing to do</string>
-    <string name="utilities">Utilities</string>
+    <string name="home">Home</string>
     <string name="friends">Friends</string>
     <string name="information">Information</string>
     <string name="social_links">Social links</string>
-    <string name="show_basic_inforamtion">Show basic inforamtion</string>
-    <string name="show_video_programs">Show video programs</string>
-    <string name="show_my_current_pc">Show my current PC</string>
-    <string name="show_my_current_smartphone">Show my current smartphone</string>
-    <string name="basic_information">Basic information</string>
-    <string name="video_programs">Video programs</string>
-    <string name="my_current_pc">My current PC</string>
-    <string name="my_current_smartphone">My current smartphone (Galaxy S21 5G)</string>
-    <string name="programs_for_android">Programs for Android</string>
-    <string name="programs_for_android_info">Useful programs for phones based on Android OS</string>
-    <string name="magisk_modules">Magisk modules</string>
-    <string name="magisk_modules_info">Magisk modules that can fix something or add new useful features</string>
-    <string name="customization">Customization</string>
-    <string name="customization_info">Themes, beautiful wallpapers, cursors and such are stored here</string>
-    <string name="product_keys_for_windows">Product keys for Windows</string>
-    <string name="product_keys_for_windows_info">Activation keys for Windows, starting with Windows 7 and ending with Windows 11</string>
-    <string name="chrome_info">A browser developed by Google based on the free Chromium browser and the Blink engine</string>
-    <string name="termux_info">Terminal for Android with Material You design</string>
-    <string name="tgmonet_info">With this application, you can create themes for Tg and TgX clients. It uses Android Material3 Color (as in Play Market)</string>
-    <string name="appmanager_info">A convenient utility for managing all applications on your phone</string>
-    <string name="totalcmd_info">Fast and convenient file manager for your phone</string>
-    <string name="spacedesk_info">The spacedesk Video Wall Software Engine enables convenient and inexpensive setup of display walls using a single PC.</string>
-    <string name="gmsflags_info">GMS Flags is a tool for changing parameters in Google services to activate or deactivate certain functionality in Google applications</string>
-    <string name="kdeconnect_info">Multi-platform app that allows your devices to communicate</string>
-    <string name="friends_info">List of all my friends</string>
-    <string name="utilities_info">Section of programs and modules that I use</string>
-    <string name="information_info">Information about me</string>
     <string name="switches">Switches</string>
     <string name="system_default">System default</string>
     <string name="dark_mode_settings">Dark mode settings</string>
     <string name="anton_info">Anton is like Anton, what can I say, I like to play CS2 and walk, and watch TikToks</string>
-    <string name="tranlators">Translators</string>
-    <string name="translated_to_ukr">Translated the program into Ukrainian</string>
-    <string name="translated_to_kk">Translated the program into Kazakh</string>
-    <string name="gemini_typing">Gemini is typing...</string>
-    <string name="checking_for_updates">Checking for updates...</string>
+    <string name="gemini_typing">Gemini is typing…</string>
+    <string name="checking_for_updates">Checking for updates…</string>
     <string name="error_getting_version_information">Error getting version data</string>
     <string name="update_available">Update available!</string>
     <string name="latest_version_installed">Latest version installed</string>
-    <string name="downloading_update">Downloading update...</string>
+    <string name="downloading_update">Downloading update…</string>
     <string name="update">Update</string>
     <string name="download_canceled">Download canceled</string>
     <string name="cancel">Cancel</string>
@@ -155,81 +57,62 @@
     <string name="gemini_attention">Gemini does not officially work in Russia, Belarus and Ukraine. Click \'OK\' to open DNS server settings (The text below will be copied automatically)</string>
     <string name="attention">Attention</string>
     <string name="ignore">Ignore</string>
-    <string name="what_is_magisk">What is Magisk?</string>
-    <string name="what_is_magisk_ask">What is Magisk and what is it for?</string>
     <string name="tu4wkl_info">Android developer from Kyiv, Ukraine. Founder of TukiOS, maintainer of different Xiaomi and Samsung devices</string>
     <string name="install_update_q">Install update?</string>
     <string name="install">Install</string>
-    <!-- SUDOKU -->
+    <string name="back">Back</string>
+    <string name="tiktok" translatable="false">TikTok</string>
+    <string name="operating_system_tester" translatable="false">Operating System Tester</string>
+    <string name="telegram" translatable="false">Telegram</string>
+    <string name="youtube" translatable="false">YouTube</string>
+    <string name="feature_unavailable_root">This feature is currently unavailable on your device. This feature requires ROOT access!</string>
+    <string name="power_menu">Power menu</string>
+    <string name="application_action_selection">Choose what you want to do with this application</string>
+    <string name="uninstall">Uninstall</string>
+    <string name="disable">Disable</string>
+    <string name="hide_system_apps">Hide system apps</string>
+    <string name="show_system_apps">Show system apps</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="turn_off_q">Are you sure you want to turn off your phone?</string>
+    <string name="reboot_system_q">Are you sure you want to reboot your phone into system?</string>
+    <string name="reboot_recovery_q">Are you sure you want to reboot your phone into Recovery?</string>
+    <string name="reboot_download_q">Are you sure you want to reboot your phone into Download Mode?</string>
+    <string name="reboot_fastboot_q">Are you sure you want to reboot your phone into Fastboot?</string>
+    <string name="reboot_fastbootd_q">Are you sure you want to reboot your phone into FastbootD?</string>
+    <string name="current_devices">My current devices</string>
+    <string name="computer">Computer</string>
+    <string name="information_headphones">Click here to see information about Galaxy Buds 2</string>
+    <string name="information_pc">Click here to see PC specifications</string>
+    <string name="second_devices">My second devices</string>
+    <string name="open_attention_again">Press here to open attention again</string>
+    <string name="sr_fail">Unable to enable speech recognition</string>
+    <string name="sr_permission_r">Permission to record audio is required.</string>
+    <string name="gemini_fail">Sorry, but something went wrong</string>
+    <string name="list">List</string>
+    <string name="list_action_button">List with action button</string>
+    <string name="open_source_program">Open Source Program</string>
+    <string name="success">Success</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
-    <string name="theme_color">Theme Color</string>
-    <string name="theme_color_summary">Change the app color</string>
-    <string name="general">General</string>
-    <string name="keep_screen_on">Keep screen on</string>
-    <string name="keep_screen_on_summary">Keep screen on while playing.</string>
-    <string name="appearance">Appearance</string>
-    <string name="grid_box_colors">Grid box colors</string>
-    <string name="grid_box_colors_summary">Turn the color of the boxes on or off.</string>
-    <string name="invert_colors">Invert colors</string>
-    <string name="invert_colors_summary">Invert the color of the predefined and user added numbers.</string>
-    <!--<string name="hint_color">Hint number color</string>
-    <string name="hint_color_summary">Change the color of hint numbers.</string>
-    <string name="error_color">Error background color</string>
-    <string name="error_color_summary">Change the color of error fields.</string>-->
-    <string name="dev_options">Developer options</string>
-    <string name="secure_flag">Secure Flag</string>
-    <string name="how_to_play">How to play</string>
-    <string name="how_to_play_summary">Tap a field to add or remove the number and notes, or get the solution for this field. You can also long click it to clear the number. Each row, column and square can only contain a number once.</string>
-    <string name="restore_all_settings">Restore all settings</string>
-    <string name="about_sudoku">About Sudoku</string>
-    <string name="translations">Translations</string>
-    <string name="undo">Undo</string>
-    <string name="pause">Pause</string>
-    <string name="resume">Resume</string>
-    <string name="duplicate">Duplicate</string>
-    <string name="solution">Solution</string>
-    <string name="share">Share</string>
-    <string name="clear">Clear</string>
-    <string name="save">Save</string>
-    <string name="notes">Notes</string>
-    <string name="hint">Hint</string>
-    <string name="remove">Remove</string>
-    <string name="initial_game">Initial Game</string>
-    <string name="current_game">Current Game</string>
-    <string name="share_sudoku">Share Sudoku</string>
-    <string name="play_sudoku">Play Sudoku</string>
-    <string name="solve_sudoku">Solve Sudoku</string>
-    <string name="new_sudoku">New Sudoku</string>
-    <string name="rename">Rename</string>
-    <string name="delete">Delete</string>
-    <string name="delete_sudoku">Delete this Game?</string>
-    <string name="generate">Generate</string>
-    <string name="make_own">Make Own</string>
-    <string name="_import">Import</string>
-    <string name="easy">Easy</string>
-    <string name="medium">Medium</string>
-    <string name="hard">Hard</string>
-    <string name="pick">Pick</string>
-    <string name="done">Done</string>
-    <string name="completed_no_error_title">Finished</string>
-    <string name="completed_error_title">Completed with Errors</string>
-    <string name="completed_error_message">You filled the game, but there are errors.</string>
-    <string name="dismiss">Dismiss</string>
-    <string name="show_errors">Show Errors</string>
-    <string name="time">Time</string>
-    <string name="size">Size</string>
-    <string name="difficulty">Difficulty</string>
-    <string name="elapsed_time">Elapsed time: %1$s</string>
-    <string name="current_time">Time: %1$s</string>
-    <string name="select_file">Select File</string>
-    <string name="successfully_imported">Successfully imported %s</string>
-    <string name="failed_to_import_game">Failed to Import Game</string>
-    <string name="error">Error</string>
-    <string name="invalid_game">Invalid Game</string>
-    <string name="no_solution">No solution</string>
-    <string name="multiple_solutions">Multiple solutions</string>
-    <string name="game_added_to_list">Game added to list</string>
-    <string name="secure_flag_summary">Block Screenshots and hide screen in recent Apps.</string>
-    <string name="back">Back</string>
+    <string name="app_list">App list</string>
+    <string name="cpu">CPU</string>
+    <string name="gpu">GPU</string>
+    <string name="ram">RAM</string>
+    <string name="rom">ROM</string>
+    <string name="motherboard">Motherboard</string>
+    <string name="turn_off">Turn off</string>
+    <string name="turn_off_s">Turn off the phone</string>
+    <string name="reboot">Reboot</string>
+    <string name="reboot_system_s">Reboot device to system</string>
+    <string name="reboot_recovery">Reboot to Recovery</string>
+    <string name="reboot_recovery_s">Reboot device to recovery</string>
+    <string name="reboot_download">Reboot to Download Mode (Samsung Only)</string>
+    <string name="reboot_download_s">Reboot device to Download Mode</string>
+    <string name="reboot_fastboot">Reboot to Fastboot</string>
+    <string name="reboot_fastboot_s">Reboot device to Fastboot</string>
+    <string name="reboot_fastbootd">Reboot to FastbootD</string>
+    <string name="reboot_fastbootd_s">Reboot device to FastbootD</string>
+    <string name="zhh4_info">A regular micro-youtuber about games.</string>
+    <string name="shagalin_info">I shoot about games, sometimes I program some crap.</string>
 </resources>

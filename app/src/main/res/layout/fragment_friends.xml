@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.friends.FriendsFragment"
+    tools:context=".ui.fragment.FriendsFragment"
     android:orientation="vertical">
 
     <dev.oneuiproject.oneui.widget.RoundLinearLayout
@@ -13,7 +13,7 @@
         android:background="@color/oui_background_color"
         android:orientation="vertical">
 
-        <com.ost.application.ui.widget.CardView
+        <com.ost.application.ui.core.widget.CardView
             android:id="@+id/friends_dsys1100"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
             app:TitleText="dsys1100"
             app:SummaryText="@string/dsys1100_info"/>
 
-        <com.ost.application.ui.widget.CardView
+        <com.ost.application.ui.core.widget.CardView
             android:id="@+id/friends_nerok"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
             app:SummaryText="@string/nerok_info"
             app:isDividerViewVisible="true"/>
 
-        <com.ost.application.ui.widget.CardView
+        <com.ost.application.ui.core.widget.CardView
             android:id="@+id/friends_dimalq"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             app:SummaryText="@string/DimaLQ_info"
             app:isDividerViewVisible="true"/>
 
-        <com.ost.application.ui.widget.CardView
+        <com.ost.application.ui.core.widget.CardView
             android:id="@+id/friends_bohdan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
             app:SummaryText="@string/bohdan_info"
             app:isDividerViewVisible="true"/>
 
-        <com.ost.application.ui.widget.CardView
+        <com.ost.application.ui.core.widget.CardView
             android:id="@+id/friends_kernel64"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,27 +62,7 @@
             app:SummaryText="@string/kernel64_info"
             app:isDividerViewVisible="true"/>
 
-        <com.ost.application.ui.widget.CardView
-            android:id="@+id/friends_danielm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:IconDrawable="@drawable/danielm"
-            app:TitleText="Daniel Myslivets"
-            app:SummaryText="@string/danielm_info"
-            app:isDividerViewVisible="true"/>
-
-        <com.ost.application.ui.widget.CardView
-            android:id="@+id/friends_tinelix"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:IconDrawable="@drawable/tinelix"
-            app:TitleText="Tinelix"
-            app:SummaryText="@string/tinelix_info"
-            app:isDividerViewVisible="true"/>
-
-        <com.ost.application.ui.widget.CardView
+        <com.ost.application.ui.core.widget.CardView
             android:id="@+id/friends_hackuser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -92,7 +72,7 @@
             app:SummaryText="@string/hackuser_info"
             app:isDividerViewVisible="true" />
 
-        <com.ost.application.ui.widget.CardView
+        <com.ost.application.ui.core.widget.CardView
             android:id="@+id/friends_ertor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -102,7 +82,7 @@
             app:SummaryText="@string/ertor_info"
             app:isDividerViewVisible="true"/>
 
-        <com.ost.application.ui.widget.CardView
+        <com.ost.application.ui.core.widget.CardView
             android:id="@+id/friends_happywin8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -112,7 +92,7 @@
             app:SummaryText="@string/happywin8_info"
             app:isDividerViewVisible="true"/>
 
-        <com.ost.application.ui.widget.CardView
+        <com.ost.application.ui.core.widget.CardView
             android:id="@+id/friends_rivixal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -122,27 +102,7 @@
             app:SummaryText="@string/osmixup_info"
             app:isDividerViewVisible="true"/>
 
-        <com.ost.application.ui.widget.CardView
-            android:id="@+id/friends_clyt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:IconDrawable="@drawable/clyt"
-            app:TitleText="CreepyLifeYT"
-            app:SummaryText="@string/clyt_info"
-            app:isDividerViewVisible="true"/>
-
-        <com.ost.application.ui.widget.CardView
-            android:id="@+id/friends_milosoft"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:IconDrawable="@drawable/milosoft"
-            app:TitleText="Milosoft"
-            app:SummaryText="@string/milosoft_info"
-            app:isDividerViewVisible="true"/>
-
-        <com.ost.application.ui.widget.CardView
+        <com.ost.application.ui.core.widget.CardView
             android:id="@+id/friends_anton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -152,7 +112,7 @@
             app:SummaryText="@string/anton_info"
             app:isDividerViewVisible="true"/>
 
-        <com.ost.application.ui.widget.CardView
+        <com.ost.application.ui.core.widget.CardView
             android:id="@+id/friends_tu4wkl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -160,6 +120,57 @@
             app:IconDrawable="@drawable/tu4wkl"
             app:TitleText="pachadomenic"
             app:SummaryText="@string/tu4wkl_info"
+            app:isDividerViewVisible="true"/>
+
+        <com.ost.application.ui.core.widget.CardView
+            android:id="@+id/friends_zhh4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:IconDrawable="@drawable/zhh4"
+            app:TitleText="zhh4"
+            app:SummaryText="@string/zhh4_info"
+            app:isDividerViewVisible="true"/>
+
+        <com.ost.application.ui.core.widget.CardView
+            android:id="@+id/friends_shagalin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:IconDrawable="@drawable/zhh4"
+            app:TitleText="Danya Shagalin"
+            app:SummaryText="@string/shagalin_info"
+            app:isDividerViewVisible="true"/>
+
+    </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+    <dev.oneuiproject.oneui.widget.Separator
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <dev.oneuiproject.oneui.widget.RoundLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/oui_background_color"
+        android:orientation="vertical">
+
+        <com.ost.application.ui.core.widget.CardView
+            android:id="@+id/friends_danielm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:IconDrawable="@drawable/danielm"
+            app:TitleText="Daniel Myslivets"
+            app:SummaryText="@string/danielm_info"/>
+
+        <com.ost.application.ui.core.widget.CardView
+            android:id="@+id/friends_tinelix"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:IconDrawable="@drawable/tinelix"
+            app:TitleText="Tinelix"
+            app:SummaryText="@string/tinelix_info"
             app:isDividerViewVisible="true"/>
 
     </dev.oneuiproject.oneui.widget.RoundLinearLayout>

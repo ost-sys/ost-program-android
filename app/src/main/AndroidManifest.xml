@@ -39,7 +39,7 @@
         android:theme="@style/OneUITheme"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".SplashActivity"
+            android:name=".MainActivity"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize"
             android:exported="true"
             android:launchMode="singleTop">
@@ -62,26 +62,8 @@
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".AboutGeminiActivity"
-            android:exported="false" />
-        <activity
-            android:name=".GeminiActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MathGame"
-            android:exported="false" />
-        <activity
             android:name=".AboutActivity"
             android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="false"/>
-        <activity
-            android:name=".sudoku.SudokuActivity"
-            android:exported="false"/>
-        <activity
-            android:name=".sudoku.SudokuSettingsActivity"
-            android:exported="false"/>
 
         <meta-data
             android:name="SamsungBasicInteraction"
@@ -98,7 +80,6 @@
         <meta-data
             android:name="theming-meta-xml"
             android:value="@xml/meta_998_sesl_app" />
-
 
         <provider
             android:name="androidx.core.content.FileProvider"

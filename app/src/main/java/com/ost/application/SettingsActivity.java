@@ -2,9 +2,11 @@ package com.ost.application;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,11 +15,11 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
-import dev.oneuiproject.oneui.base.FragmentInfo;
+import com.ost.application.ui.core.base.FragmentInfo;
 import dev.oneuiproject.oneui.layout.ToolbarLayout;
 import dev.oneuiproject.oneui.preference.HorizontalRadioPreference;
 import dev.oneuiproject.oneui.preference.internal.PreferenceRelatedCard;
-import dev.oneuiproject.oneui.utils.DarkModeUtils;
+import com.ost.application.utils.DarkModeUtils;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -98,6 +100,12 @@ public class SettingsActivity extends AppCompatActivity {
 
         @SuppressLint("RestrictedApi")
         private void initPreferences() {
+
+            Preference aboutAppPreference = findPreference("about_app");
+            if (aboutAppPreference != null) {
+                aboutAppPreference.setOnPreferenceClickListener(this);
+            }
+
             int darkMode = DarkModeUtils.getDarkMode(mContext);
 
             HorizontalRadioPreference darkModePref = findPreference("dark_mode");
@@ -113,6 +121,11 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         public boolean onPreferenceClick(Preference preference) {
+            if (preference.getKey().equals("about_app")) {
+                Intent intent = new Intent(requireContext(), AboutActivity.class);
+                startActivity(intent);
+                return true;
+            }
             return false;
         }
 

@@ -18,4 +18,12 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory>
+
+        <Preference
+            android:key="about_app"
+            android:title="@string/about_app"/>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:seslUseCustomHeight="true"
-        app:seslHeightProportion="0.5">
+        app:seslHeightProportion="0.5"
+        android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/about_ctl"
@@ -52,6 +53,14 @@
                     android:textSize="14sp"
                     android:textColor="@color/about_page_secondary_text_color" />
 
+                <Button
+                    android:id="@+id/about_update"
+                    style="@style/OneUI.AppInfoButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/check_for_updates"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -79,6 +88,13 @@
                         android:layout_height="48dp"
                         android:background="?attr/actionBarItemBackground"
                         app:srcCompat="@drawable/about_page_youtube" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/about_header_tt"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="?attr/actionBarItemBackground"
+                        app:srcCompat="@drawable/about_page_tt" />
 
                 </LinearLayout>
 

@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -26,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -38,7 +38,6 @@ import androidx.core.content.FileProvider;
 import com.google.android.material.appbar.AppBarLayout;
 import com.ost.application.databinding.ActivityAboutBinding;
 import com.ost.application.databinding.ActivityAboutContentBinding;
-import com.ost.application.ui.widget.CardView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,6 +67,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
     private static final int PERMISSION_REQUEST_UNKNOWN_APPS = 3;
     private static final int PERMISSION_REQUEST_NOTIFICATION = 4;
     private String apkUrl;
+    private String changelog;
     private ProgressDialog progressDialog;
     private long downloadId;
     private AlertDialog downloadDialog;
@@ -108,12 +108,12 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                     PERMISSION_REQUEST_ALL_FILES);
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!Settings.canDrawOverlays(this)) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, PERMISSION_REQUEST_UNKNOWN_APPS);
-            }
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            if (!Settings.canDrawOverlays(this)) {
+//                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+//                startActivityForResult(intent, PERMISSION_REQUEST_UNKNOWN_APPS);
+//            }
+//        }
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -157,6 +157,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 JSONObject latestRelease = releases.getJSONObject(0);
                 String latestVersionName = latestRelease.getString("tag_name");
                 apkUrl = latestRelease.getJSONArray("assets").getJSONObject(0).getString("browser_download_url");
+                changelog = latestRelease.getString("body");
 
                 return latestVersionName;
 
@@ -166,13 +167,14 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
             }
         }
 
+        @SuppressLint("InflateParams")
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             progressDialog.dismiss();
 
             if (result == null) {
-                mBottomContent.aboutUpdate.setSummaryText(getString(R.string.error_getting_version_information));
+                mBinding.aboutUpdate.setText(getString(R.string.error_getting_version_information));
                 Toast.makeText(AboutActivity.this, R.string.error_getting_version_information, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -180,16 +182,16 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
             String currentVersionName = getCurrentVersionName();
 
             if (result.compareTo(currentVersionName) > 0) {
-                mBottomContent.aboutUpdate.setSummaryText(getString(R.string.update_available));
+                mBinding.aboutUpdate.setText(getString(R.string.update_available));
                 Toast.makeText(AboutActivity.this, R.string.update_available, Toast.LENGTH_SHORT).show();
                 new AlertDialog.Builder(AboutActivity.this)
                         .setTitle(getString(R.string.update_available))
-                        .setMessage(R.string.install_update_q)
+                        .setMessage(getString(R.string.install_update_q) + "\n\n" + changelog)
                         .setPositiveButton(R.string.install, (dialog, id) -> startDownload())
                         .setNegativeButton(getString(R.string.cancel), null)
                         .show();
             } else {
-                mBottomContent.aboutUpdate.setSummaryText(getString(R.string.latest_version_installed) + ": " + BuildConfig.VERSION_NAME);
+                mBinding.aboutUpdate.setText(getString(R.string.latest_version_installed));
                 Toast.makeText(AboutActivity.this, R.string.latest_version_installed, Toast.LENGTH_SHORT).show();
             }
         }
@@ -242,8 +244,8 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 query.setFilterById(downloadId);
                 Cursor cursor = downloadManager.query(query);
                 if (cursor.moveToFirst()) {
-                    int bytesDownloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-                    int bytesTotal = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                    @SuppressLint("Range") int bytesDownloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                    @SuppressLint("Range") int bytesTotal = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
                     int progress = (bytesDownloaded * 100) / bytesTotal;
                     publishProgress((long) progress);
 
@@ -288,11 +290,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
 
         switch (requestCode) {
             case PERMISSION_REQUEST_STORAGE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                } else {
-                    Toast.makeText(AboutActivity.this, getString(R.string.write_to_external_storage_permission), Toast.LENGTH_SHORT).show();
-                }
                 break;
             case PERMISSION_REQUEST_ALL_FILES:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -335,7 +332,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         if (mEnableBackToHeader && mBinding.aboutAppBar.seslIsCollapsed()) {
             mBinding.aboutAppBar.setExpanded(true);
         } else {
-            // Fix O memory leak
             if (Build.VERSION.SDK_INT
                     == Build.VERSION_CODES.O && isTaskRoot()) {
                 finishAfterTransition();
@@ -376,6 +372,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
     public boolean isInMultiWindowMode() {
         return Build.VERSION.SDK_INT >= 24 && super.isInMultiWindowMode();
     }
+    @SuppressLint("RestrictedApi")
     private void resetAppBar(Configuration config) {
         ToolbarLayoutUtils.hideStatusBarForLandscape(this, config.orientation);
         ToolbarLayoutUtils.updateListBothSideMargin(this,
@@ -417,51 +414,48 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         mBinding.aboutHeaderAppVersion.setText(getString(R.string.version) + " " + BuildConfig.VERSION_NAME);
         mBinding.aboutBottomAppVersion.setText(getString(R.string.version) + " " + BuildConfig.VERSION_NAME);
 
+        mBinding.aboutUpdate.setOnClickListener(v -> checkUpdate());
+
         mBinding.aboutHeaderGithub.setOnClickListener(this);
         TooltipCompat.setTooltipText(mBinding.aboutHeaderGithub, getString(R.string.github));
         mBinding.aboutHeaderTelegram.setOnClickListener(this);
         TooltipCompat.setTooltipText(mBinding.aboutHeaderTelegram, getString(R.string.telegram));
         mBinding.aboutHeaderYoutube.setOnClickListener(this);
         TooltipCompat.setTooltipText(mBinding.aboutHeaderYoutube, getString(R.string.youtube));
+        mBinding.aboutHeaderTt.setOnClickListener(this);
+        TooltipCompat.setTooltipText(mBinding.aboutHeaderYoutube, getString(R.string.tiktok));
 
         mBottomContent.aboutBottomOst.setOnClickListener(this);
-        mBottomContent.aboutUpdate.setOnClickListener(v -> checkUpdate());
-
-        mBottomContent.translatorUk.setOnClickListener(this);
-        mBottomContent.translatorKk.setOnClickListener(this);
 
         mBottomContent.aboutBottomDevYann.setOnClickListener(this);
-        mBottomContent.aboutBottomDevMesa.setOnClickListener(this);
+        mBottomContent.aboutBottomDevSalvo.setOnClickListener(this);
         mBottomContent.aboutBottomDevTribalfs.setOnClickListener(this);
 
         mBottomContent.aboutBottomOssProgram.setOnClickListener(this);
         mBottomContent.aboutBottomOssApache.setOnClickListener(this);
         mBottomContent.aboutBottomOssMit.setOnClickListener(this);
 
-        mBottomContent.aboutBottomRelativeOstGithub.setOnClickListener(this);
         mBottomContent.aboutBottomRelativeJetpack.setOnClickListener(this);
         mBottomContent.aboutBottomRelativeMaterial.setOnClickListener(this);
-        mBottomContent.aboutBottomRelativeOuip.setOnClickListener(this);
+        mBottomContent.aboutBottomRelativeSeslAndroidx.setOnClickListener(this);
+        mBottomContent.aboutBottomRelativeSeslMaterial.setOnClickListener(this);
+        mBottomContent.aboutBottomRelativeDesign6.setOnClickListener(this);
     }
 
     private void setBottomContentEnabled(boolean enabled) {
         mBinding.aboutHeaderGithub.setEnabled(!enabled);
         mBinding.aboutHeaderTelegram.setEnabled(!enabled);
         mBinding.aboutHeaderYoutube.setEnabled(!enabled);
+        mBinding.aboutHeaderTt.setEnabled(!enabled);
         mBottomContent.aboutBottomOst.setEnabled(enabled);
-        mBottomContent.aboutUpdate.setEnabled(enabled);
-        mBottomContent.translatorUk.setEnabled(enabled);
-        mBottomContent.translatorKk.setEnabled(enabled);
         mBottomContent.aboutBottomDevYann.setEnabled(enabled);
-        mBottomContent.aboutBottomDevMesa.setEnabled(enabled);
+        mBottomContent.aboutBottomDevSalvo.setEnabled(enabled);
         mBottomContent.aboutBottomDevTribalfs.setEnabled(enabled);
         mBottomContent.aboutBottomOssProgram.setEnabled(enabled);
         mBottomContent.aboutBottomOssApache.setEnabled(enabled);
         mBottomContent.aboutBottomOssMit.setEnabled(enabled);
-        mBottomContent.aboutBottomRelativeOstGithub.setEnabled(enabled);
         mBottomContent.aboutBottomRelativeJetpack.setEnabled(enabled);
         mBottomContent.aboutBottomRelativeMaterial.setEnabled(enabled);
-        mBottomContent.aboutBottomRelativeOuip.setEnabled(enabled);
     }
 
     @Override
@@ -475,16 +469,14 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 url = "https://t.me/oneuiproject";
             } else if (v.getId() == mBinding.aboutHeaderYoutube.getId()) {
                 url = "https://www.youtube.com/channel/UC6wNi6iQFVSnd-eJivuG3_Q";
+            } else if (v.getId() == mBinding.aboutHeaderTt.getId()) {
+                url = "https://www.tiktok.com/@ost5566?_t=8qVU4QZzE3n&_r=1";
             } else if (v.getId() == mBottomContent.aboutBottomOst.getId()) {
                 url = "https://github.com/ost-sys/";
-            } else if (v.getId() == mBottomContent.translatorUk.getId()) {
-                url = "https://Bohdan157.github.io";
-            } else if (v.getId() == mBottomContent.translatorKk.getId()) {
-                url = "https://www.youtube.com/@Mazurobi";
             } else if (v.getId() == mBottomContent.aboutBottomDevYann.getId()) {
                 url = "https://github.com/Yanndroid";
-            } else if (v.getId() == mBottomContent.aboutBottomDevMesa.getId()) {
-                url = "https://github.com/XDABlackMesa123";
+            } else if (v.getId() == mBottomContent.aboutBottomDevSalvo.getId()) {
+                url = "https://github.com/salvogiangri";
             } else if (v.getId() == mBottomContent.aboutBottomDevTribalfs.getId()) {
                 url = "https://github.com/tribalfs";
             } else if (v.getId() == mBottomContent.aboutBottomOssProgram.getId()) {
@@ -493,14 +485,18 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 url = "https://www.apache.org/licenses/LICENSE-2.0.txt";
             } else if (v.getId() == mBottomContent.aboutBottomOssMit.getId()) {
                 url = "https://github.com/OneUIProject/sesl/blob/main/LICENSE";
-            } else if (v.getId() == mBottomContent.aboutBottomRelativeOstGithub.getId()) {
-                url = "https://github.com/ost-sys/ost-program-android";
             } else if (v.getId() == mBottomContent.aboutBottomRelativeJetpack.getId()) {
                 url = "https://developer.android.com/jetpack";
             } else if (v.getId() == mBottomContent.aboutBottomRelativeMaterial.getId()) {
                 url = "https://material.io/develop/android";
-            } else if (v.getId() == mBottomContent.aboutBottomRelativeOuip.getId()) {
-                url = "https://github.com/OneUIProject";
+            } else if (v.getId() == mBottomContent.aboutBottomRelativeSeslAndroidx.getId()) {
+                url = "https://github.com/tribalfs/sesl-androidx";
+            } else if (v.getId() == mBottomContent.aboutBottomRelativeSeslMaterial.getId()) {
+                url = "https://github.com/tribalfs/sesl-material-components-android";
+            } else if (v.getId() == mBottomContent.aboutBottomRelativeDesign6.getId()) {
+                url = "https://github.com/tribalfs/oneui-design";
+            } else if (v.getId() == mBottomContent.aboutBottomDevTribalfs.getId()) {
+                url = "https://github.com/tribalfs";
             }
 
             if (url != null) {
@@ -520,7 +516,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
     private class AboutAppBarListener implements AppBarLayout.OnOffsetChangedListener {
         @Override
         public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-            // Handle the SwipeUp anim view
             final int totalScrollRange = appBarLayout.getTotalScrollRange();
             final int abs = Math.abs(verticalOffset);
 
@@ -541,7 +536,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 mBinding.aboutSwipeUpContainer.setAlpha(arrowAlpha);
             }
 
-            // Handle the bottom part of the UI
             final float alphaRange = mBinding.aboutCtl.getHeight() * 0.143f;
             final float layoutPosition = Math.abs(appBarLayout.getTop());
             float bottomAlpha = (150.0f / alphaRange)
