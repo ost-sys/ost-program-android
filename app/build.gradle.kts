@@ -12,11 +12,12 @@ android {
         applicationId = "com.ost.application"
         minSdk = 28
         targetSdk = 34
-        versionCode = 200
-        versionName = "2.0.0"
+        versionCode = 210
+        versionName = "2.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
+
     }
 
     buildTypes {
@@ -40,6 +41,10 @@ android {
         includeInBundle = true
     }
     buildToolsVersion = "34.0.0"
+
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
 }
 
 buildscript {
@@ -66,7 +71,6 @@ configurations.implementation {
 }
 
 dependencies {
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -84,18 +88,13 @@ dependencies {
     implementation("sesl.androidx.indexscroll:indexscroll:1.0.3+1.0.3-sesl6+rev2")
     implementation("sesl.com.google.android.material:material:1.12.0+1.0.18-sesl6+rev0")
     implementation("sesl.androidx.viewpager2:viewpager2:1.1.0+1.0.0-sesl6+rev0")
-
-//    implementation(project(":lib"))
+    implementation("io.github.oneuiproject:icons:1.1.0")
 
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     implementation("com.airbnb.android:lottie:6.1.0")
-    implementation("io.github.oneuiproject:icons:1.1.0")
     implementation("androidx.webkit:webkit:1.12.1")
 
-    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
-    implementation("com.google.guava:guava:31.0.1-android")
-    implementation("org.reactivestreams:reactive-streams:1.0.4")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.asynclayoutinflater:asynclayoutinflater:1.0.0")
 
@@ -107,6 +106,18 @@ dependencies {
 
     implementation("eu.chainfire:libsuperuser:1.1.1")
 
-    implementation("io.github.tribalfs:oneui-design:0.1.3+oneui6")
+    implementation("io.github.tribalfs:oneui-design:0.1.5+oneui6")
+
+    implementation("com.jaredrummler:android-device-names:2.1.1")
+
+    implementation("com.google.android.play:integrity:1.4.0")
+
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+
+    implementation("com.github.oshi:oshi-core:6.6.5") {
+        exclude("net.java.dev.jna", "jna")
+    }
+
+    implementation("net.java.dev.jna:jna:5.15.0@aar")
 
 }

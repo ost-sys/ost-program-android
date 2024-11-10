@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragment.phoneinfo.DisplayInfoFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/display_screen_resolution_icon"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/ic_oui_screen_resolution"/>
+
+            <TextView
+                android:id="@+id/display_screen_resolution"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textColor="@color/oui_primary_text_color"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <dev.oneuiproject.oneui.widget.Separator
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <dev.oneuiproject.oneui.widget.RoundLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/oui_background_color"
+            android:orientation="vertical">
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/display_screen_diagonal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/screen_diagonal"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/display_refresh_rate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/refresh_rate"
+                app:isDividerViewVisible="true"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/display_dpi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/dpi_dots_per_inch"
+                app:isDividerViewVisible="true"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/display_screen_orientation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/orientation"
+                app:isDividerViewVisible="true"/>
+
+        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

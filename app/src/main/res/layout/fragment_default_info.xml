@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragment.phoneinfo.DefaultInfoFragment"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/about_phone_image"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/ic_oui_page_settings"/>
+
+            <TextView
+                android:id="@+id/about_phone_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primary_color"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <dev.oneuiproject.oneui.widget.Separator
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <dev.oneuiproject.oneui.widget.RoundLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/oui_background_color"
+            android:orientation="vertical">
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/about_phone_android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/android_version"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/about_phone_brand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/brand"
+                app:isDividerViewVisible="true"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/about_phone_board"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/board"
+                app:isDividerViewVisible="true"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/about_phone_model"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/model"
+                app:isDividerViewVisible="true"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/about_phone_codename"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/codename"
+                app:isDividerViewVisible="true"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/about_phone_build_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/build_number"
+                app:isDividerViewVisible="true"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/about_phone_sdk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/software_development_kit_android_sdk"
+                app:isDividerViewVisible="true"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/about_phone_device"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/device_type"
+                app:isDividerViewVisible="true"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/about_phone_ram"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/ram"
+                app:isDividerViewVisible="true"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/about_phone_rom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/rom"
+                app:isDividerViewVisible="true"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/about_phone_fingerprint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/build_fingerprint"
+                app:isDividerViewVisible="true"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/about_phone_fingerprint_scanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/fingerprint_support"
+                app:isDividerViewVisible="true"/>
+
+        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

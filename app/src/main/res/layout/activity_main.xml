@@ -7,23 +7,17 @@
     android:id="@+id/drawerLayout"
     app:title="@string/operating_system_tester">
 
-    <androidx.core.widget.NestedScrollView
+    <dev.oneuiproject.oneui.widget.RoundFrameLayout
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <dev.oneuiproject.oneui.widget.RoundFrameLayout
-            android:id="@+id/main_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_location="main_content" />
-
-    </androidx.core.widget.NestedScrollView>
+        android:layout_height="match_parent"
+        app:layout_location="main_content" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/drawer_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        app:layout_location="drawer_panel" />
+        app:layout_location="drawer_panel"/>
 
 </dev.oneuiproject.oneui.layout.DrawerLayout>

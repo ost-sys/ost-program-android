@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragment.phoneinfo.BatteryInfoFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/battery_icon"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/ic_oui_category_battery"/>
+
+            <TextView
+                android:id="@+id/battery_level"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <dev.oneuiproject.oneui.widget.Separator
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <dev.oneuiproject.oneui.widget.RoundLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/oui_background_color"
+            android:orientation="vertical">
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/battery_health"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/health"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/battery_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/status"
+                app:isDividerViewVisible="true"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/battery_temp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/temperature"
+                app:isDividerViewVisible="true"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/battery_voltage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/voltage"
+                app:isDividerViewVisible="true"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/battery_technology"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/technology"
+                app:isDividerViewVisible="true"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/battery_capacity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/capacity"
+                app:isDividerViewVisible="true"/>
+
+        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

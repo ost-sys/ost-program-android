@@ -8,13 +8,13 @@
 
         <item
             android:id="@+id/menu_apppicker_system"
-            android:title="Show system apps"
+            android:title="@string/show_system_apps"
             android:visible="false"
             app:showAsAction="never" />
 
         <item
             android:id="@+id/menu_app_refresh"
-            android:title="Refresh"
+            android:title="@string/refresh"
             android:icon="@drawable/ic_oui_refresh"
             android:visible="false"
             app:showAsAction="always"/>
@@ -24,8 +24,20 @@
     <group>
 
         <item
+            android:id="@+id/menu_indexscroll_text"
+            android:title="@string/show_letters"
+            android:icon="@drawable/ic_oui_text"
+            android:visible="false"
+            app:showAsAction="always" />
+
+    </group>
+
+    <group>
+
+        <item
             android:id="@+id/menu_check_root"
-            android:title="Check ROOT"
+            android:title="@string/check_root"
+            android:visible="false"
             app:showAsAction="never"/>
 
     </group>

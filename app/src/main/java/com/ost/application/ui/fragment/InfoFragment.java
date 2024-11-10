@@ -72,6 +72,12 @@ public class InfoFragment extends BaseFragment implements View.OnClickListener {
                 url = "https://www.samsung.com/us/app/mobile-audio/galaxy-buds2/";
             } else if (view.getId() == binding.aboutDevicesSecondPhone.getId()) {
                 url = "https://support.apple.com/en-us/111976";
+            } else if (view.getId() == binding.homeBottomRelativeOstYoutube.getId()) {
+                url = "https://www.youtube.com/channel/UC6wNi6iQFVSnd-eJivuG3_Q";
+            } else if (view.getId() == binding.homeBottomRelativeOstTelegram.getId()) {
+                url = "https://t.me/ost_news5566";
+            } else if (view.getId() == binding.homeBottomRelativeOstGithub.getId()) {
+                url = "https://github.com/ost-sys/";
             }
             if (url != null) {
                 try {
@@ -98,13 +104,6 @@ public class InfoFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public CharSequence getTitle() {
         return getString(R.string.information);
-    }
-
-    public void onPause() {
-        super.onPause();
-    }
-    public void onResume() {
-        super.onResume();
     }
 
 }

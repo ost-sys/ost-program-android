@@ -8,6 +8,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.menu.SeslMenuItem;
+import androidx.core.view.MenuProvider;
+import androidx.lifecycle.Lifecycle;
 
 import android.os.SystemClock;
 import android.util.Log;
@@ -19,34 +22,36 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ost.application.R;
-import com.ost.application.databinding.FragmentHomeBinding;
+import com.ost.application.databinding.FragmentPowerMenuBinding;
 import com.ost.application.ui.core.widget.CardView;
 import com.topjohnwu.superuser.Shell;
 
 import com.ost.application.ui.core.base.BaseFragment;
 
+import java.io.IOException;
+
 import dev.oneuiproject.oneui.widget.Separator;
 import dev.oneuiproject.oneui.widget.TipPopup;
 
-public class HomeFragment extends BaseFragment implements View.OnClickListener {
+public class PowerMenuFragment extends BaseFragment implements View.OnClickListener {
 
-    private FragmentHomeBinding binding;
+    private FragmentPowerMenuBinding binding;
     CardView powerOff, reboot, recovery, download_mode, fastboot, fastbootd;
     private long mLastClickTime;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding = FragmentPowerMenuBinding.inflate(inflater, container, false);
 
-        Separator separatorPowerMenu = binding.separatorPowerMenu;
-        separatorPowerMenu.post(() -> {
-            if (!(Shell.cmd("su").exec()).isSuccess()) {
-                TipPopup tipPopup = new TipPopup(separatorPowerMenu, TipPopup.MODE_NORMAL);
-                tipPopup.setMessage(getString(R.string.feature_unavailable_root));
-                tipPopup.setExpanded(true);
-                tipPopup.show(TipPopup.DIRECTION_BOTTOM_RIGHT);
-            }
-        });
+//        Separator separatorPowerMenu = binding.separatorPowerMenu;
+//        separatorPowerMenu.post(() -> {
+//            if (!(Shell.cmd("su").exec()).isSuccess()) {
+//                TipPopup tipPopup = new TipPopup(separatorPowerMenu, TipPopup.MODE_NORMAL);
+//                tipPopup.setMessage(getString(R.string.feature_unavailable_root));
+//                tipPopup.setExpanded(true);
+//                tipPopup.show(TipPopup.DIRECTION_BOTTOM_RIGHT);
+//            }
+//        });
 
         powerOff = binding.powerOff;
         reboot = binding.reboot;
@@ -58,14 +63,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         Shell.Result result = Shell.cmd("su").exec();
         if (result.isSuccess()) {
             powerOff.setEnabled(true);
-            powerOff.setEnabled(true);
             reboot.setEnabled(true);
             recovery.setEnabled(true);
             download_mode.setEnabled(getSystemProperty("ro.product.system.brand").equals("samsung"));
             fastboot.setEnabled(true);
             fastbootd.setEnabled(true);
         } else {
-            powerOff.setEnabled(false);
+            powerOff.setEnabled(true);
             reboot.setEnabled(false);
             recovery.setEnabled(false);
             download_mode.setEnabled(false);
@@ -99,33 +103,17 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         download_mode.setOnClickListener(this);
         fastboot.setOnClickListener(this);
         fastbootd.setOnClickListener(this);
-        binding.homeBottomRelativeOstYoutube.setOnClickListener(this);
-        binding.homeBottomRelativeOstTelegram.setOnClickListener(this);
-        binding.homeBottomRelativeOstGithub.setOnClickListener(this);
-        binding.homeBottomRelativeOstOpenvk.setOnClickListener(this);
-        binding.homeBottomRelativeOstDa.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         long uptimeMillis = SystemClock.uptimeMillis();
         if (uptimeMillis - mLastClickTime > 600L) {
-            String url = null;
             String message = null;
             String cmd = null;
-            if (v.getId() == binding.homeBottomRelativeOstYoutube.getId()) {
-                url = "https://www.youtube.com/channel/UC6wNi6iQFVSnd-eJivuG3_Q";
-            } else if (v.getId() == binding.homeBottomRelativeOstTelegram.getId()) {
-                url = "https://t.me/ost_news5566";
-            } else if (v.getId() == binding.homeBottomRelativeOstGithub.getId()) {
-                url = "https://github.com/ost-sys/";
-            } else if (v.getId() == binding.homeBottomRelativeOstOpenvk.getId()) {
-                url = "https://ovk.to/id11578";
-            } else if (v.getId() == binding.homeBottomRelativeOstDa.getId()) {
-                url = "https://www.donationalerts.com/r/ost_5566";
-            } else if (v.getId() == powerOff.getId()) {
+            if (v.getId() == powerOff.getId()) {
                 message = getString(R.string.turn_off_q);
-                cmd = "reboot -p";
+//                cmd = "reboot -p";
             } else if (v.getId() == reboot.getId()) {
                 message = getString(R.string.reboot_system_q);
                 cmd = "reboot";
@@ -142,15 +130,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 message = getString(R.string.reboot_fastbootd_q);
                 cmd = "reboot fastboot";
             }
-            if (url != null) {
-                try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(url));
-                    startActivity(intent);
-                } catch (ActivityNotFoundException e) {
-                    Log.d("Link error", "Activity is not detected");
-                }
-            }
+
             if (message != null && cmd != null) {
                 String finalCmd = cmd;
                 AlertDialog.Builder alert = new AlertDialog.Builder(v.getContext());
@@ -167,48 +147,58 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.fragment_home;
+        return R.layout.fragment_power_menu;
     }
 
     @Override
     public int getIconResId() {
-        return dev.oneuiproject.oneui.R.drawable.ic_oui_home_outline;
+        return dev.oneuiproject.oneui.R.drawable.ic_oui_power;
     }
 
     @Override
     public CharSequence getTitle() {
-        return getString(R.string.home);
+        return getString(R.string.power_menu);
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        MenuItem menuItem = menu.findItem(R.id.menu_check_root);
-        menuItem.setVisible(true);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_check_root) {
-            Shell.Result result = Shell.cmd("su").exec();
-            if (result.isSuccess()) {
-                powerOff.setEnabled(true);
-                powerOff.setEnabled(true);
-                reboot.setEnabled(true);
-                recovery.setEnabled(true);
-                download_mode.setEnabled(getSystemProperty("ro.product.system.brand").equals("samsung"));
-                fastboot.setEnabled(true);
-                fastbootd.setEnabled(true);
-            } else {
-                AlertDialog.Builder alert = new AlertDialog.Builder(binding.getRoot().getContext());
-                alert.setTitle(getString(R.string.power_menu))
-                        .setMessage(getString(R.string.feature_unavailable_root))
-                        .setNegativeButton("OK", null)
-                        .create()
-                        .show();
-            }
-            return true;
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            requireActivity().addMenuProvider(menuProvider);
+        } else {
+            requireActivity().removeMenuProvider(menuProvider);
         }
-        return super.onOptionsItemSelected(item);
     }
+
+    private MenuProvider menuProvider = new MenuProvider() {
+        @Override
+        public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+            MenuItem menuItem = menu.findItem(R.id.menu_check_root);
+            menuItem.setVisible(true);
+        }
+
+        @Override
+        public boolean onMenuItemSelected(@NonNull MenuItem item) {
+            if (item.getItemId() == R.id.menu_check_root) {
+                Shell.Result result = Shell.cmd("su").exec();
+                if (result.isSuccess()) {
+                    powerOff.setEnabled(true);
+                    reboot.setEnabled(true);
+                    recovery.setEnabled(true);
+                    download_mode.setEnabled(getSystemProperty("ro.product.system.brand").equals("samsung"));
+                    fastboot.setEnabled(true);
+                    fastbootd.setEnabled(true);
+                } else {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(binding.getRoot().getContext());
+                    alert.setTitle(getString(R.string.power_menu))
+                            .setMessage(getString(R.string.feature_unavailable_root))
+                            .setNegativeButton("OK", null)
+                            .create()
+                            .show();
+                }
+                return true;
+            }
+            return false;
+        }
+    };
 }

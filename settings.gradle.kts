@@ -20,14 +20,14 @@ dependencyResolutionManagement {
             url = uri("https://maven.pkg.github.com/tribalfs/sesl-androidx")
             credentials {
                 username = "ost-sys"
-                password = "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"
+                password = "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"
             }
         }
         maven {
             url = uri("https://maven.pkg.github.com/tribalfs/sesl-material-components-android")
             credentials {
                 username = "ost-sys"
-                password = "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"
+                password = "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"
             }
         }
         maven { url = uri("https://jitpack.io")}

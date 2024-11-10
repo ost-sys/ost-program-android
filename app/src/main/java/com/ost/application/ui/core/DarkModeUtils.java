@@ -1,4 +1,4 @@
-package com.ost.application.utils;
+package com.ost.application.ui.core;
 
 import android.app.UiModeManager;
 import android.content.Context;
@@ -61,21 +61,18 @@ public class DarkModeUtils {
     }
 
     public static void setDarkMode(AppCompatActivity activity, int mode) {
-        if (getDarkMode(activity) != mode) {
-            SharedPreferences sharedPreferences = activity.getSharedPreferences(
-                    NAME, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt(KEY_DARK_MODE, mode).apply();
-        }
+        SharedPreferences sharedPreferences = activity.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(KEY_DARK_MODE, mode).apply();
 
-        if (mode != DARK_MODE_AUTO) {
-            AppCompatDelegate.setDefaultNightMode(mode == DARK_MODE_ENABLED
-                    ? AppCompatDelegate.MODE_NIGHT_YES
-                    : AppCompatDelegate.MODE_NIGHT_NO);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        }
+        int nightMode = mode == DARK_MODE_ENABLED
+                ? AppCompatDelegate.MODE_NIGHT_YES
+                : mode == DARK_MODE_DISABLED
+                ? AppCompatDelegate.MODE_NIGHT_NO
+                : AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
 
+        AppCompatDelegate.setDefaultNightMode(nightMode);
         activity.getDelegate().applyDayNight();
     }
+
 }

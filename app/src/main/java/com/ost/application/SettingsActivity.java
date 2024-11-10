@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +18,7 @@ import com.ost.application.ui.core.base.FragmentInfo;
 import dev.oneuiproject.oneui.layout.ToolbarLayout;
 import dev.oneuiproject.oneui.preference.HorizontalRadioPreference;
 import dev.oneuiproject.oneui.preference.internal.PreferenceRelatedCard;
-import com.ost.application.utils.DarkModeUtils;
+import com.ost.application.ui.core.DarkModeUtils;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -28,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        DarkModeUtils.setDarkMode(this, DarkModeUtils.getDarkMode(this));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
         if (savedInstanceState == null) {

@@ -1,5 +1,7 @@
 package com.ost.application.ui.fragment;
 
+import static dev.oneuiproject.oneui.widget.Toast.makeText;
+
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -24,6 +26,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import com.ost.application.MainActivity;
 import com.ost.application.R;
 import com.topjohnwu.superuser.Shell;
 
@@ -35,7 +38,9 @@ import java.util.Set;
 
 import com.ost.application.ui.core.base.BaseFragment;
 
+import dev.oneuiproject.oneui.layout.DrawerLayout;
 import dev.oneuiproject.oneui.widget.TipPopup;
+import dev.oneuiproject.oneui.widget.Toast;
 
 public class AppListFragment extends BaseFragment
         implements AppPickerView.OnBindListener, AdapterView.OnItemSelectedListener {
@@ -49,12 +54,14 @@ public class AppListFragment extends BaseFragment
 
     private AppPickerView mAppPickerView;
     private SeslProgressBar mProgress;
+    private DrawerLayout drawerLayout;
 
     public String appName = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        drawerLayout = ((MainActivity)getActivity()).findViewById(R.id.drawerLayout);
         setHasOptionsMenu(true);
     }
 
@@ -104,7 +111,7 @@ public class AppListFragment extends BaseFragment
                 refreshListView();
                 return true;
             } else if (item.getItemId() == R.id.menu_app_refresh) {
-                refreshListView();
+                mAppPickerView.setSearchFilter(appName);
             }
 
             return false;
@@ -132,13 +139,6 @@ public class AppListFragment extends BaseFragment
         List<String> categories = new ArrayList<>();
         categories.add(getString(R.string.list));
         categories.add(getString(R.string.list_action_button));
-//        categories.add("List, CheckBox");
-//        categories.add("List, CheckBox, All apps");
-//        categories.add("List, RadioButton");
-//        categories.add("List, Switch");
-//        categories.add("List, Switch, All apps");
-//        categories.add("Grid");
-//        categories.add("Grid, CheckBox");
 
         ArrayAdapter<String> adapter
                 = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, categories);
@@ -219,6 +219,10 @@ public class AppListFragment extends BaseFragment
                                  int position, String packageName) {
         switch (mListType) {
             case AppPickerView.TYPE_LIST: {
+                holder.getItem().setOnLongClickListener(view -> {
+                    Toast.makeText(mContext, appName, Toast.LENGTH_SHORT);
+                    return true;
+                });
                 holder.getItem().setOnClickListener(view -> {
                     Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                     intent.setData(Uri.parse("package:" + packageName));
@@ -251,102 +255,6 @@ public class AppListFragment extends BaseFragment
                     startActivity(intent);
                 });
             } break;
-
-//            case AppPickerView.TYPE_LIST_CHECKBOX: {
-//                CheckBox checkBox = holder.getCheckBox();
-//                checkBox.setChecked(mItems.get(position));
-//                checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//                    mItems.set(position, isChecked);
-//                    if (checkBox.isChecked()) {
-//                        appName += " " + packageName;
-//                        Log.d("appname", appName);
-//                    } else {
-//                        appName = appName.replace((" " + packageName), "") ;
-//                        Log.d("appname", appName);
-//                    }
-//                });
-//            } break;
-//
-//            case AppPickerView.TYPE_LIST_CHECKBOX_WITH_ALL_APPS: {
-//                CheckBox checkBox = holder.getCheckBox();
-//                if (position == 0) {
-//                    holder.getAppLabel().setText("All apps");
-//                    checkBox.setChecked(mIsAllAppsSelected);
-//                    checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//                        if (mIsAllAppsSelected != isChecked) {
-//                            mIsAllAppsSelected = isChecked;
-//                            for (int i = 0; i < mItems.size(); i++){
-//                                mItems.set(i, mIsAllAppsSelected);
-//                            }
-//                            mAppPickerView.refreshUI();
-//                        }
-//                    });
-//                } else {
-//                    checkBox.setChecked(mItems.get(position));
-//                    checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//                        mItems.set(position, isChecked);
-//                        checkAllAppsToggle();
-//                    });
-//                }
-//            } break;
-//
-//            case AppPickerView.TYPE_LIST_RADIOBUTTON: {
-//                RadioButton radioButton = holder.getRadioButton();
-//                radioButton.setChecked(mItems.get(position));
-//                holder.getRadioButton().setOnCheckedChangeListener((buttonView, isChecked) -> {
-//                    if (isChecked) {
-//                        if (mCheckedPosition != position) {
-//                            mItems.set(mCheckedPosition, false);
-//                            mAppPickerView.refreshUI(mCheckedPosition);
-//                        }
-//                        mItems.set(position, true);
-//                        mCheckedPosition = position;
-//                    }
-//                });
-//            } break;
-//
-//            case AppPickerView.TYPE_LIST_SWITCH: {
-//                SwitchCompat switchWidget = holder.getSwitch();
-//                switchWidget.setChecked(mItems.get(position));
-//                switchWidget.setOnCheckedChangeListener((buttonView, isChecked)
-//                        -> mItems.set(position, isChecked));
-//            } break;
-//
-//            case AppPickerView.TYPE_LIST_SWITCH_WITH_ALL_APPS: {
-//                SwitchCompat switchWidget = holder.getSwitch();
-//                if (position == 0) {
-//                    holder.getAppLabel().setText("All apps");
-//                    switchWidget.setChecked(mIsAllAppsSelected);
-//                    switchWidget.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//                        if (mIsAllAppsSelected != isChecked) {
-//                            mIsAllAppsSelected = isChecked;
-//                            for (int i = 0; i < mItems.size(); i++){
-//                                mItems.set(i, mIsAllAppsSelected);
-//                            }
-//                            mAppPickerView.refreshUI();
-//                        }
-//                    });
-//                } else {
-//                    switchWidget.setChecked(mItems.get(position));
-//                    switchWidget.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//                        mItems.set(position, isChecked);
-//                        checkAllAppsToggle();
-//                    });
-//                }
-//            } break;
-//
-//            case AppPickerView.TYPE_GRID: {
-//                holder.getItem().setOnClickListener(view -> { });
-//            } break;
-//
-//            case AppPickerView.TYPE_GRID_CHECKBOX: {
-//                CheckBox checkBox = holder.getCheckBox();
-//                checkBox.setChecked(mItems.get(position));
-//                checkBox.setOnCheckedChangeListener((buttonView, isChecked)
-//                        -> mItems.set(position, isChecked));
-//                holder.getItem().setOnClickListener(view
-//                        -> checkBox.setChecked(!checkBox.isChecked()));
-//            } break;
         }
     }
 

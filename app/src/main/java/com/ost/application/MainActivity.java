@@ -2,9 +2,8 @@ package com.ost.application;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.ShortcutInfo;
-import android.content.pm.ShortcutManager;
-import android.graphics.drawable.Icon;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,17 +19,25 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.ost.application.databinding.ActivityMainBinding;
+import com.ost.application.ui.core.DarkModeUtils;
 import com.ost.application.ui.core.drawer.DrawerListAdapter;
 import com.ost.application.ui.fragment.AppListFragment;
-import com.ost.application.ui.fragment.FriendsFragment;
-import com.ost.application.ui.fragment.HomeFragment;
+import com.ost.application.ui.fragment.phoneinfo.BatteryInfoFragment;
+import com.ost.application.ui.fragment.phoneinfo.CPUInfoFragment;
+import com.ost.application.ui.fragment.phoneinfo.DefaultInfoFragment;
+import com.ost.application.ui.fragment.FriendsListFragment;
+import com.ost.application.ui.fragment.PowerMenuFragment;
 import com.ost.application.ui.fragment.InfoFragment;
+import com.ost.application.ui.fragment.phoneinfo.DisplayInfoFragment;
+import com.ost.application.ui.fragment.phoneinfo.NetworkInfoFragment;
 import com.topjohnwu.superuser.Shell;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.ost.application.ui.core.base.FragmentInfo;
+
+import dev.oneuiproject.oneui.layout.DrawerLayout;
 import dev.oneuiproject.oneui.utils.ActivityUtils;
 import dev.oneuiproject.oneui.widget.Toast;
 
@@ -43,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements DrawerListAdapter
     @SuppressLint({"ShowToast", "MissingInflatedId", "WrongThread"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        DarkModeUtils.setDarkMode(this, DarkModeUtils.getDarkMode(this));
         super.onCreate(savedInstanceState);
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
@@ -52,29 +60,19 @@ public class MainActivity extends AppCompatActivity implements DrawerListAdapter
         initDrawer();
         initFragments();
 
-//        ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
-//
-//        Intent geminiShortcut = new Intent(this, GeminiActivity.class);
-//        geminiShortcut.setAction(Intent.ACTION_VIEW);
-//
-//        ShortcutInfo gemini = new ShortcutInfo.Builder(this, "shortcut_gemini")
-//                .setShortLabel(getString(R.string.gemini))
-//                .setLongLabel(getString(R.string.gemini))
-//                .setIcon(Icon.createWithResource(this, R.drawable.gemini_ask_btn_shortcut))
-//                .setIntent(geminiShortcut)
-//                .build();
-//
-//        List<ShortcutInfo> shortcutInfoList = new ArrayList<>();
-//        shortcutInfoList.add(gemini);
-//        shortcutManager.setDynamicShortcuts(shortcutInfoList);
-
     }
 
     private void initFragmentList() {
-        fragments.add(new HomeFragment());
+        fragments.add(new DefaultInfoFragment());
+        fragments.add(new CPUInfoFragment());
+        fragments.add(new BatteryInfoFragment());
+        fragments.add(new DisplayInfoFragment());
+        fragments.add(new NetworkInfoFragment());
+        fragments.add(null);
+        fragments.add(new PowerMenuFragment());
         fragments.add(new AppListFragment());
         fragments.add(null);
-        fragments.add(new FriendsFragment());
+        fragments.add(new FriendsListFragment());
         fragments.add(new InfoFragment());
     }
 
@@ -107,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements DrawerListAdapter
         if (item.getItemId() == R.id.menu_check_root) {
             Shell.Result result = Shell.cmd("su").exec();
             if (result.isSuccess()) {
-                Toast.makeText(this, R.string.success, Toast.LENGTH_SHORT);
+                Toast.makeText(this, R.string.success, Toast.LENGTH_SHORT).show();
             } else {
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 alert.setTitle(getString(R.string.power_menu))
@@ -160,5 +158,37 @@ public class MainActivity extends AppCompatActivity implements DrawerListAdapter
         mBinding.drawerLayout.setDrawerOpen(false, true);
 
         return true;
+    }
+
+    public DrawerLayout getDrawerLayout() {
+        return mBinding.drawerLayout;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+
+            int res = checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE);
+            if (res != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.READ_PHONE_STATE}, 123);
+            }
+
+        }
+    }
+    private final static int REQUEST_CODE_ASK_PERMISSIONS = 1002;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_ASK_PERMISSIONS) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getApplicationContext(), "READ_PHONE_STATE Denied", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }

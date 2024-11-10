@@ -30,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SeslProgressBar;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -49,7 +50,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 
 import dev.oneuiproject.oneui.utils.ViewUtils;
 import dev.oneuiproject.oneui.utils.internal.ToolbarLayoutUtils;
@@ -215,13 +218,21 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setVisibleInDownloadsUi(true);
 
+        // Создаем View для update_dialog.xml
+        View dialogView = getLayoutInflater().inflate(R.layout.update_dialog, null);
+
+        // Получаем SeslProgressBar из dialogView
+        SeslProgressBar progressBar = dialogView.findViewById(R.id.update_progressbar);
+
         DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         downloadId = downloadManager.enqueue(request);
 
+        // Создаем AlertDialog и устанавливаем диалоговое окно
         AlertDialog.Builder builder = new AlertDialog.Builder(AboutActivity.this);
         builder.setTitle(getString(R.string.downloading_update))
                 .setMessage(getString(R.string.downloading_update))
                 .setCancelable(false)
+                .setView(dialogView) // Устанавливаем view
                 .setNegativeButton(R.string.cancel, (dialog, id) -> {
                     downloadManager.remove(downloadId);
                     Toast.makeText(AboutActivity.this, getString(R.string.download_canceled), Toast.LENGTH_SHORT).show();
@@ -229,11 +240,17 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         downloadDialog = builder.create();
         downloadDialog.show();
 
-        new DownloadStatusTask().execute();
+        // Запускаем  DownloadStatusTask, передавая  SeslProgressBar
+        new DownloadStatusTask(progressBar).execute();
     }
 
     @SuppressLint("StaticFieldLeak")
     private class DownloadStatusTask extends AsyncTask<Void, Long, Void> {
+        private SeslProgressBar progressBar;
+
+        public DownloadStatusTask(SeslProgressBar progressBar) {
+            this.progressBar = progressBar;
+        }
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -246,6 +263,13 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                 if (cursor.moveToFirst()) {
                     @SuppressLint("Range") int bytesDownloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
                     @SuppressLint("Range") int bytesTotal = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+
+                    // Проверка на  bytesTotal  равен 0
+                    if (bytesTotal == 0) {
+                        // Если  bytesTotal  равен 0, выходим из цикла
+                        break;
+                    }
+
                     int progress = (bytesDownloaded * 100) / bytesTotal;
                     publishProgress((long) progress);
 
@@ -266,7 +290,8 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         @Override
         protected void onProgressUpdate(Long... values) {
             super.onProgressUpdate(values);
-            downloadDialog.setMessage(getString(R.string.downloading_update) + values[0] + "%");
+            downloadDialog.setMessage(getString(R.string.downloading_update) + " " + values[0] + "%");
+            progressBar.setProgress(Math.toIntExact(values[0]));
         }
 
         @Override
@@ -423,7 +448,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         mBinding.aboutHeaderYoutube.setOnClickListener(this);
         TooltipCompat.setTooltipText(mBinding.aboutHeaderYoutube, getString(R.string.youtube));
         mBinding.aboutHeaderTt.setOnClickListener(this);
-        TooltipCompat.setTooltipText(mBinding.aboutHeaderYoutube, getString(R.string.tiktok));
+        TooltipCompat.setTooltipText(mBinding.aboutHeaderTt, getString(R.string.tiktok));
 
         mBottomContent.aboutBottomOst.setOnClickListener(this);
 
@@ -464,9 +489,9 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         if (uptimeMillis - mLastClickTime > 600L) {
             String url = null;
             if (v.getId() == mBinding.aboutHeaderGithub.getId()) {
-                url = "https://github.com/OneUIProject/oneui-design";
+                url = "https://github.com/ost-sys/";
             } else if (v.getId() == mBinding.aboutHeaderTelegram.getId()) {
-                url = "https://t.me/oneuiproject";
+                url = "https://t.me/ost_news5566";
             } else if (v.getId() == mBinding.aboutHeaderYoutube.getId()) {
                 url = "https://www.youtube.com/channel/UC6wNi6iQFVSnd-eJivuG3_Q";
             } else if (v.getId() == mBinding.aboutHeaderTt.getId()) {
