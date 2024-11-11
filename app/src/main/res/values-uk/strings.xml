@@ -125,7 +125,7 @@
     <string name="software_development_kit_android_sdk">Комплект для розробки програмного забезпечення (Android SDK)</string>
     <string name="device_type">Тип пристрою</string>
     <string name="build_fingerprint">Збірка відбитку</string>
-    <string name="fingerprint_support">Підтримка відбитку пальця</string>
+    <string name="fingerprint_support">Підтримка сенсора відбитка пальця</string>
     <string name="good">Добрий</string>
     <string name="cold">Холодний</string>
     <string name="fail">Помилка</string>
@@ -176,4 +176,6 @@
     <string name="phone_type">Тип телефону</string>
     <string name="network_connectivity_status">Стан мережевого підключення</string>
     <string name="check_permission">Перевірити дозвіл</string>
+    <string name="fingers_registered">Пальці зареєстровані</string>
+    <string name="fingers_not_registered">Пальці не зареєстровані</string>
 </resources>

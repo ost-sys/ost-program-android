@@ -185,5 +185,7 @@
     <string name="phone_type">Phone type</string>
     <string name="network_connectivity_status">Network connectivity status</string>
     <string name="check_permission">Check permission</string>
+    <string name="fingers_registered">Fingers registered</string>
+    <string name="fingers_not_registered">Fingers not registered</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

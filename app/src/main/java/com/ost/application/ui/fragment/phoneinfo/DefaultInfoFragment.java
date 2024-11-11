@@ -24,7 +24,7 @@ public class DefaultInfoFragment extends BaseFragment {
 
     private FragmentDefaultInfoBinding binding;
 
-    @SuppressLint("UseCompatLoadingForDrawables")
+    @SuppressLint({"UseCompatLoadingForDrawables", "ObsoleteSdkInt"})
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDefaultInfoBinding.inflate(inflater, container, false);
@@ -103,11 +103,18 @@ public class DefaultInfoFragment extends BaseFragment {
             binding.aboutPhoneImage.setImageDrawable(getResources().getDrawable(dev.oneuiproject.oneui.R.drawable.ic_oui_page_settings));
         }
 
-        FingerprintManager fingerprintManager = (FingerprintManager) getActivity().getSystemService(Context.FINGERPRINT_SERVICE);
-        if (fingerprintManager.isHardwareDetected()) {
-            binding.aboutPhoneFingerprintScanner.setSummaryText(getString(R.string.supported));
-        } else {
-            binding.aboutPhoneFingerprintScanner.setSummaryText(getString(R.string.unsupported));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            FingerprintManager fingerprintManager = getActivity().getSystemService(FingerprintManager.class);
+
+            if (fingerprintManager != null && fingerprintManager.isHardwareDetected()) {
+                if (fingerprintManager.hasEnrolledFingerprints()) {
+                    binding.aboutPhoneFingerprintScanner.setSummaryText(getString(R.string.supported) + "\n" + getString(R.string.fingers_registered));
+                } else {
+                    binding.aboutPhoneFingerprintScanner.setSummaryText(getString(R.string.supported) + "\n" + getString(R.string.fingers_not_registered));
+                }
+            } else {
+                binding.aboutPhoneFingerprintScanner.setSummaryText(getString(R.string.unsupported));
+            }
         }
 
         return binding.getRoot();
