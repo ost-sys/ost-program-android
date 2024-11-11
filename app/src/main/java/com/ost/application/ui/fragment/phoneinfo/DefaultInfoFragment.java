@@ -69,6 +69,8 @@ public class DefaultInfoFragment extends BaseFragment {
 
         DeviceName.init(getActivity());
         DeviceName.with(getActivity()).request((info, error) -> {
+            if (!isAdded()) return;
+
             String name = info.marketName;
             String model = info.model;
             String codename = info.codename;

@@ -8,9 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.provider.Settings;
-import android.telephony.CarrierConfigManager;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +23,7 @@ import com.ost.application.ui.core.base.BaseFragment;
 
 import dev.oneuiproject.oneui.widget.Toast;
 
-public class NetworkInfoFragment extends BaseFragment implements View.OnClickListener{
+public class NetworkInfoFragment extends BaseFragment implements View.OnClickListener {
     private FragmentNetworkInfoBinding binding;
     private static final int REQUEST_PHONE_STATE = 101;
 
@@ -47,14 +45,18 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
     private void updateNetworkInfo() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             binding.checkPermission.setSummaryText(getString(R.string.press_to_grant_permission));
+            binding.checkPermission.setEnabled(true);
         } else {
             binding.checkPermission.setSummaryText(getString(R.string.permission_granted));
             binding.checkPermission.setEnabled(false);
+            showNetworkInfo();
         }
+    }
 
+    private void showNetworkInfo() {
         TelephonyManager manager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        String countryCode = manager.getNetworkCountryIso();
         if (manager != null) {
+            String countryCode = manager.getNetworkCountryIso();
             String carrierName = manager.getNetworkOperatorName();
             String connectivityStatus = getConnectivityStatusString(getActivity());
 
@@ -68,7 +70,7 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
     private String networkType() {
         TelephonyManager manager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            requestPhoneStatePermission();
+            return getString(R.string.grant_permission_to_continue);
         }
         int networkType = manager.getNetworkType();
         switch (networkType) {
@@ -110,9 +112,9 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 updateNetworkInfo();
             } else {
-                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
-                startActivity(intent);
+                Toast.makeText(getActivity(), getString(R.string.grant_permission_to_continue), Toast.LENGTH_SHORT).show();
+                binding.checkPermission.setSummaryText(getString(R.string.check_permission));
+                binding.checkPermission.setEnabled(true);
             }
         }
     }
@@ -136,7 +138,6 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
             updateNetworkInfo();
             Toast.makeText(getActivity(), R.string.success, Toast.LENGTH_SHORT).show();
-            binding.checkPermission.setSummaryText(getString(R.string.success));
         } else {
             requestPhoneStatePermission();
         }

@@ -94,7 +94,6 @@ public class AppListFragment extends BaseFragment
         public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
             MenuItem menuItem = menu.findItem(R.id.menu_apppicker_system);
             MenuItem refresh = menu.findItem(R.id.menu_app_refresh);
-            ((SeslMenuItem) menuItem).setBadgeText("");
             menuItem.setVisible((Shell.cmd("su").exec()).isSuccess());
             refresh.setVisible(true);
         }

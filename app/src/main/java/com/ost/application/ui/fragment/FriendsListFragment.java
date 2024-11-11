@@ -128,10 +128,8 @@ public class FriendsListFragment extends BaseFragment {
     private final MenuProvider menuProvider = new MenuProvider() {
         @Override
         public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-
             MenuItem menuItem = menu.findItem(R.id.menu_indexscroll_text);
             menuItem.setVisible(true);
-            ((SeslMenuItem) menuItem).setBadgeText("");
         }
 
         @Override
