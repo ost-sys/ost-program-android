@@ -10,6 +10,7 @@
             android:id="@+id/menu_apppicker_system"
             android:title="@string/show_system_apps"
             android:visible="false"
+            app:iconTint="?actionMenuTextColor"
             app:showAsAction="never" />
 
         <item
@@ -17,6 +18,15 @@
             android:title="@string/refresh"
             android:icon="@drawable/ic_oui_refresh"
             android:visible="false"
+            app:iconTint="?actionMenuTextColor"
+            app:showAsAction="always"/>
+
+        <item
+            android:id="@+id/menu_apppicker_search"
+            android:title="Search"
+            android:icon="@drawable/ic_oui_list_search"
+            android:visible="false"
+            app:iconTint="?actionMenuTextColor"
             app:showAsAction="always"/>
 
     </group>
@@ -28,6 +38,7 @@
             android:title="@string/show_letters"
             android:icon="@drawable/ic_oui_text"
             android:visible="false"
+            app:iconTint="?actionMenuTextColor"
             app:showAsAction="always" />
 
     </group>
@@ -38,6 +49,7 @@
             android:id="@+id/menu_check_root"
             android:title="@string/check_root"
             android:visible="false"
+            app:iconTint="?actionMenuTextColor"
             app:showAsAction="never"/>
 
     </group>

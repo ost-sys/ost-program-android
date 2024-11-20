@@ -30,7 +30,7 @@
                 android:id="@+id/about_phone_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/primary_color"
+                android:textColor="?actionMenuTextColor"
                 android:textAlignment="center"
                 android:textSize="24sp"
                 android:textStyle="bold"/>
@@ -92,7 +92,7 @@
                 android:id="@+id/about_phone_sdk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/software_development_kit_android_sdk"
+                app:TitleText="@string/software_development_kit"
                 app:isDividerViewVisible="true"/>
 
             <com.ost.application.ui.core.widget.CardView

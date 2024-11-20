@@ -31,7 +31,7 @@
                 android:textAlignment="center"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="@color/oui_primary_text_color"/>
+                android:textColor="?actionMenuTextColor"/>
 
         </LinearLayout>
 

@@ -3,10 +3,13 @@ package com.ost.application;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.util.SeslMisc;
@@ -17,12 +20,14 @@ import androidx.preference.SwitchPreferenceCompat;
 import com.ost.application.ui.core.base.FragmentInfo;
 import dev.oneuiproject.oneui.layout.ToolbarLayout;
 import dev.oneuiproject.oneui.preference.HorizontalRadioPreference;
-import dev.oneuiproject.oneui.preference.internal.PreferenceRelatedCard;
+import dev.oneuiproject.oneui.widget.Toast;
+
 import com.ost.application.ui.core.DarkModeUtils;
 
 public class SettingsActivity extends AppCompatActivity {
 
     ToolbarLayout toolbarLayout;
+    private static final int REQUEST_WRITE_SETTINGS = 100;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -46,10 +51,10 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat implements FragmentInfo, Preference.OnPreferenceClickListener,
-            Preference.OnPreferenceChangeListener  {
+            Preference.OnPreferenceChangeListener {
 
         private Context mContext;
-        private PreferenceRelatedCard mRelativeLinkCard;
+        private static final int REQUEST_WRITE_SETTINGS = 100;
 
         @Override
         public void onAttach(@NonNull Context context) {
@@ -100,6 +105,17 @@ public class SettingsActivity extends AppCompatActivity {
 
         @SuppressLint("RestrictedApi")
         private void initPreferences() {
+            SwitchPreferenceCompat brightnessControlPref = findPreference("brightness_control");
+            if (brightnessControlPref != null) {
+                brightnessControlPref.setOnPreferenceChangeListener((preference, newValue) -> {
+                    boolean isEnabled = (boolean) newValue;
+                    if (isEnabled && !Settings.System.canWrite(requireContext())) {
+                        requestWriteSettingsPermission();
+                        return false;
+                    }
+                    return true;
+                });
+            }
 
             Preference aboutAppPreference = findPreference("about_app");
             if (aboutAppPreference != null) {
@@ -109,15 +125,37 @@ public class SettingsActivity extends AppCompatActivity {
             int darkMode = DarkModeUtils.getDarkMode(mContext);
 
             HorizontalRadioPreference darkModePref = findPreference("dark_mode");
-            darkModePref.setOnPreferenceChangeListener( this);
+            darkModePref.setOnPreferenceChangeListener(this);
             darkModePref.setDividerEnabled(false);
             darkModePref.setTouchEffectEnabled(false);
             darkModePref.setEnabled(darkMode != DarkModeUtils.DARK_MODE_AUTO);
             darkModePref.setValue(SeslMisc.isLightTheme(mContext) ? "0" : "1");
 
             SwitchPreferenceCompat autoDarkModePref = findPreference("dark_mode_auto");
-            autoDarkModePref.setOnPreferenceChangeListener( this);
+            autoDarkModePref.setOnPreferenceChangeListener(this);
             autoDarkModePref.setChecked(darkMode == DarkModeUtils.DARK_MODE_AUTO);
+        }
+
+        private void requestWriteSettingsPermission() {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+            intent.setData(Uri.parse("package:" + requireContext().getPackageName()));
+            startActivityForResult(intent, REQUEST_WRITE_SETTINGS);
+        }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == REQUEST_WRITE_SETTINGS) {
+                SwitchPreferenceCompat brightnessControlPref = findPreference("brightness_control");
+                if (brightnessControlPref != null) {
+                    if (Settings.System.canWrite(requireContext())) {
+                        brightnessControlPref.setChecked(true);
+                    } else {
+                        brightnessControlPref.setChecked(false);
+                        Toast.makeText(requireContext(), getString(R.string.brightness_permission_r), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
         }
 
         public boolean onPreferenceClick(Preference preference) {
@@ -133,15 +171,16 @@ public class SettingsActivity extends AppCompatActivity {
             String currentDarkMode = String.valueOf(DarkModeUtils.getDarkMode(mContext));
             HorizontalRadioPreference darkModePref = findPreference("dark_mode");
 
-            switch (preference.getKey()) {
-                case "dark_mode":
+            return switch (preference.getKey()) {
+                case "dark_mode" -> {
                     if (currentDarkMode != newValue) {
                         DarkModeUtils.setDarkMode((AppCompatActivity) requireActivity(), newValue.equals("0")
                                 ? DarkModeUtils.DARK_MODE_DISABLED
                                 : DarkModeUtils.DARK_MODE_ENABLED);
                     }
-                    return true;
-                case "dark_mode_auto":
+                    yield true;
+                }
+                case "dark_mode_auto" -> {
                     if ((boolean) newValue) {
                         darkModePref.setEnabled(false);
                         DarkModeUtils.setDarkMode((AppCompatActivity) requireActivity(),
@@ -149,10 +188,11 @@ public class SettingsActivity extends AppCompatActivity {
                     } else {
                         darkModePref.setEnabled(true);
                     }
-                    return true;
-            }
-
-            return false;
+                    yield true;
+                }
+                default -> false;
+            };
         }
     }
+
 }

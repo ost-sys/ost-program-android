@@ -2,15 +2,21 @@ package com.ost.application.ui.fragment.phoneinfo;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.StatFs;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -19,16 +25,32 @@ import com.ost.application.R;
 import com.ost.application.databinding.FragmentDefaultInfoBinding;
 import com.ost.application.ui.core.base.BaseFragment;
 
-
-public class DefaultInfoFragment extends BaseFragment {
+public class DefaultInfoFragment extends BaseFragment implements View.OnClickListener{
 
     private FragmentDefaultInfoBinding binding;
+    private Handler handler;
+    private Runnable updateRunnable;
+    private long mLastClickTime;
+    private int clickCount = 0;
+
 
     @SuppressLint({"UseCompatLoadingForDrawables", "ObsoleteSdkInt"})
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDefaultInfoBinding.inflate(inflater, container, false);
+        handler = new Handler(Looper.getMainLooper());
+        updateRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateInfo();
+                handler.postDelayed(this, 1000);
+            }
+        };
+        handler.post(updateRunnable);
+        return binding.getRoot();
+    }
 
+    private void updateInfo() {
         assert getActivity() != null;
         ActivityManager actManager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
@@ -36,11 +58,11 @@ public class DefaultInfoFragment extends BaseFragment {
         double availMemory = memInfo.availMem / (1024.0 * 1024 * 1024);
         double totalMemory = memInfo.totalMem / (1024.0 * 1024 * 1024);
 
-        StatFs internalStatFs = new StatFs(Environment.getRootDirectory().getAbsolutePath() );
+        StatFs internalStatFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());
         double internalTotal;
         double internalFree;
 
-        StatFs externalStatFs = new StatFs(Environment.getExternalStorageDirectory().getAbsolutePath() );
+        StatFs externalStatFs = new StatFs(Environment.getExternalStorageDirectory().getAbsolutePath());
         double externalTotal;
         double externalFree;
 
@@ -49,12 +71,11 @@ public class DefaultInfoFragment extends BaseFragment {
             internalFree = (internalStatFs.getAvailableBlocksLong() * internalStatFs.getBlockSizeLong()) / (1024.0 * 1024 * 1024);
             externalTotal = (externalStatFs.getBlockCountLong() * externalStatFs.getBlockSizeLong()) / (1024.0 * 1024 * 1024);
             externalFree = (externalStatFs.getAvailableBlocksLong() * externalStatFs.getBlockSizeLong()) / (1024.0 * 1024 * 1024);
-        }
-        else {
-            internalTotal = ((long)internalStatFs.getBlockCount() * (long)internalStatFs.getBlockSize()) / (1024.0 * 1024 * 1024);
-            internalFree = ((long)internalStatFs.getAvailableBlocks() * (long)internalStatFs.getBlockSize()) / (1024.0 * 1024 * 1024);
-            externalTotal = ((long)externalStatFs.getBlockCount() * (long)externalStatFs.getBlockSize()) / (1024.0 * 1024 * 1024);
-            externalFree = ((long)externalStatFs.getAvailableBlocks() * (long)externalStatFs.getBlockSize()) / (1024.0 * 1024 * 1024);
+        } else {
+            internalTotal = ((long) internalStatFs.getBlockCount() * (long) internalStatFs.getBlockSize()) / (1024.0 * 1024 * 1024);
+            internalFree = ((long) internalStatFs.getAvailableBlocks() * (long) internalStatFs.getBlockSize()) / (1024.0 * 1024 * 1024);
+            externalTotal = ((long) externalStatFs.getBlockCount() * (long) externalStatFs.getBlockSize()) / (1024.0 * 1024 * 1024);
+            externalFree = ((long) externalStatFs.getAvailableBlocks() * (long) externalStatFs.getBlockSize()) / (1024.0 * 1024 * 1024);
         }
 
         double total = internalTotal + externalTotal;
@@ -116,21 +137,25 @@ public class DefaultInfoFragment extends BaseFragment {
                 binding.aboutPhoneFingerprintScanner.setSummaryText(getString(R.string.unsupported));
             }
         }
-
-        return binding.getRoot();
+        binding.aboutPhoneAndroid.setOnClickListener(this);
     }
+
     @SuppressLint("PrivateApi")
     public String getSystemProperty(String key) {
         String value = null;
-
         try {
             value = (String) Class.forName("android.os.SystemProperties")
                     .getMethod("get", String.class).invoke(null, key);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return value;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        handler.removeCallbacks(updateRunnable);
     }
 
     @Override
@@ -158,4 +183,39 @@ public class DefaultInfoFragment extends BaseFragment {
             return getString(R.string.about_device);
         }
     }
+
+    @Override
+    public void onClick(View v) {
+        clickCount++;
+        handler.removeCallbacks(resetClickCountRunnable);
+
+        if (clickCount == 3) {
+            performAction();
+            clickCount = 0;
+        } else {
+            int maxClickTime = 1000;
+            handler.postDelayed(resetClickCountRunnable, maxClickTime);
+        }
+    }
+
+    private void performAction() {
+        long uptimeMillis = SystemClock.uptimeMillis();
+        if (uptimeMillis - mLastClickTime > 600L) {
+            String activity = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                activity = "com.android.egg.landroid.MainActivity";
+            } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Toast.makeText(getActivity(), "Easter Egg is not founded in System UI or in Android Easter Egg application", Toast.LENGTH_SHORT).show();
+            } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+                activity = "com.android.egg.quares.QuaresActivity";
+            } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.P) {
+                activity = "com.android.egg.paint.PaintActivity";
+            }
+            if (activity != null) {
+                startActivity(Intent.makeMainActivity(new ComponentName("com.android.egg", activity)));
+            }
+        }
+    }
+
+    private final Runnable resetClickCountRunnable = () -> clickCount = 0;
 }

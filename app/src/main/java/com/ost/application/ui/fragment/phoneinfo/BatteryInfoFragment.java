@@ -6,9 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +15,6 @@ import com.ost.application.R;
 import com.ost.application.databinding.FragmentBatteryInfoBinding;
 import com.ost.application.ui.core.base.BaseFragment;
 
-import java.util.Objects;
-
-import eu.chainfire.libsuperuser.Shell;
 
 public class BatteryInfoFragment extends BaseFragment {
 

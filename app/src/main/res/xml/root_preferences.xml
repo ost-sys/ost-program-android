@@ -16,6 +16,67 @@
             android:key="dark_mode_auto"
             android:title="@string/system_default" />
 
+        <SwitchPreferenceCompat
+            android:key="brightness_control"
+            android:title="@string/brightness_control"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+
+        <dev.oneuiproject.oneui.preference.SeekBarPreferencePro
+            android:key="total_duration"
+            app:showTickMark="true"
+            android:title="@string/total_recovery_time"
+            android:summary="@string/recovery_time"
+            app:centerBasedSeekBar="false"
+            app:seamlessSeekBar="false"
+            android:defaultValue="30"
+            android:max="60"
+            app:min="1"
+            app:seekBarMode="level_bar"
+            app:adjustable="true" />
+
+        <dev.oneuiproject.oneui.preference.SeekBarPreferencePro
+            android:key="noise_duration"
+            app:showTickMark="true"
+            android:title="@string/noise"
+            android:summary="@string/noise_display_time"
+            app:centerBasedSeekBar="false"
+            app:seamlessSeekBar="false"
+            android:defaultValue="2"
+            android:max="10"
+            app:min="1"
+            app:seekBarMode="level_bar"
+            app:adjustable="true" />
+
+        <dev.oneuiproject.oneui.preference.SeekBarPreferencePro
+            android:key="horizontal_duration"
+            app:showTickMark="true"
+            android:title="@string/horizontal_lines"
+            android:summary="@string/horizontal_lines_display_time"
+            app:centerBasedSeekBar="false"
+            app:seamlessSeekBar="false"
+            android:defaultValue="2"
+            android:max="10"
+            app:min="1"
+            app:seekBarMode="level_bar"
+            app:adjustable="true" />
+
+        <dev.oneuiproject.oneui.preference.SeekBarPreferencePro
+            android:key="vertical_duration"
+            app:showTickMark="true"
+            android:title="@string/vertical_lines"
+            android:summary="@string/vertical_lines_display_time"
+            app:centerBasedSeekBar="false"
+            app:seamlessSeekBar="false"
+            android:defaultValue="2"
+            android:max="10"
+            app:min="1"
+            app:seekBarMode="level_bar"
+            app:adjustable="true" />
+
     </PreferenceCategory>
 
     <PreferenceCategory>

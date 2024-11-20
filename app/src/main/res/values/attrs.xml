@@ -8,5 +8,9 @@
         <attr name="SummaryText" format="string" />
         <attr name="isDividerViewVisible" format="boolean" />
     </declare-styleable>
+    <declare-styleable name="FullscreenAttrs">
+        <attr name="fullscreenBackgroundColor" format="color" />
+        <attr name="fullscreenTextColor" format="color" />
+    </declare-styleable>
 
 </resources>

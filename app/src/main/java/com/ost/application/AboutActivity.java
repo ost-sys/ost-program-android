@@ -50,12 +50,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.Random;
 
 import dev.oneuiproject.oneui.utils.ViewUtils;
 import dev.oneuiproject.oneui.utils.internal.ToolbarLayoutUtils;
+import dev.oneuiproject.oneui.widget.TipPopup;
 import dev.oneuiproject.oneui.widget.Toast;
 
 public class AboutActivity extends AppCompatActivity implements View.OnClickListener {
@@ -110,13 +113,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     PERMISSION_REQUEST_ALL_FILES);
         }
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//            if (!Settings.canDrawOverlays(this)) {
-//                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-//                startActivityForResult(intent, PERMISSION_REQUEST_UNKNOWN_APPS);
-//            }
-//        }
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -218,21 +214,18 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setVisibleInDownloadsUi(true);
 
-        // Создаем View для update_dialog.xml
         View dialogView = getLayoutInflater().inflate(R.layout.update_dialog, null);
 
-        // Получаем SeslProgressBar из dialogView
         SeslProgressBar progressBar = dialogView.findViewById(R.id.update_progressbar);
 
         DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         downloadId = downloadManager.enqueue(request);
 
-        // Создаем AlertDialog и устанавливаем диалоговое окно
         AlertDialog.Builder builder = new AlertDialog.Builder(AboutActivity.this);
         builder.setTitle(getString(R.string.downloading_update))
                 .setMessage(getString(R.string.downloading_update))
                 .setCancelable(false)
-                .setView(dialogView) // Устанавливаем view
+                .setView(dialogView)
                 .setNegativeButton(R.string.cancel, (dialog, id) -> {
                     downloadManager.remove(downloadId);
                     Toast.makeText(AboutActivity.this, getString(R.string.download_canceled), Toast.LENGTH_SHORT).show();
@@ -240,7 +233,6 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
         downloadDialog = builder.create();
         downloadDialog.show();
 
-        // Запускаем  DownloadStatusTask, передавая  SeslProgressBar
         new DownloadStatusTask(progressBar).execute();
     }
 
@@ -264,9 +256,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                     @SuppressLint("Range") int bytesDownloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
                     @SuppressLint("Range") int bytesTotal = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
 
-                    // Проверка на  bytesTotal  равен 0
                     if (bytesTotal == 0) {
-                        // Если  bytesTotal  равен 0, выходим из цикла
                         break;
                     }
 
@@ -425,6 +415,32 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
 
     @SuppressLint("SetTextI18n")
     private void initContent() {
+
+        List<String> messages = Arrays.asList(
+                "Callback Ping!",
+                "sesl6",
+                "It's me, OST Tools",
+                "You got notification!",
+                "Привет, мир!",
+                getString(R.string.success),
+                "S C H L E C K",
+                "Who are you?",
+                "Operating System Tester",
+                "Subscribe to my channel please :D",
+                "Access denied",
+                "I know you here!",
+                "I sent your IP-address моему создателю! Жди докс",
+                "0x000000",
+                getString(R.string.build_number),
+                "ыыыыыыыыыыыыы",
+                "java.lang.NoClassDefFoundError: com.sun.jna.Native",
+                "Блять",
+                "Hello and, again, welcome to the Aperture Science computer-aided enrichment center.",
+                "Easier to assimilate than explain anyway",
+                "User is dead",
+                getString(R.string.grant_permission_to_continue)
+        );
+
         ViewUtils.semSetRoundedCorners(
                 mBinding.aboutBottomContent.getRoot(),
                 ViewUtils.SEM_ROUNDED_CORNER_TOP_LEFT | ViewUtils.SEM_ROUNDED_CORNER_TOP_RIGHT);
@@ -434,7 +450,25 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
 
         @SuppressLint("UseCompatLoadingForDrawables") Drawable appIcon = getDrawable(R.mipmap.ic_launcher);
         mBinding.aboutHeaderAppIcon.setImageDrawable(appIcon);
+        mBinding.aboutHeaderAppIcon.setOnClickListener(view -> {
+            Random random = new Random();
+            int randomIndex = random.nextInt(messages.size());
+            String randomMessage = messages.get(randomIndex);
+            TipPopup tipPopup = new TipPopup(view, TipPopup.MODE_NORMAL);
+            tipPopup.setMessage(randomMessage);
+            tipPopup.setExpanded(true);
+            tipPopup.show(TipPopup.DIRECTION_DEFAULT);
+        });
         mBinding.aboutBottomAppIcon.setImageDrawable(appIcon);
+        mBinding.aboutBottomAppIcon.setOnClickListener(view -> {
+            Random random = new Random();
+            int randomIndex = random.nextInt(messages.size());
+            String randomMessage = messages.get(randomIndex);
+            TipPopup tipPopup = new TipPopup(view, TipPopup.MODE_NORMAL);
+            tipPopup.setMessage(randomMessage);
+            tipPopup.setExpanded(true);
+            tipPopup.show(TipPopup.DIRECTION_DEFAULT);
+        });
 
         mBinding.aboutHeaderAppVersion.setText(getString(R.string.version) + " " + BuildConfig.VERSION_NAME);
         mBinding.aboutBottomAppVersion.setText(getString(R.string.version) + " " + BuildConfig.VERSION_NAME);
@@ -530,8 +564,7 @@ public class AboutActivity extends AppCompatActivity implements View.OnClickList
                     intent.setData(Uri.parse(url));
                     startActivity(intent);
                 } catch (ActivityNotFoundException e) {
-                    Toast.makeText(
-                            this, "No suitable activity found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.no_suitable_activity_found), Toast.LENGTH_SHORT).show();
                 }
             }
         }

@@ -2,6 +2,8 @@ package com.ost.application.ui.fragment.phoneinfo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Bundle;
 
@@ -13,14 +15,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import androidx.preference.PreferenceManager;
+
 import com.ost.application.R;
 import com.ost.application.databinding.FragmentDisplayInfoBinding;
 import com.ost.application.ui.core.base.BaseFragment;
+import com.ost.application.ui.fragment.phoneinfo.test.BurnInRecoveryActivity;
+import com.ost.application.ui.fragment.phoneinfo.test.PixelTestActivity;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
-public class DisplayInfoFragment extends BaseFragment {
+public class DisplayInfoFragment extends BaseFragment implements View.OnClickListener {
     private FragmentDisplayInfoBinding binding;
     private Handler handler = new Handler();
     private Runnable updateRunnable;
@@ -40,6 +46,9 @@ public class DisplayInfoFragment extends BaseFragment {
         };
 
         handler.post(updateRunnable);
+
+        binding.checkDeadPixels.setOnClickListener(this);
+        binding.fixDeadPixels.setOnClickListener(this);
 
         return binding.getRoot();
     }
@@ -87,7 +96,7 @@ public class DisplayInfoFragment extends BaseFragment {
 
     @Override
     public int getIconResId() {
-        return dev.oneuiproject.oneui.R.drawable.ic_oui_fit_to_screen;
+        return dev.oneuiproject.oneui.R.drawable.ic_oui_screen_resolution;
     }
 
     @Override
@@ -116,5 +125,36 @@ public class DisplayInfoFragment extends BaseFragment {
             ex.printStackTrace();
         }
         return String.format(Locale.US, "%.2f", Math.sqrt(x + y));
+    }
+
+    private void launchPixelTestActivity() {
+        Intent intent = new Intent(requireContext(), PixelTestActivity.class);
+        startActivity(intent);
+    }
+
+    private void launchPixelFixActivity() {
+        Context context = requireContext();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        int totalDuration = preferences.getInt("total_duration", 30);
+        int noiseDuration = preferences.getInt("noise_duration", 2);
+        int horizontalDuration = preferences.getInt("horizontal_duration", 2);
+        int verticalDuration = preferences.getInt("vertical_duration", 2);
+
+        Intent intent = new Intent(requireContext(), BurnInRecoveryActivity.class);
+        intent.putExtra("totalDuration", totalDuration);
+        intent.putExtra("noiseDuration", noiseDuration);
+        intent.putExtra("horizontalDuration", horizontalDuration);
+        intent.putExtra("verticalDuration", verticalDuration);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == binding.checkDeadPixels.getId()) {
+            launchPixelTestActivity();
+        } else if (view.getId() == binding.fixDeadPixels.getId()) {
+            launchPixelFixActivity();
+        }
     }
 }

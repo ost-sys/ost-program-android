@@ -5,17 +5,17 @@
 
     <style name="BottomNavViewTextMode" parent="Widget.Design.Light.BottomNavigationView.Text" />
 
-<!--    <style name="SudokuTheme" parent="OneUITheme">-->
-<!--        <item name="colorPrimary">@color/primary_color</item>-->
-<!--        <item name="colorPrimaryDark">@color/primary_dark_color</item>-->
-<!--        <item name="colorSecondary">@color/secondary_color</item>-->
-<!--        <item name="colorAccent">@color/secondary_color</item>-->
-<!--    </style>-->
+    <!--    <style name="SudokuTheme" parent="OneUITheme">-->
+    <!--        <item name="colorPrimary">@color/primary_color</item>-->
+    <!--        <item name="colorPrimaryDark">@color/primary_dark_color</item>-->
+    <!--        <item name="colorSecondary">@color/secondary_color</item>-->
+    <!--        <item name="colorAccent">@color/secondary_color</item>-->
+    <!--    </style>-->
 
-<!--    <style name="ButtonStyle.Colored" parent="Widget.AppCompat.Button">-->
-<!--        <item name="android:backgroundTint">?colorAccent</item>-->
-<!--        <item name="android:textColor">@color/white</item>-->
-<!--    </style>-->
+    <!--    <style name="ButtonStyle.Colored" parent="Widget.AppCompat.Button">-->
+    <!--        <item name="android:backgroundTint">?colorAccent</item>-->
+    <!--        <item name="android:textColor">@color/white</item>-->
+    <!--    </style>-->
 
     <style name="DrawerDividerStyle">
         <item name="android:layout_marginTop">6dp</item>
@@ -34,6 +34,15 @@
 
     <style name="color">
         <item name="color">@color/white</item>
+    </style>
+
+    <style name="Widget.OneUITheme.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="Widget.OneUITheme.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
 
 </resources>

@@ -10,7 +10,6 @@ import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuCompat;
 import androidx.fragment.app.Fragment;
@@ -21,9 +20,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.ost.application.databinding.ActivityMainBinding;
 import com.ost.application.ui.core.DarkModeUtils;
 import com.ost.application.ui.core.drawer.DrawerListAdapter;
-import com.ost.application.ui.fragment.AppListFragment;
+import com.ost.application.ui.fragment.applist.AppListFragment;
 import com.ost.application.ui.fragment.phoneinfo.BatteryInfoFragment;
 import com.ost.application.ui.fragment.phoneinfo.CPUInfoFragment;
+import com.ost.application.ui.fragment.phoneinfo.CameraInfoFragment;
 import com.ost.application.ui.fragment.phoneinfo.DefaultInfoFragment;
 import com.ost.application.ui.fragment.FriendsListFragment;
 import com.ost.application.ui.fragment.PowerMenuFragment;
@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements DrawerListAdapter
         fragments.add(new BatteryInfoFragment());
         fragments.add(new DisplayInfoFragment());
         fragments.add(new NetworkInfoFragment());
+        fragments.add(new CameraInfoFragment());
         fragments.add(null);
         fragments.add(new PowerMenuFragment());
         fragments.add(new AppListFragment());
@@ -85,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements DrawerListAdapter
                         new Intent(MainActivity.this, SettingsActivity.class),
                         null,
                         ActivityUtils.POP_OVER_POSITION_TOP | ActivityUtils.POP_OVER_POSITION_CENTER_HORIZONTAL));
-
         mBinding.drawerListView.setLayoutManager(new LinearLayoutManager(this));
         mBinding.drawerListView.setAdapter(new DrawerListAdapter(this, fragments, this));
         mBinding.drawerListView.setItemAnimator(null);
@@ -106,13 +106,6 @@ public class MainActivity extends AppCompatActivity implements DrawerListAdapter
             Shell.Result result = Shell.cmd("su").exec();
             if (result.isSuccess()) {
                 Toast.makeText(this, R.string.success, Toast.LENGTH_SHORT).show();
-            } else {
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.setTitle(getString(R.string.power_menu))
-                        .setMessage(getString(R.string.feature_unavailable_root))
-                        .setNegativeButton("OK", null)
-                        .create()
-                        .show();
             }
         }
         return false;
@@ -184,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements DrawerListAdapter
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CODE_ASK_PERMISSIONS) {
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getApplicationContext(), "READ_PHONE_STATE Denied", Toast.LENGTH_SHORT)
+                Toast.makeText(getApplicationContext(), getString(R.string.read_phone_state_denied), Toast.LENGTH_SHORT)
                         .show();
             }
         } else {

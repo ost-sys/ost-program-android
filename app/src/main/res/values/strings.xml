@@ -1,7 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name" translatable="false">OST Tools</string>
     <string name="github" translatable="false">GitHub</string>
-    <string name="gemini" translatable="false">Gemini</string>
     <string name="settings">Settings</string>
     <string name="about_app">About program</string>
     <string name="version">Version</string>
@@ -13,25 +12,12 @@
     <string name="video_editing_tool">Video editing tool</string>
     <string name="video_recording_tool">Video recording tool</string>
     <string name="preview_tool">Preview tool</string>
-    <string name="dsys1100_info">Nanostreamer, guy xd.</string>
-    <string name="nerok_info">An ordinary schoolboy from Ukraine who is interested in IT</string>
-    <string name="DimaLQ_info">I am Dmitry, a half-coder, I like to suffer with bullshit. I run my own TikTok channel, I am not a tech blogger! I am a simple person</string>
-    <string name="bohdan_info">I interested in tech, especially in phones and computers. I like dig into oses</string>
-    <string name="kernel64_info">I like experimenting with computers and phones.</string>
-    <string name="danielm_info">A completely ordinary person</string>
-    <string name="tinelix_info">I am Dmitry. I work on YouTube, I have been programming in various languages since 2018.</string>
-    <string name="hackuser_info">An ordinary person who is interested in technology.</string>
-    <string name="ertor_info">My name is Ertorik! I am interested in programming, hardware and everything that is somehow related to IT</string>
-    <string name="happywin8_info">Hello, I am a very ordinary person, I shoot videos, and play games. xD</string>
-    <string name="osmixup_info">An ordinary person who creates his own website and develops various programs in the C# programming language. Self-education in this area.</string>
     <string name="home">Home</string>
     <string name="friends">Friends</string>
     <string name="information">Information</string>
     <string name="social_links">Social links</string>
-    <string name="switches">Switches</string>
     <string name="system_default">System default</string>
     <string name="dark_mode_settings">Dark mode settings</string>
-    <string name="anton_info">Anton is like Anton, what can I say, I like to play CS2 and walk, and watch TikToks</string>
     <string name="checking_for_updates">Checking for updates…</string>
     <string name="error_getting_version_information">Error getting version data</string>
     <string name="update_available">Update available!</string>
@@ -48,7 +34,6 @@
     <string name="check_for_updates">Check for updates</string>
     <string name="attention">Attention</string>
     <string name="ignore">Ignore</string>
-    <string name="tu4wkl_info">Android developer from Kyiv, Ukraine. Founder of TukiOS, maintainer of different Xiaomi and Samsung devices</string>
     <string name="install_update_q">Install update?</string>
     <string name="install">Install</string>
     <string name="back">Back</string>
@@ -77,9 +62,6 @@
     <string name="information_pc">Click here to see PC specifications</string>
     <string name="second_devices">My second devices</string>
     <string name="open_attention_again">Press here to open attention again</string>
-    <string name="sr_fail">Unable to enable speech recognition</string>
-    <string name="sr_permission_r">Permission to record audio is required.</string>
-    <string name="gemini_fail">Sorry, but something went wrong</string>
     <string name="list">List</string>
     <string name="list_action_button">List with action button</string>
     <string name="open_source_program">Open Source Program</string>
@@ -104,9 +86,6 @@
     <string name="reboot_fastboot_s">Reboot device to Fastboot</string>
     <string name="reboot_fastbootd">Reboot to FastbootD</string>
     <string name="reboot_fastbootd_s">Reboot device to FastbootD</string>
-    <string name="zhh4_info">A regular micro-youtuber about games.</string>
-    <string name="shagalin_info">I shoot about games, sometimes I program some crap.</string>
-    <string name="melamit_info">Don\'t be afraid when you\'re one, be afraid when you\'re two. It\'s cool, but don\'t write to me, really do not, but if you need me, there\'s a telegram.</string>
     <string name="refresh">Refresh</string>
     <string name="check_root">Check ROOT</string>
     <string name="show_letters">Show letters</string>
@@ -130,7 +109,7 @@
     <string name="model">Model</string>
     <string name="codename">Codename</string>
     <string name="build_number">Build number</string>
-    <string name="software_development_kit_android_sdk">Software Development Kit (Android SDK)</string>
+    <string name="software_development_kit">Software Development Kit (Android SDK)</string>
     <string name="device_type">Device type</string>
     <string name="build_fingerprint">Build fingerprint</string>
     <string name="fingerprint_support">Fingerprint support</string>
@@ -161,7 +140,7 @@
     <string name="still_on_beta">Still on BETA! NOT READY FOR USE</string>
     <string name="soc_model">SoC Model</string>
     <string name="soc_manufacturer">SoC Manufacturer</string>
-    <string name="abi_application_binary_interface">ABI (Application Binary Interface)</string>
+    <string name="application_binary_interface">ABI (Application Binary Interface)</string>
     <string name="cores">Cores</string>
     <string name="frequency_min_max">Frequency (min - max)</string>
     <string name="screen_diagonal">Screen diagonal</string>
@@ -187,5 +166,40 @@
     <string name="check_permission">Check permission</string>
     <string name="fingers_registered">Fingers registered</string>
     <string name="fingers_not_registered">Fingers not registered</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="multiple_rear_cameras_detected">Multiple rear cameras detected</string>
+    <string name="single_rear_camera">Single rear camera</string>
+    <string name="unknown">Unknown</string>
+    <string name="camera">Camera</string>
+    <string name="access_denied">Access denied</string>
+    <string name="access_granted">Access granted</string>
+    <string name="no_suitable_activity_found">No suitable activity found</string>
+    <string name="read_phone_state_denied">READ_PHONE_STATE Denied</string>
+    <string name="brightness_permission_r">To change the brightness, you need permission to change the settings. You can grant it in the application settings</string>
+    <string name="brightness_permission_m">Permission is required to control brightness</string>
+    <string name="exiting">Exiting...</string>
+    <string name="brightness_fail">Failed to change brightness</string>
+    <string name="permission_not_granted">Permission not granted</string>
+    <string name="rear_facing_camera">Rear-facing camera</string>
+    <string name="camera_resolution">Camera resolution</string>
+    <string name="focal_lenght">Focal lenght</string>
+    <string name="stabilization_support">Stabilization support</string>
+    <string name="flash">Flash</string>
+    <string name="rear_facing_camera_second">Rear-facing camera (Second module)</string>
+    <string name="rear_facing_camera_third">Rear-facing camera (Third module)</string>
+    <string name="front_camera">Front camera</string>
+    <string name="check_for_dead_pixels">Check for dead pixels</string>
+    <string name="fix_dead_pixels">Fix dead pixels</string>
+    <string name="fix_dead_pixels_w">Don\'t count on 100% success</string>
+    <string name="access_request_sent">Access request sent</string>
+    <string name="total_recovery_time">Total recovery time</string>
+    <string name="recovery_time">Recovery time (minutes)</string>
+    <string name="noise">Noise</string>
+    <string name="noise_display_time">Noise display time (minutes)</string>
+    <string name="horizontal_lines">Horizontal lines</string>
+    <string name="horizontal_lines_display_time">Horizontal lines display time (minutes)</string>
+    <string name="vertical_lines">Vertical lines</string>
+    <string name="vertical_lines_display_time">Vertical Lines Display Time (minutes)</string>
+    <string name="brightness_control">Brightness control</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

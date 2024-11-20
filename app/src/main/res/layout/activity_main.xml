@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:expanded="true"
+    app:drawerBackAnimation="true"
     android:id="@+id/drawerLayout"
     app:title="@string/operating_system_tester">
 

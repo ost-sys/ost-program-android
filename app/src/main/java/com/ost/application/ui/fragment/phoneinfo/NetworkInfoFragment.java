@@ -89,8 +89,8 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
             case TelephonyManager.NETWORK_TYPE_IDEN: return "iDen";
             case TelephonyManager.NETWORK_TYPE_LTE: return "LTE";
             case TelephonyManager.NETWORK_TYPE_UMTS: return "UMTS";
-            case TelephonyManager.NETWORK_TYPE_UNKNOWN: return "Unknown";
-            default: return "Unknown";
+            case TelephonyManager.NETWORK_TYPE_UNKNOWN: return getString(R.string.unknown);
+            default: return getString(R.string.unknown);
         }
     }
 

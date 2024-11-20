@@ -5,11 +5,6 @@
     <uses-feature
         android:name="android.hardware.telephony"
         android:required="false" />
-    <queries>
-        <intent>
-            <action android:name="android.speech.RecognitionService" />
-        </intent>
-    </queries>
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission
@@ -19,6 +14,7 @@
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
@@ -26,13 +22,21 @@
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.BATTERY_STATS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+    <uses-permission
+        android:name="android.permission.BATTERY_STATS"
+        tools:ignore="CoarseFineLocation,ProtectedPermissions" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
         tools:ignore="CoarseFineLocation" />
+    <uses-permission
+        android:name="android.permission.CAMERA"
+        tools:ignore="PermissionImpliesUnsupportedChromeOsHardware" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+
     <application
         android:allowBackup="true"
         android:enableOnBackInvokedCallback="true"
@@ -46,7 +50,8 @@
             android:name=".MainActivity"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize"
             android:exported="true"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:resizeableActivity="true">
             <meta-data
                 android:name="com.sec.android.app.launcher.icon_theme"
                 android:value="themeColor" />
@@ -64,10 +69,24 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:resizeableActivity="true" />
         <activity
             android:name=".AboutActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:resizeableActivity="true" />
+        <activity
+            android:name=".ui.fragment.phoneinfo.test.PixelTestActivity"
+            android:exported="false"
+            android:resizeableActivity="true"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/OneUITheme.Fullscreen"/>
+        <activity
+            android:name=".ui.fragment.phoneinfo.test.BurnInRecoveryActivity"
+            android:exported="false"
+            android:resizeableActivity="true"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/OneUITheme.Fullscreen"/>
 
         <meta-data
             android:name="SamsungBasicInteraction"
@@ -84,6 +103,12 @@
         <meta-data
             android:name="theming-meta-xml"
             android:value="@xml/meta_998_sesl_app" />
+        <meta-data
+            android:name="com.samsung.android.keepalive.density"
+            android:value="true" />
+        <meta-data
+            android:name="com.samsung.android.multidisplay.keep_process_alive"
+            android:value="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

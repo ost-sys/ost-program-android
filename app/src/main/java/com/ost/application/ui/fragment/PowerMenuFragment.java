@@ -3,6 +3,7 @@ package com.ost.application.ui.fragment;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -32,6 +33,7 @@ import java.io.IOException;
 
 import dev.oneuiproject.oneui.widget.Separator;
 import dev.oneuiproject.oneui.widget.TipPopup;
+import dev.oneuiproject.oneui.widget.Toast;
 
 public class PowerMenuFragment extends BaseFragment implements View.OnClickListener {
 
@@ -43,16 +45,14 @@ public class PowerMenuFragment extends BaseFragment implements View.OnClickListe
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPowerMenuBinding.inflate(inflater, container, false);
 
-//        Separator separatorPowerMenu = binding.separatorPowerMenu;
-//        separatorPowerMenu.post(() -> {
-//            if (!(Shell.cmd("su").exec()).isSuccess()) {
-//                TipPopup tipPopup = new TipPopup(separatorPowerMenu, TipPopup.MODE_NORMAL);
-//                tipPopup.setMessage(getString(R.string.feature_unavailable_root));
-//                tipPopup.setExpanded(true);
-//                tipPopup.show(TipPopup.DIRECTION_BOTTOM_RIGHT);
-//            }
-//        });
+        shellResult();
 
+        initContent();
+        return binding.getRoot();
+
+    }
+
+    private void shellResult() {
         powerOff = binding.powerOff;
         reboot = binding.reboot;
         recovery = binding.recovery;
@@ -68,18 +68,20 @@ public class PowerMenuFragment extends BaseFragment implements View.OnClickListe
             download_mode.setEnabled(getSystemProperty("ro.product.system.brand").equals("samsung"));
             fastboot.setEnabled(true);
             fastbootd.setEnabled(true);
+
+            binding.powerMenuText.setText(R.string.access_granted);
+            binding.powerMenuText.setTextColor(getResources().getColor(R.color.green));
         } else {
-            powerOff.setEnabled(true);
+            powerOff.setEnabled(false);
             reboot.setEnabled(false);
             recovery.setEnabled(false);
             download_mode.setEnabled(false);
             fastboot.setEnabled(false);
             fastbootd.setEnabled(false);
+
+            binding.powerMenuText.setText(R.string.access_denied);
+            binding.powerMenuText.setTextColor(getResources().getColor(R.color.red));
         }
-
-        initContent();
-        return binding.getRoot();
-
     }
 
     @SuppressLint("PrivateApi")
@@ -180,23 +182,7 @@ public class PowerMenuFragment extends BaseFragment implements View.OnClickListe
         @Override
         public boolean onMenuItemSelected(@NonNull MenuItem item) {
             if (item.getItemId() == R.id.menu_check_root) {
-                Shell.Result result = Shell.cmd("su").exec();
-                if (result.isSuccess()) {
-                    powerOff.setEnabled(true);
-                    reboot.setEnabled(true);
-                    recovery.setEnabled(true);
-                    download_mode.setEnabled(getSystemProperty("ro.product.system.brand").equals("samsung"));
-                    fastboot.setEnabled(true);
-                    fastbootd.setEnabled(true);
-                } else {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(binding.getRoot().getContext());
-                    alert.setTitle(getString(R.string.power_menu))
-                            .setMessage(getString(R.string.feature_unavailable_root))
-                            .setNegativeButton("OK", null)
-                            .create()
-                            .show();
-                }
-                return true;
+                shellResult();
             }
             return false;
         }

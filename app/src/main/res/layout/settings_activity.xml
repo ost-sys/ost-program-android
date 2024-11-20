@@ -3,6 +3,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbarLayout"
+    app:expanded="false"
     app:title="@string/settings"
     app:navigationIcon="@drawable/ic_oui_back">
 

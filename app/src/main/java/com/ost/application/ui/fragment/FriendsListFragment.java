@@ -84,6 +84,7 @@ public class FriendsListFragment extends BaseFragment {
             new FriendData("HappyWin8", "https://www.youtube.com/channel/UCEUf6E02RlsxKlAxIbNzBfA"),
             new FriendData("K", null),
             new FriendData("kernel64", "https://xerix123456.github.io"),
+            new FriendData("kirillgorev", "https://kirillgorev.fun"),
             new FriendData("L", null),
             new FriendData("localhosted (aka. Nerok)", "https://t.me/localhosted"),
             new FriendData("M", null),
@@ -395,6 +396,9 @@ public class FriendsListFragment extends BaseFragment {
                     break;
                 case "Melamit":
                     iconResId = R.drawable.melamit;
+                    break;
+                case "kirillgorev":
+                    iconResId = R.drawable.kirillgorev;
                     break;
             }
 

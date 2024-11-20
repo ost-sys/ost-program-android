@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
                 android:textSize="24sp"
-                android:textColor="@color/oui_primary_text_color"
+                android:textColor="?actionMenuTextColor"
                 android:textStyle="bold"/>
 
         </LinearLayout>
@@ -71,6 +71,32 @@
                 android:layout_height="wrap_content"
                 app:TitleText="@string/orientation"
                 app:isDividerViewVisible="true"/>
+
+        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+        <dev.oneuiproject.oneui.widget.Separator
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <dev.oneuiproject.oneui.widget.RoundLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/oui_background_color"
+            android:orientation="vertical">
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/check_dead_pixels"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/check_for_dead_pixels"/>
+
+            <com.ost.application.ui.core.widget.CardView
+                android:id="@+id/fix_dead_pixels"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:TitleText="@string/fix_dead_pixels"
+                app:SummaryText="@string/fix_dead_pixels_w"
+                app:isDividerViewVisible="true" />
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 

@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="center"
+            android:paddingHorizontal="24dp"
             android:gravity="center">
 
             <ImageView
@@ -65,7 +66,7 @@
                 android:id="@+id/cpu_abi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/abi_application_binary_interface"
+                app:TitleText="@string/application_binary_interface"
                 app:isDividerViewVisible="true"/>
 
             <com.ost.application.ui.core.widget.CardView
