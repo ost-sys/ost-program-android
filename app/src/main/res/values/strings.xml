@@ -8,7 +8,7 @@
     <string name="open_source_licenses">Open source licenses</string>
     <string name="one_ui_design_developers">One UI Design developers</string>
     <string name="developer">Developer</string>
-    <string name="vm" translatable="false">VM</string>
+    <string name="vm">Virtual Machine</string>
     <string name="video_editing_tool">Video editing tool</string>
     <string name="video_recording_tool">Video recording tool</string>
     <string name="preview_tool">Preview tool</string>
@@ -201,5 +201,27 @@
     <string name="vertical_lines">Vertical lines</string>
     <string name="vertical_lines_display_time">Vertical Lines Display Time (minutes)</string>
     <string name="brightness_control">Brightness control</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="video_tools">Video tools</string>
+    <string name="scan_qr_code_m">Scan QR code on another device to view the %1$s\'s profile</string>
+    <string name="share_via">Share via</string>
+    <string name="select_mail_client">Select mail client</string>
+    <string name="no_mail_clients_found">No mail clients found</string>
+    <string name="search">Search</string>
+    <string name="share">Share</string>
+    <string name="qr_code">QR code</string>
+    <string name="quick_share">Quick Share</string>
+    <string name="stargazers">Stargazers</string>
+    <string name="share_stargazers_urls">Share Stargazer(-s) URL(-s)</string>
+    <string name="website">Website</string>
+    <string name="url_is_not_detected">URL is not detected</string>
+    <string name="callback_ping">Callback Ping...</string>
+    <string name="no_internet_connection_detected">No internet connection detected</string>
+    <string name="star_repositories">Star any of my repositories\n</string>
+    <string name="retry">Retry</string>
+    <string name="loading_stargazers">Loading stargazers...</string>
+    <string name="no_stargazers_yet">No stargazers yet.</string>
+    <string name="no_results_found">No results found.</string>
+    <string name="refreshing">Refreshing...</string>
+    <string name="error_loading_stargazers">Error loading stargazers</string>
+    <string name="search_user">Search user</string>
 </resources>

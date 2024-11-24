@@ -21,6 +21,8 @@ import com.ost.application.R;
 import com.ost.application.databinding.FragmentNetworkInfoBinding;
 import com.ost.application.ui.core.base.BaseFragment;
 
+import java.util.Objects;
+
 import dev.oneuiproject.oneui.widget.Toast;
 
 public class NetworkInfoFragment extends BaseFragment implements View.OnClickListener {
@@ -60,7 +62,11 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
             String carrierName = manager.getNetworkOperatorName();
             String connectivityStatus = getConnectivityStatusString(getActivity());
 
-            binding.networkTitle.setText(carrierName);
+            if (!Objects.equals(carrierName, "")) {
+                binding.networkTitle.setText(carrierName);
+            } else {
+                binding.networkTitle.setText("SIM card not detected");
+            }
             binding.networkOperatorCountry.setSummaryText(countryCode.toUpperCase());
             binding.networkPhoneType.setSummaryText(networkType());
             binding.networkConnectivityStatus.setSummaryText(connectivityStatus);

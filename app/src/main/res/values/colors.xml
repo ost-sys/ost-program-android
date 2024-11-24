@@ -6,6 +6,9 @@
     <color name="secondary_color">#FF0091EA</color>
     <color name="primary_dark_color">#FF1E4BC6</color>
 
+    <color name="primary">#2dba4e</color>
+    <color name="tertiary">#FF0091EA</color>
+
     <color name="sesl_thumb_control_color_activated">@color/primary_color</color>
 
     <color name="red">#ffD50000</color>
@@ -22,5 +25,7 @@
     <color name="light_blue_A200">#FF40C4FF</color>
     <color name="light_blue_A400">#FF00B0FF</color>
     <color name="black_overlay">#66000000</color>
+
+    <color name="transparent_window_bg_color">#3B000000</color>
 
 </resources>

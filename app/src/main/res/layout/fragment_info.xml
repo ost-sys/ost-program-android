@@ -38,7 +38,7 @@
         <dev.oneuiproject.oneui.widget.Separator
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Video tools"/>
+            android:text="@string/video_tools"/>
 
         <dev.oneuiproject.oneui.widget.RoundLinearLayout
             android:layout_width="match_parent"
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:IconDrawable="@drawable/ic_oui_record"
-                app:TitleText="Screen recorder"
+                app:TitleText="@string/video_recording_tool"
                 app:SummaryText="OBS"
                 app:isDividerViewVisible="true"/>
 
@@ -105,7 +105,7 @@
                 android:orientation="vertical"
                 app:IconDrawable="@drawable/ic_oui_device_outline"
                 app:TitleText="Galaxy S21 FE 5G"
-                app:SummaryText="Android 14 • OneUI 6.1 • Snapdragon 888"/>
+                app:SummaryText="SM-G990B"/>
 
             <com.ost.application.ui.core.widget.CardView
                 android:id="@+id/about_devices_pc"

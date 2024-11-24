@@ -3,6 +3,7 @@ package com.ost.application;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -15,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.util.SeslMisc;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
+import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.ost.application.ui.core.base.FragmentInfo;
@@ -124,16 +127,51 @@ public class SettingsActivity extends AppCompatActivity {
 
             int darkMode = DarkModeUtils.getDarkMode(mContext);
 
-            HorizontalRadioPreference darkModePref = findPreference("dark_mode");
+            HorizontalRadioPreference darkModePref = findPreference("darkMode");
             darkModePref.setOnPreferenceChangeListener(this);
             darkModePref.setDividerEnabled(false);
             darkModePref.setTouchEffectEnabled(false);
             darkModePref.setEnabled(darkMode != DarkModeUtils.DARK_MODE_AUTO);
             darkModePref.setValue(SeslMisc.isLightTheme(mContext) ? "0" : "1");
 
-            SwitchPreferenceCompat autoDarkModePref = findPreference("dark_mode_auto");
+            SwitchPreferenceCompat autoDarkModePref = findPreference("darkModeAuto");
             autoDarkModePref.setOnPreferenceChangeListener(this);
             autoDarkModePref.setChecked(darkMode == DarkModeUtils.DARK_MODE_AUTO);
+
+
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+            // Consistent key names
+            SeekBarPreference durationTotalPref = findPreference("total_duration");
+            if (durationTotalPref != null) {
+                durationTotalPref.setOnPreferenceChangeListener((preference, newValue) -> {
+                    sharedPreferences.edit().putInt("total_duration", (int) newValue).commit();
+                    return true;
+                });
+            }
+
+            SeekBarPreference durationNoisePref = findPreference("noise_duration");
+            if (durationNoisePref != null) {
+                durationNoisePref.setOnPreferenceChangeListener((preference, newValue) -> {
+                    sharedPreferences.edit().putInt("noise_duration", (int) newValue).commit();
+                    return true;
+                });
+            }
+
+            SeekBarPreference durationHorizontalLinesPref = findPreference("duration_horizontal_lines");
+            if (durationHorizontalLinesPref != null) {
+                durationHorizontalLinesPref.setOnPreferenceChangeListener((preference, newValue) -> {
+                    sharedPreferences.edit().putInt("duration_horizontal_lines", (int) newValue).commit();
+                    return true;
+                });
+            }
+
+            SeekBarPreference durationVerticalLinesPref = findPreference("duration_vertical_lines");
+            if (durationVerticalLinesPref != null) {
+                durationVerticalLinesPref.setOnPreferenceChangeListener((preference, newValue) -> {
+                    sharedPreferences.edit().putInt("duration_vertical_lines", (int) newValue).commit();
+                    return true;
+                });
+            }
         }
 
         private void requestWriteSettingsPermission() {
@@ -169,10 +207,10 @@ public class SettingsActivity extends AppCompatActivity {
 
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             String currentDarkMode = String.valueOf(DarkModeUtils.getDarkMode(mContext));
-            HorizontalRadioPreference darkModePref = findPreference("dark_mode");
+            HorizontalRadioPreference darkModePref = findPreference("darkMode");
 
             return switch (preference.getKey()) {
-                case "dark_mode" -> {
+                case "darkMode" -> {
                     if (currentDarkMode != newValue) {
                         DarkModeUtils.setDarkMode((AppCompatActivity) requireActivity(), newValue.equals("0")
                                 ? DarkModeUtils.DARK_MODE_DISABLED
@@ -180,7 +218,7 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                     yield true;
                 }
-                case "dark_mode_auto" -> {
+                case "darkModeAuto" -> {
                     if ((boolean) newValue) {
                         darkModePref.setEnabled(false);
                         DarkModeUtils.setDarkMode((AppCompatActivity) requireActivity(),

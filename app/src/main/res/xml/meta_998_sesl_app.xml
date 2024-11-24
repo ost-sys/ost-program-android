@@ -2,7 +2,13 @@
 <ThemeMetaData FormatVersion="1.3" GuideVersion="1.4">
     <AppMetaData Name="OSTProgram" TargetApi="21" TargetPackageName="com.ost.application" VersionCode="1" VersionName="">
         <Include RefName="OST" />
-        <Property Comment="Primary Color - Dummy" DefaultValue="074d4" DestAttribName="dummy_primary_color" UID="998-1" ValueRef="1-A" ValueType="Color" />
-        <Property Comment="Main Text Color - Dummy" DefaultValue="ff252525" DestAttribName="dummy_primary_text_color" UID="998-2" ValueRef="24-A" ValueType="TextColor" />
+        <Property
+            Comment="FAB : BG tint color"
+            DefaultValue="#ff57b2d4"
+            DestAttribName="fab_bg_tint_color"
+            DestQualifiers=""
+            UID="13-5-5"
+            ValueRef="1-8-1"
+            ValueType="BgColor"/>
     </AppMetaData>
 </ThemeMetaData>

@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import com.ost.application.data.datastore.appPreferences
 import com.ost.application.data.util.getInstalledPackagesCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -31,15 +32,10 @@ data class AppsPreference(
 class AppsRepo (
     private val context: Context
 ) {
-    private val dataStore: DataStore<Preferences> = context.sampleAppPreferences
+    private val dataStore: DataStore<Preferences> = context.appPreferences
 
     val appsFlow: Flow<List<App>> get() = flow { emit(getInstalledPackageNames()) }
 
-    /**
-     * Opted to source installed apps here instead of using list from AppPickerView itself.
-     * [AppPickerView] can automatically provide list of installed apps
-     * but no ability to filter out system apps
-    */
     private suspend fun getInstalledPackageNames(): List<App> = withContext(Dispatchers.IO) {
         return@withContext context.packageManager
             .getInstalledPackagesCompat(PackageManager.GET_META_DATA)

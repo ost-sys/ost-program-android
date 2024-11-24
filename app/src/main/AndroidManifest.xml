@@ -45,10 +45,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/OneUITheme"
-        tools:targetApi="tiramisu">
+        tools:targetApi="tiramisu"
+        android:localeConfig="@xml/locales_config">
         <activity
             android:name=".MainActivity"
-            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|locale|layoutDirection"
             android:exported="true"
             android:launchMode="singleTop"
             android:resizeableActivity="true">
@@ -87,6 +88,16 @@
             android:resizeableActivity="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/OneUITheme.Fullscreen"/>
+        <activity
+            android:name=".StargazersApp"
+            android:exported="false"
+            android:resizeableActivity="true"/>
+        <activity
+            android:name=".ProfileActivity"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize" />
+        <activity
+            android:name=".settings.indexscroll.IndexscrollSettingsActivity"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize" />
 
         <meta-data
             android:name="SamsungBasicInteraction"

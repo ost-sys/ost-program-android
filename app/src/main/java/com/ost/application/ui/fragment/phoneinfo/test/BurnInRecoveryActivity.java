@@ -1,15 +1,16 @@
 package com.ost.application.ui.fragment.phoneinfo.test;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -68,8 +69,18 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
             }
         }
 
-        handler = new Handler(Looper.getMainLooper());
-        startModeCycle();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sharedPreferences == null) {
+            Log.e("BurnInRecovery", "SharedPreferences is null");
+        } else {
+            int totalDuration = sharedPreferences.getInt("total_duration", 30);
+            int noiseDuration = sharedPreferences.getInt("noise_duration", 1);
+            int horizontalLinesDuration = sharedPreferences.getInt("horizontal_lines_duration", 1); // Consistent key
+            int verticalLinesDuration = sharedPreferences.getInt("vertical_lines_duration", 1); // Consistent key
+
+            handler = new Handler(Looper.getMainLooper());
+            startModeCycle(totalDuration, noiseDuration, horizontalLinesDuration, verticalLinesDuration);
+        }
 
         noiseView.setOnLongClickListener(v -> {
             isRunning = false;
@@ -154,18 +165,44 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
         }
     }
 
-    private void startModeCycle() {
+    private void startModeCycle(int totalDuration, int noiseDuration, int horizontalLinesDuration, int verticalLinesDuration) {
+        int[] modeDurations = {
+                noiseDuration * 60 * 1000, // Шум
+                horizontalLinesDuration * 60 * 1000, // Горизонтальные линии
+                verticalLinesDuration * 60 * 1000  // Вертикальные линии
+        };
+
         Runnable modeSwitcher = new Runnable() {
+            long startTime = System.currentTimeMillis();
+            int modeIndex = 0;
+
             @Override
             public void run() {
                 if (!isRunning) return;
 
-                currentMode = (currentMode + 1) % 3;
+                // Проверяем, не превысили ли общее время восстановления
+                long elapsedTime = System.currentTimeMillis() - startTime;
+                if (elapsedTime >= totalDuration * 60 * 1000) {
+                    isRunning = false;
+                    Toast.makeText(BurnInRecoveryActivity.this, getString(R.string.exiting), Toast.LENGTH_SHORT).show();
+                    finish();
+                    return;
+                }
+
+                // Устанавливаем текущий режим
+                currentMode = modeIndex;
                 noiseView.setMode(currentMode);
 
-                handler.postDelayed(this, MODE_DURATION);
+                // Переходим к следующему режиму
+                modeIndex = (modeIndex + 1) % modeDurations.length;
+
+                Log.d("BurnInRecovery", "Switching to mode " + modeIndex + ", Duration: " + modeDurations[modeIndex]);
+
+                // Планируем следующий режим
+                handler.postDelayed(this, modeDurations[modeIndex]);
             }
         };
+
         handler.post(modeSwitcher);
     }
 

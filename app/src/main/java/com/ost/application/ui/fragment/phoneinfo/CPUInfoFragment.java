@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,57 +124,66 @@ public class CPUInfoFragment extends BaseFragment {
     }
 
     private float getClockMaxSpeed() {
-        String[] args = {"/system/bin/cat", "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq"};
-        ProcessBuilder builder = new ProcessBuilder(args);
-        if ("/system/bin/" != null)
-            builder.directory(new File("/system/bin/"));
-        builder.redirectErrorStream(true);
-        Process process = null;
         try {
-            process = builder.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        InputStream in = process.getInputStream();
-        String temp = "";
-        byte[] re = new byte[1024];
-        try {
-            while (in.read(re) != -1) {
-                temp = temp + new String(re) + "\n";
+            String[] args = {"/system/bin/cat", "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq"};
+            ProcessBuilder builder = new ProcessBuilder(args);
+            if ("/system/bin/" != null)
+                builder.directory(new File("/system/bin/"));
+            builder.redirectErrorStream(true);
+            Process process = null;
+            try {
+                process = builder.start();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            InputStream in = process.getInputStream();
+            String temp = "";
+            byte[] re = new byte[1024];
+            try {
+                while (in.read(re) != -1) {
+                    temp = temp + new String(re) + "\n";
+                }
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return Float.parseFloat(temp);
+        } catch (NumberFormatException e) {
+            Log.e("TAG", "File is not detected");
         }
-        return Float.parseFloat(temp);
 
+        return 0;
     }
 
     private float getClockMinSpeed() {
-        String[] args = {"/system/bin/cat", "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq"};
-        ProcessBuilder builder = new ProcessBuilder(args);
-        if ("/system/bin/" != null)
-            builder.directory(new File("/system/bin/"));
-        builder.redirectErrorStream(true);
-        Process process = null;
         try {
-            process = builder.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        InputStream in = process.getInputStream();
-        String temp = "";
-        byte[] re = new byte[1024];
-        try {
-            while (in.read(re) != -1) {
-                temp = temp + new String(re) + "\n";
+            String[] args = {"/system/bin/cat", "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq"};
+            ProcessBuilder builder = new ProcessBuilder(args);
+            if ("/system/bin/" != null)
+                builder.directory(new File("/system/bin/"));
+            builder.redirectErrorStream(true);
+            Process process = null;
+            try {
+                process = builder.start();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            InputStream in = process.getInputStream();
+            String temp = "";
+            byte[] re = new byte[1024];
+            try {
+                while (in.read(re) != -1) {
+                    temp = temp + new String(re) + "\n";
+                }
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return Float.parseFloat(temp);
+        } catch (NumberFormatException e) {
+            Log.e("TAG", "File is not found");
         }
-        return Float.parseFloat(temp);
-
+        return 0;
     }
 
     @Override

@@ -8,6 +8,7 @@
     <string name="open_source_licenses">Лицензии с открытым исходным кодом</string>
     <string name="one_ui_design_developers">Разработчики One UI Design</string>
     <string name="developer">Разработчик</string>
+    <string name="vm">Виртуальная машина</string>
     <string name="video_editing_tool">Редактор видео</string>
     <string name="video_recording_tool">Запись видео</string>
     <string name="preview_tool">Утилита для превью</string>
@@ -192,4 +193,27 @@
     <string name="vertical_lines">Вертикальные линии</string>
     <string name="vertical_lines_display_time">Время отображения вертикальных линий (минуты)</string>
     <string name="brightness_control">Регулировка яркости</string>
+    <string name="url_is_not_detected">Ссылка не найдена</string>
+    <string name="callback_ping">Обратная связь...</string>
+    <string name="video_tools">Видео инструменты</string>
+    <string name="scan_qr_code_m">Отсканируйте QR-код на другом устройстве, чтобы просмотреть профиль %1$s</string>
+    <string name="share_via">Поделиться через</string>
+    <string name="select_mail_client">Выберите почтовый клиент</string>
+    <string name="no_mail_clients_found">Почтовый клиент не найден</string>
+    <string name="search">Поиск</string>
+    <string name="share">Поделиться</string>
+    <string name="qr_code">QR-код</string>
+    <string name="quick_share">Быстрая отправка</string>
+    <string name="stargazers">Звездочёты</string>
+    <string name="share_stargazers_urls">Поделиться URL-адресом(-ами) звездочёта(-ов)</string>
+    <string name="website">Вебсайт</string>
+    <string name="no_internet_connection_detected">Интернет соединение не обнаружено.</string>
+    <string name="star_repositories">Отметьте звездой любой мой репозиторий\\n</string>
+    <string name="retry">Повторить попытку</string>
+    <string name="loading_stargazers">Загрузка звездочётов...</string>
+    <string name="no_stargazers_yet">Пока звездочетов нет.</string>
+    <string name="no_results_found">Результаты не найдены.</string>
+    <string name="refreshing">Обновление...</string>
+    <string name="error_loading_stargazers">Ошибка загрузки звездочётов</string>
+    <string name="search_user">Поиск пользователя</string>
 </resources>

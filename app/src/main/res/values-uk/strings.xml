@@ -8,6 +8,7 @@
     <string name="open_source_licenses">Ліцензії з відкритим вихідним кодом</string>
     <string name="one_ui_design_developers">Розробники One UI Design</string>
     <string name="developer">Розробники</string>
+    <string name="vm">Віртуальна машина</string>
     <string name="video_editing_tool">Редактор відео</string>
     <string name="video_recording_tool">Запис відео</string>
     <string name="preview_tool">Утиліта для прев\'ю</string>
@@ -192,4 +193,27 @@
     <string name="vertical_lines">Вертикальні лінії</string>
     <string name="vertical_lines_display_time">Час відображення вертикальних ліній (хвилини)</string>
     <string name="brightness_control">Регулювання яскравості</string>
+    <string name="url_is_not_detected">Посилання не знайдено</string>
+    <string name="callback_ping">Запит на відгук...</string>
+    <string name="video_tools">Відео інструменти</string>
+    <string name="scan_qr_code_m">Відскануйте QR-код на іншому пристрої, щоб переглянути профіль %1$s</string>
+    <string name="share_via">Поділитися через</string>
+    <string name="select_mail_client">Виберіть поштового клієнта</string>
+    <string name="no_mail_clients_found">Поштового клієнта не знайдено</string>
+    <string name="search">Пошук</string>
+    <string name="share">Поділитися</string>
+    <string name="qr_code">QR-код</string>
+    <string name="quick_share">Швидке відправлення</string>
+    <string name="stargazers">Зірки</string>
+    <string name="share_stargazers_urls">Поділитися URL-адресою(-ами) зореточка(-ів)</string>
+    <string name="website">Вебсайт</string>
+    <string name="no_internet_connection_detected">Інтернет з\'єднання не виявлено.</string>
+    <string name="star_repositories">Позначте зіркою будь-який мій репозиторій\\n</string>
+    <string name="retry">Повторити спробу</string>
+    <string name="loading_stargazers">Завантаження звіздарів...</string>
+    <string name="no_stargazers_yet">Поки що звіздарів немає.</string>
+    <string name="no_results_found">Результати не знайдено.</string>
+    <string name="refreshing">Оновлення...</string>
+    <string name="error_loading_stargazers">Помилка завантаження звіздарів</string>
+    <string name="search_user">Пошук користувача</string>
 </resources>

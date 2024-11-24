@@ -35,4 +35,23 @@
         <item>reply_all</item>
     </string-array>
 
+    <string-array name="preferences_searchoptions_entries">
+        <item>Dismiss</item>
+        <item>Resume</item>
+    </string-array>
+    <string-array name="preferences_searchoptions_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+    <string-array name="preferences_searchmode_entries">
+        <item>Dismiss</item>
+        <item>Clear-dismiss</item>
+        <item>Clear-close</item>
+    </string-array>
+    <string-array name="preferences_searchmode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 </resources>

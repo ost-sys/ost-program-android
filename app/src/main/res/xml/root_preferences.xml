@@ -5,7 +5,8 @@
     <PreferenceCategory>
 
         <dev.oneuiproject.oneui.preference.HorizontalRadioPreference
-            android:key="dark_mode"
+            android:dependency="darkModeAuto"
+            android:key="darkMode"
             android:title="@string/dark_mode_settings"
             app:entries="@array/preferences_darkmode_entries"
             app:entriesImage="@array/preferences_darkmode_entries_image"
@@ -13,7 +14,8 @@
             app:viewType="image" />
 
         <SwitchPreferenceCompat
-            android:key="dark_mode_auto"
+            android:disableDependentsState="true"
+            android:key="darkModeAuto"
             android:title="@string/system_default" />
 
         <SwitchPreferenceCompat
@@ -45,7 +47,7 @@
             android:summary="@string/noise_display_time"
             app:centerBasedSeekBar="false"
             app:seamlessSeekBar="false"
-            android:defaultValue="2"
+            android:defaultValue="1"
             android:max="10"
             app:min="1"
             app:seekBarMode="level_bar"
@@ -58,7 +60,7 @@
             android:summary="@string/horizontal_lines_display_time"
             app:centerBasedSeekBar="false"
             app:seamlessSeekBar="false"
-            android:defaultValue="2"
+            android:defaultValue="1"
             android:max="10"
             app:min="1"
             app:seekBarMode="level_bar"
@@ -71,7 +73,7 @@
             android:summary="@string/vertical_lines_display_time"
             app:centerBasedSeekBar="false"
             app:seamlessSeekBar="false"
-            android:defaultValue="2"
+            android:defaultValue="1"
             android:max="10"
             app:min="1"
             app:seekBarMode="level_bar"

@@ -42,10 +42,10 @@ public class DrawerListAdapter extends RecyclerView.Adapter<DrawerListViewHolder
         View view;
         if (isSeparator) {
             view = inflater.inflate(
-                    R.layout.sample3_view_drawer_list_separator, parent, false);
+                    R.layout.view_drawer_list_separator, parent, false);
         } else {
             view = inflater.inflate(
-                    R.layout.sample3_view_drawer_list_item, parent, false);
+                    R.layout.view_drawer_list_item, parent, false);
         }
 
         return new DrawerListViewHolder(view, isSeparator);

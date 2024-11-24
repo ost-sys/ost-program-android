@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.splashscreen.SplashScreen;
 import androidx.core.view.MenuCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -25,11 +26,11 @@ import com.ost.application.ui.fragment.phoneinfo.BatteryInfoFragment;
 import com.ost.application.ui.fragment.phoneinfo.CPUInfoFragment;
 import com.ost.application.ui.fragment.phoneinfo.CameraInfoFragment;
 import com.ost.application.ui.fragment.phoneinfo.DefaultInfoFragment;
-import com.ost.application.ui.fragment.FriendsListFragment;
 import com.ost.application.ui.fragment.PowerMenuFragment;
 import com.ost.application.ui.fragment.InfoFragment;
 import com.ost.application.ui.fragment.phoneinfo.DisplayInfoFragment;
 import com.ost.application.ui.fragment.phoneinfo.NetworkInfoFragment;
+import com.ost.application.ui.fragment.stargazerslist.StargazersListFragment;
 import com.topjohnwu.superuser.Shell;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ import java.util.List;
 import com.ost.application.ui.core.base.FragmentInfo;
 
 import dev.oneuiproject.oneui.layout.DrawerLayout;
+import dev.oneuiproject.oneui.layout.ToolbarLayout;
 import dev.oneuiproject.oneui.utils.ActivityUtils;
 import dev.oneuiproject.oneui.widget.Toast;
 
@@ -50,11 +52,15 @@ public class MainActivity extends AppCompatActivity implements DrawerListAdapter
     @SuppressLint({"ShowToast", "MissingInflatedId", "WrongThread"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        DarkModeUtils.setDarkMode(this, DarkModeUtils.getDarkMode(this));
         super.onCreate(savedInstanceState);
+        DarkModeUtils.setDarkMode(this, DarkModeUtils.getDarkMode(this));
+        SplashScreen.installSplashScreen(this);
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
-        EdgeToEdge.enable(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            EdgeToEdge.enable(this);
+        }
 
         initFragmentList();
         initDrawer();
@@ -72,8 +78,8 @@ public class MainActivity extends AppCompatActivity implements DrawerListAdapter
         fragments.add(null);
         fragments.add(new PowerMenuFragment());
         fragments.add(new AppListFragment());
+        fragments.add(new StargazersListFragment());
         fragments.add(null);
-        fragments.add(new FriendsListFragment());
         fragments.add(new InfoFragment());
     }
 

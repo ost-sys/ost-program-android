@@ -51,7 +51,7 @@ public class CardView extends LinearLayout {
         removeAllViews();
 
         if (mIsIconView) {
-            inflate(mContext, R.layout.sample3_widget_cardview_icon, this);
+            inflate(mContext, R.layout.widget_cardview_icon, this);
 
             mIconImageView = findViewById(R.id.cardview_icon);
             mIconImageView.setImageDrawable(mIconDrawable);
@@ -59,7 +59,7 @@ public class CardView extends LinearLayout {
                 mIconImageView.getDrawable().setTint(mIconColor);
             }
         } else {
-            inflate(mContext, R.layout.sample3_widget_cardview, this);
+            inflate(mContext, R.layout.widget_cardview, this);
         }
 
         mParentView = findViewById(R.id.cardview_main_container);

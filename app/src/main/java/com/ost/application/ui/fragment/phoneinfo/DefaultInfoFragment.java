@@ -102,7 +102,7 @@ public class DefaultInfoFragment extends BaseFragment implements View.OnClickLis
             binding.aboutPhoneBoard.setSummaryText(Build.BOARD);
             binding.aboutPhoneModel.setSummaryText(model);
             binding.aboutPhoneCodename.setSummaryText(codename);
-            binding.aboutPhoneBuildNumber.setSummaryText(getSystemProperty("ro.system.build.id"));
+            binding.aboutPhoneBuildNumber.setSummaryText(getBuildNumber());
             binding.aboutPhoneSdk.setSummaryText(Build.VERSION.SDK);
             if (getSystemProperty("ro.build.characteristics").equals("phone")) {
                 binding.aboutPhoneDevice.setSummaryText(getString(R.string.phone));
@@ -215,6 +215,16 @@ public class DefaultInfoFragment extends BaseFragment implements View.OnClickLis
                 startActivity(Intent.makeMainActivity(new ComponentName("com.android.egg", activity)));
             }
         }
+    }
+
+    public String getBuildNumber() {
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            return getSystemProperty("ro.build.id");
+        } else {
+            return getSystemProperty("ro.system.build.id");
+        }
+
     }
 
     private final Runnable resetClickCountRunnable = () -> clickCount = 0;

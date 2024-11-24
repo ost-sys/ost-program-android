@@ -6,4 +6,24 @@
     <dimen name="cardview_icon_margin_vertical">8dp</dimen>
     <dimen name="cardview_icon_margin_end">16dp</dimen>
 
+    <dimen name="sec_top_level_account_preference_icon_bg_height_with_profile_picture">86.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_icon_bg_width_with_profile_picture">84.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_icon_frame_padding_bottom_default">15.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_icon_frame_padding_bottom_with_profile_picture">6.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_icon_frame_padding_end_default">16.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_icon_frame_padding_end_with_profile_picture">18.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_icon_frame_padding_start_default">9.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_icon_frame_padding_start_with_profile_picture">10.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_icon_frame_padding_top_default">15.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_icon_frame_padding_top_with_profile_picture">0.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_icon_height_default">60.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_icon_height_with_profile_picture">77.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_icon_margin_top_with_profile_picture">3.5dip</dimen>
+    <dimen name="sec_top_level_account_preference_icon_width_default">60.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_icon_width_with_profile_picture">77.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_text_frame_padding_end_with_profile_picture">112.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_text_frame_padding_vertical_default">24.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_text_frame_padding_vertical_with_profile_picture">17.0dip</dimen>
+    <dimen name="sec_top_level_account_preference_title_text_size">19.0sp</dimen>
+
 </resources>
