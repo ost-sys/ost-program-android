@@ -48,58 +48,59 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/power_off"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:IconDrawable="@drawable/ic_oui_power"
-                app:TitleText="@string/turn_off"
-                app:SummaryText="@string/turn_off_s"/>
+                app:icon="@drawable/ic_oui_power"
+                app:title="@string/turn_off"
+                app:summary="@string/turn_off_s"
+                app:showTopDivider="false"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/reboot"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:IconDrawable="@drawable/ic_oui_restart"
-                app:TitleText="@string/reboot"
-                app:SummaryText="@string/reboot_system_s"
+                app:icon="@drawable/ic_oui_restart"
+                app:title="@string/reboot"
+                app:summary="@string/reboot_system_s"
                 app:isDividerViewVisible="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/recovery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:IconDrawable="@drawable/ic_oui_lightning"
-                app:TitleText="@string/reboot_recovery"
-                app:SummaryText="@string/reboot_recovery_s"
-                app:isDividerViewVisible="true"/>
+                app:icon="@drawable/ic_oui_lightning"
+                app:title="@string/reboot_recovery"
+                app:summary="@string/reboot_recovery_s"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/download_mode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:IconDrawable="@drawable/ic_oui_download_circle_filled"
-                app:TitleText="@string/reboot_download"
-                app:SummaryText="@string/reboot_download_s"
-                app:isDividerViewVisible="true"/>
+                app:icon="@drawable/ic_oui_download_circle_filled"
+                app:title="@string/reboot_download"
+                app:summary="@string/reboot_download_s"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/fastboot"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:IconDrawable="@drawable/ic_oui_restart"
-                app:TitleText="@string/reboot_fastboot"
-                app:SummaryText="@string/reboot_fastboot_s"
-                app:isDividerViewVisible="true"/>
+                app:icon="@drawable/ic_oui_restart"
+                app:title="@string/reboot_fastboot"
+                app:summary="@string/reboot_fastboot_s"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/fastbootd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:IconDrawable="@drawable/ic_oui_restart"
-                app:TitleText="@string/reboot_fastbootd"
-                app:SummaryText="@string/reboot_fastbootd_s"
-                app:isDividerViewVisible="true"/>
+                app:icon="@drawable/ic_oui_restart"
+                app:title="@string/reboot_fastbootd"
+                app:summary="@string/reboot_fastbootd_s"
+                app:showTopDivider="true"/>
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 

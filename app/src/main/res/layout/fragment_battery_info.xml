@@ -44,46 +44,47 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/battery_health"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/health"/>
+                app:title="@string/health"
+                app:showTopDivider="false"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/battery_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/status"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/status"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/battery_temp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/temperature"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/temperature"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/battery_voltage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/voltage"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/voltage"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/battery_technology"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/technology"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/technology"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/battery_capacity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/capacity"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/capacity"
+                app:showTopDivider="true"/>
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 

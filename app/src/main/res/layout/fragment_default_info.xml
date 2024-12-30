@@ -47,88 +47,89 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_phone_android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/android_version"/>
+                app:title="@string/android_version"
+                app:showTopDivider="false"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_phone_brand"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/brand"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/brand"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_phone_board"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/board"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/board"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_phone_model"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/model"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/model"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_phone_codename"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/codename"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/codename"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_phone_build_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/build_number"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/build_number"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_phone_sdk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/software_development_kit"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/software_development_kit"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_phone_device"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/device_type"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/device_type"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_phone_ram"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/ram"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/ram"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_phone_rom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/rom"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/rom"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_phone_fingerprint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/build_fingerprint"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/build_fingerprint"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_phone_fingerprint_scanner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/fingerprint_support"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/fingerprint_support"
+                app:showTopDivider="true"/>
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 

@@ -46,10 +46,26 @@ public class DefaultInfoFragment extends BaseFragment implements View.OnClickLis
                 handler.postDelayed(this, 1000);
             }
         };
+
+        assert getActivity() != null;
+        DeviceName.init(getActivity());
+        DeviceName.with(getActivity()).request((info, error) -> {
+            if (!isAdded()) return;
+
+            String name = info.getName();
+            String model = info.model;
+            String codename = info.codename;
+
+            binding.aboutPhoneName.setText(name);
+            binding.aboutPhoneModel.setSummary(model);
+            binding.aboutPhoneCodename.setSummary(codename);
+        });
+
         handler.post(updateRunnable);
         return binding.getRoot();
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void updateInfo() {
         assert getActivity() != null;
         ActivityManager actManager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
@@ -88,33 +104,21 @@ public class DefaultInfoFragment extends BaseFragment implements View.OnClickLis
         String freeString = String.format("%.1f", free);
         String usedString = String.format("%.1f", used);
 
-        DeviceName.init(getActivity());
-        DeviceName.with(getActivity()).request((info, error) -> {
-            if (!isAdded()) return;
-
-            String name = info.marketName;
-            String model = info.model;
-            String codename = info.codename;
-
-            binding.aboutPhoneName.setText(name);
-            binding.aboutPhoneAndroid.setSummaryText(Build.VERSION.RELEASE);
-            binding.aboutPhoneBrand.setSummaryText(Build.BRAND);
-            binding.aboutPhoneBoard.setSummaryText(Build.BOARD);
-            binding.aboutPhoneModel.setSummaryText(model);
-            binding.aboutPhoneCodename.setSummaryText(codename);
-            binding.aboutPhoneBuildNumber.setSummaryText(getBuildNumber());
-            binding.aboutPhoneSdk.setSummaryText(Build.VERSION.SDK);
-            if (getSystemProperty("ro.build.characteristics").equals("phone")) {
-                binding.aboutPhoneDevice.setSummaryText(getString(R.string.phone));
-            } else if (getSystemProperty("ro.build.characteristics").equals("tablet")) {
-                binding.aboutPhoneDevice.setSummaryText(getString(R.string.tablet));
-            } else {
-                binding.aboutPhoneDevice.setSummaryText(getString(R.string.device) + " (" + getSystemProperty("ro.build.characteristics") + ")");
-            }
-            binding.aboutPhoneRam.setSummaryText(getString(R.string.available) + ": " + availMemoryString + " " + getString(R.string.gb) + "\n" + getString(R.string.total) + ": " + totalMemoryString + " " + getString(R.string.gb));
-            binding.aboutPhoneRom.setSummaryText(getString(R.string.total) + ": " + totalString + " " + getString(R.string.gb) + "\n" + getString(R.string.available) + ": " + freeString + " " + getString(R.string.gb) + "\n" + getString(R.string.used) + ": " + usedString + " " + getString(R.string.gb));
-            binding.aboutPhoneFingerprint.setSummaryText(Build.FINGERPRINT);
-        });
+        binding.aboutPhoneAndroid.setSummary(Build.VERSION.RELEASE);
+        binding.aboutPhoneBrand.setSummary(Build.BRAND);
+        binding.aboutPhoneBoard.setSummary(Build.BOARD);
+        binding.aboutPhoneBuildNumber.setSummary(getBuildNumber());
+        binding.aboutPhoneSdk.setSummary(Build.VERSION.SDK);
+        if (getSystemProperty("ro.build.characteristics").equals("phone")) {
+            binding.aboutPhoneDevice.setSummary(getString(R.string.phone));
+        } else if (getSystemProperty("ro.build.characteristics").equals("tablet")) {
+            binding.aboutPhoneDevice.setSummary(getString(R.string.tablet));
+        } else {
+            binding.aboutPhoneDevice.setSummary(getString(R.string.device) + " (" + getSystemProperty("ro.build.characteristics") + ")");
+        }
+        binding.aboutPhoneRam.setSummary(getString(R.string.available) + ": " + availMemoryString + " " + getString(R.string.gb) + "\n" + getString(R.string.total) + ": " + totalMemoryString + " " + getString(R.string.gb));
+        binding.aboutPhoneRom.setSummary(getString(R.string.total) + ": " + totalString + " " + getString(R.string.gb) + "\n" + getString(R.string.available) + ": " + freeString + " " + getString(R.string.gb) + "\n" + getString(R.string.used) + ": " + usedString + " " + getString(R.string.gb));
+        binding.aboutPhoneFingerprint.setSummary(Build.FINGERPRINT);
 
         if (getSystemProperty("ro.build.characteristics").equals("phone")) {
             binding.aboutPhoneImage.setImageDrawable(getResources().getDrawable(dev.oneuiproject.oneui.R.drawable.ic_oui_device_outline));
@@ -124,18 +128,16 @@ public class DefaultInfoFragment extends BaseFragment implements View.OnClickLis
             binding.aboutPhoneImage.setImageDrawable(getResources().getDrawable(dev.oneuiproject.oneui.R.drawable.ic_oui_page_settings));
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            FingerprintManager fingerprintManager = getActivity().getSystemService(FingerprintManager.class);
+        FingerprintManager fingerprintManager = getActivity().getSystemService(FingerprintManager.class);
 
-            if (fingerprintManager != null && fingerprintManager.isHardwareDetected()) {
-                if (fingerprintManager.hasEnrolledFingerprints()) {
-                    binding.aboutPhoneFingerprintScanner.setSummaryText(getString(R.string.supported) + "\n" + getString(R.string.fingers_registered));
-                } else {
-                    binding.aboutPhoneFingerprintScanner.setSummaryText(getString(R.string.supported) + "\n" + getString(R.string.fingers_not_registered));
-                }
+        if (fingerprintManager != null && fingerprintManager.isHardwareDetected()) {
+            if (fingerprintManager.hasEnrolledFingerprints()) {
+                binding.aboutPhoneFingerprintScanner.setSummary(getString(R.string.supported) + "\n" + getString(R.string.fingers_registered));
             } else {
-                binding.aboutPhoneFingerprintScanner.setSummaryText(getString(R.string.unsupported));
+                binding.aboutPhoneFingerprintScanner.setSummary(getString(R.string.supported) + "\n" + getString(R.string.fingers_not_registered));
             }
+        } else {
+            binding.aboutPhoneFingerprintScanner.setSummary(getString(R.string.unsupported));
         }
         binding.aboutPhoneAndroid.setOnClickListener(this);
     }
@@ -157,6 +159,54 @@ public class DefaultInfoFragment extends BaseFragment implements View.OnClickLis
         super.onDestroyView();
         handler.removeCallbacks(updateRunnable);
     }
+
+    @Override
+    public void onClick(View v) {
+        clickCount++;
+        handler.removeCallbacks(resetClickCountRunnable);
+
+        if (clickCount == 3) {
+            performAction();
+            clickCount = 0;
+        } else {
+            int maxClickTime = 1000;
+            handler.postDelayed(resetClickCountRunnable, maxClickTime);
+        }
+    }
+
+    private void performAction() {
+        long uptimeMillis = SystemClock.uptimeMillis();
+        if (uptimeMillis - mLastClickTime > 600L) {
+            String activity = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                activity = "com.android.egg.landroid.MainActivity";
+            } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU
+                    && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+                    || Build.VERSION.SDK_INT == Build.VERSION_CODES.O
+                    || Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1){
+                Toast.makeText(getActivity(), getString(R.string.easter_egg_not_founded), Toast.LENGTH_SHORT).show();
+            } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+                activity = "com.android.egg.quares.QuaresActivity";
+            } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.P) {
+                activity = "com.android.egg.paint.PaintActivity";
+            }
+            if (activity != null) {
+                startActivity(Intent.makeMainActivity(new ComponentName("com.android.egg", activity)));
+            }
+        }
+    }
+
+    public String getBuildNumber() {
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            return getSystemProperty("ro.build.id");
+        } else {
+            return getSystemProperty("ro.system.build.id");
+        }
+
+    }
+
+    private final Runnable resetClickCountRunnable = () -> clickCount = 0;
 
     @Override
     public int getLayoutResId() {
@@ -183,49 +233,4 @@ public class DefaultInfoFragment extends BaseFragment implements View.OnClickLis
             return getString(R.string.about_device);
         }
     }
-
-    @Override
-    public void onClick(View v) {
-        clickCount++;
-        handler.removeCallbacks(resetClickCountRunnable);
-
-        if (clickCount == 3) {
-            performAction();
-            clickCount = 0;
-        } else {
-            int maxClickTime = 1000;
-            handler.postDelayed(resetClickCountRunnable, maxClickTime);
-        }
-    }
-
-    private void performAction() {
-        long uptimeMillis = SystemClock.uptimeMillis();
-        if (uptimeMillis - mLastClickTime > 600L) {
-            String activity = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                activity = "com.android.egg.landroid.MainActivity";
-            } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                Toast.makeText(getActivity(), "Easter Egg is not founded in System UI or in Android Easter Egg application", Toast.LENGTH_SHORT).show();
-            } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
-                activity = "com.android.egg.quares.QuaresActivity";
-            } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.P) {
-                activity = "com.android.egg.paint.PaintActivity";
-            }
-            if (activity != null) {
-                startActivity(Intent.makeMainActivity(new ComponentName("com.android.egg", activity)));
-            }
-        }
-    }
-
-    public String getBuildNumber() {
-
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-            return getSystemProperty("ro.build.id");
-        } else {
-            return getSystemProperty("ro.system.build.id");
-        }
-
-    }
-
-    private final Runnable resetClickCountRunnable = () -> clickCount = 0;
 }

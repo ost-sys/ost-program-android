@@ -19,6 +19,8 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper.END
+import androidx.recyclerview.widget.ItemTouchHelper.START
 import com.ost.application.MainActivity
 import com.ost.application.R
 import com.ost.application.data.AppsRepo
@@ -26,18 +28,24 @@ import com.ost.application.databinding.FragmentAppListBinding
 import com.ost.application.ui.core.base.BaseFragment
 import com.ost.application.ui.core.launchAndRepeatWithViewLifecycle
 import com.ost.application.ui.core.toast
+import com.ost.application.ui.core.util.openUrl
+import com.ost.application.ui.fragment.stargazerslist.model.StargazersListItemUiModel
 import com.topjohnwu.superuser.Shell
 import dev.oneuiproject.oneui.delegates.AppBarAwareYTranslator
 import dev.oneuiproject.oneui.delegates.AppPickerDelegate
 import dev.oneuiproject.oneui.delegates.AppPickerOp
 import dev.oneuiproject.oneui.delegates.ViewYTranslator
 import dev.oneuiproject.oneui.ktx.clearBadge
+import dev.oneuiproject.oneui.ktx.configureItemSwipeAnimator
 import dev.oneuiproject.oneui.ktx.isSoftKeyboardShowing
 import dev.oneuiproject.oneui.ktx.setBadge
 import dev.oneuiproject.oneui.ktx.setEntries
 import dev.oneuiproject.oneui.layout.Badge
 import dev.oneuiproject.oneui.layout.ToolbarLayout
 import dev.oneuiproject.oneui.layout.startSearchMode
+import dev.oneuiproject.oneui.widget.TipPopup
+import dev.oneuiproject.oneui.widget.TipPopup.Direction
+import dev.oneuiproject.oneui.widget.TipPopup.Mode
 import kotlinx.coroutines.flow.collectLatest
 
 class AppListFragment : BaseFragment(),

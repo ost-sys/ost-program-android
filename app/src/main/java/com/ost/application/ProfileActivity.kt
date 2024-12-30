@@ -18,6 +18,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.IntentCompat
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.ost.application.data.model.Stargazer
 import com.ost.application.databinding.ActivityStargazerBinding
 import com.ost.application.ui.core.util.ActivityBackAnimationDelegate
@@ -26,7 +27,11 @@ import com.ost.application.ui.core.util.onSingleClick
 import com.ost.application.ui.core.util.openUrl
 import com.ost.application.ui.core.util.semSetToolTipText
 import com.ost.application.ui.core.toast
+import com.ost.application.ui.core.util.SharingUtils.isSamsungQuickShareAvailable
+import com.ost.application.ui.core.util.SharingUtils.share
+import com.topjohnwu.superuser.internal.Utils.context
 import dev.oneuiproject.oneui.widget.CardItemView
+import kotlinx.coroutines.launch
 import dev.oneuiproject.oneui.R as designR
 
 @SuppressLint("RestrictedApi")
@@ -175,7 +180,7 @@ class ProfileActivity : AppCompatActivity(){
     private fun setupSharedElementTransitionWindow(){
         window.apply {
             requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
-            setSharedElementsUseOverlay(false)
+            sharedElementsUseOverlay = false
             AutoTransition().let {
                 it.duration = 250
                 sharedElementExitTransition = it
@@ -199,17 +204,16 @@ class ProfileActivity : AppCompatActivity(){
     }
 
     private fun setupBottomNav(){
+        mBinding.bottomNav.menu.findItem(R.id.menu_sg_share).apply {
+            title = if (isSamsungQuickShareAvailable()) getString(R.string.quick_share) else getString(R.string.share)
+        }
+
         mBinding.bottomNav.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.menu_sg_share -> {
-                    val shareText = "${stargazer.getDisplayName()} - ${stargazer.html_url}"
-                    val shareIntent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, shareText)
-                        type = "text/plain"
+                    lifecycleScope.launch {
+                        stargazer.asVCardFile(this@ProfileActivity).share(this@ProfileActivity)
                     }
-                    val chooserIntent = Intent.createChooser(shareIntent, getString(R.string.share_via))
-                    startActivity(chooserIntent)
                     true
                 }
                 R.id.menu_sg_qrcode -> {

@@ -54,6 +54,21 @@ public class DisplayInfoFragment extends BaseFragment implements View.OnClickLis
     }
 
     @Override
+    public int getLayoutResId() {
+        return R.layout.fragment_display_info;
+    }
+
+    @Override
+    public int getIconResId() {
+        return dev.oneuiproject.oneui.R.drawable.ic_oui_screen_resolution;
+    }
+
+    @Override
+    public CharSequence getTitle() {
+        return getString(R.string.display);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         handler.removeCallbacks(updateRunnable);
@@ -78,30 +93,15 @@ public class DisplayInfoFragment extends BaseFragment implements View.OnClickLis
         int densityDpi = (int)(metrics.density * 160f);
 
         binding.displayScreenResolution.setText(height + " * " + width);
-        binding.displayRefreshRate.setSummaryText((int) refreshRating + " " + getString(R.string.hz));
-        binding.displayDpi.setSummaryText(densityDpi + " " + getString(R.string.dpi));
-        binding.displayScreenDiagonal.setSummaryText(getDisplaySize(getActivity()) + " " + getString(R.string.inches));
+        binding.displayRefreshRate.setSummary((int) refreshRating + " " + getString(R.string.hz));
+        binding.displayDpi.setSummary(densityDpi + " " + getString(R.string.dpi));
+        binding.displayScreenDiagonal.setSummary(getDisplaySize(getActivity()) + " " + getString(R.string.inches));
 
         if (getActivity().getResources().getConfiguration().orientation == 1) {
-            binding.displayScreenOrientation.setSummaryText(getString(R.string.portrait));
+            binding.displayScreenOrientation.setSummary(getString(R.string.portrait));
         } else if (getActivity().getResources().getConfiguration().orientation == 2) {
-            binding.displayScreenOrientation.setSummaryText(getString(R.string.landscape));
+            binding.displayScreenOrientation.setSummary(getString(R.string.landscape));
         }
-    }
-
-    @Override
-    public int getLayoutResId() {
-        return R.layout.fragment_display_info;
-    }
-
-    @Override
-    public int getIconResId() {
-        return dev.oneuiproject.oneui.R.drawable.ic_oui_screen_resolution;
-    }
-
-    @Override
-    public CharSequence getTitle() {
-        return getString(R.string.display);
     }
 
     static String getDisplaySize(Activity activity) {
@@ -137,15 +137,17 @@ public class DisplayInfoFragment extends BaseFragment implements View.OnClickLis
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         int totalDuration = preferences.getInt("total_duration", 30);
-        int noiseDuration = preferences.getInt("noise_duration", 2);
-        int horizontalDuration = preferences.getInt("horizontal_duration", 2);
-        int verticalDuration = preferences.getInt("vertical_duration", 2);
+        int noiseDuration = preferences.getInt("noise_duration", 1);
+        int horizontalDuration = preferences.getInt("horizontal_duration", 1);
+        int verticalDuration = preferences.getInt("vertical_duration", 1);
+        int blackWhiteNoiseDuration = preferences.getInt("black_white_noise_duration", 1);
 
         Intent intent = new Intent(requireContext(), BurnInRecoveryActivity.class);
         intent.putExtra("totalDuration", totalDuration);
         intent.putExtra("noiseDuration", noiseDuration);
         intent.putExtra("horizontalDuration", horizontalDuration);
         intent.putExtra("verticalDuration", verticalDuration);
+        intent.putExtra("blackWhiteNoiseDuration", blackWhiteNoiseDuration);
         startActivity(intent);
     }
 

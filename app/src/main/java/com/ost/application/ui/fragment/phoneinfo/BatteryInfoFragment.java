@@ -15,6 +15,8 @@ import com.ost.application.R;
 import com.ost.application.databinding.FragmentBatteryInfoBinding;
 import com.ost.application.ui.core.base.BaseFragment;
 
+import java.util.Objects;
+
 
 public class BatteryInfoFragment extends BaseFragment {
 
@@ -30,7 +32,7 @@ public class BatteryInfoFragment extends BaseFragment {
         batteryReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals(Intent.ACTION_BATTERY_CHANGED)) {
+                if (Objects.equals(intent.getAction(), Intent.ACTION_BATTERY_CHANGED)) {
                     updateBatteryInfo(intent);
                     getBatteryCapacity(context);
                 }
@@ -49,30 +51,15 @@ public class BatteryInfoFragment extends BaseFragment {
         final Bundle extras = intent.getExtras();
         String batteryTech = (extras != null) ? extras.getString(BatteryManager.EXTRA_TECHNOLOGY) : null;
 
-        String healthStatus;
-        switch (health) {
-            case BatteryManager.BATTERY_HEALTH_GOOD:
-                healthStatus = getString(R.string.good);
-                break;
-            case BatteryManager.BATTERY_HEALTH_OVERHEAT:
-                healthStatus = getString(R.string.overheat);
-                break;
-            case BatteryManager.BATTERY_HEALTH_DEAD:
-                healthStatus = getString(R.string.dead);
-                break;
-            case BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE:
-                healthStatus = getString(R.string.over_voltage);
-                break;
-            case BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE:
-                healthStatus = getString(R.string.fail);
-                break;
-            case BatteryManager.BATTERY_HEALTH_COLD:
-                healthStatus = getString(R.string.cold);
-                break;
-            default:
-                healthStatus = getString(R.string.undefined);
-                break;
-        }
+        String healthStatus = switch (health) {
+            case BatteryManager.BATTERY_HEALTH_GOOD -> getString(R.string.good);
+            case BatteryManager.BATTERY_HEALTH_OVERHEAT -> getString(R.string.overheat);
+            case BatteryManager.BATTERY_HEALTH_DEAD -> getString(R.string.dead);
+            case BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> getString(R.string.over_voltage);
+            case BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE -> getString(R.string.fail);
+            case BatteryManager.BATTERY_HEALTH_COLD -> getString(R.string.cold);
+            default -> getString(R.string.undefined);
+        };
 
         int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
         String chargingStatus;
@@ -109,11 +96,11 @@ public class BatteryInfoFragment extends BaseFragment {
             }
         }
 
-        binding.batteryStatus.setSummaryText(chargingStatus);
-        binding.batteryHealth.setSummaryText(healthStatus);
-        binding.batteryTemp.setSummaryText(temp / 10 + "°C");
-        binding.batteryVoltage.setSummaryText(voltage / 1000 + "V");
-        binding.batteryTechnology.setSummaryText(batteryTech);
+        binding.batteryStatus.setSummary(chargingStatus);
+        binding.batteryHealth.setSummary(healthStatus);
+        binding.batteryTemp.setSummary(temp / 10 + "°C");
+        binding.batteryVoltage.setSummary(voltage / 1000 + "V");
+        binding.batteryTechnology.setSummary(batteryTech);
     }
 
     @Override
@@ -131,7 +118,7 @@ public class BatteryInfoFragment extends BaseFragment {
     }
 
     @SuppressLint("PrivateApi")
-    public double getBatteryCapacity(Context context) {
+    public void getBatteryCapacity(Context context) {
         Object mPowerProfile;
         double batteryCapacity = 0;
         final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
@@ -150,8 +137,7 @@ public class BatteryInfoFragment extends BaseFragment {
             e.printStackTrace();
         }
 
-        binding.batteryCapacity.setSummaryText((int) batteryCapacity + " " + getString(R.string.mah));
-        return batteryCapacity;
+        binding.batteryCapacity.setSummary((int) batteryCapacity + " " + getString(R.string.mah));
 
     }
 

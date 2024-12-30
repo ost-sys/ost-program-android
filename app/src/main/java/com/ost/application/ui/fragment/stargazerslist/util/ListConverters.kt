@@ -25,7 +25,7 @@ fun List<StargazersListItemUiModel>.toIndexCharsArray(): Array<String> {
 }
 
 
-fun List<Stargazer>.toFilteredStargazerUiModelList(query: String): List<StargazersListItemUiModel> {
+fun List<Stargazer>.toFilteredStargazerUiModelList(query: String, repoFilter: String): List<StargazersListItemUiModel> {
     val list = mutableListOf<StargazersListItemUiModel>()
 
     var previousChar: String? = null

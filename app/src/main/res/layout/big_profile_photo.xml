@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dev.oneuiproject.oneui.widget.RoundedFrameLayout
+    android:id="@+id/header_container"
     android:background="?android:colorBackground"
     android:paddingHorizontal="24dp"
     android:paddingVertical="12dp"
@@ -13,7 +14,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
-        android:id="@+id/icon"
+        android:id="@+id/stargazer_avatar"
         android:layout_gravity="end|center_vertical"
         android:layout_width="92dp"
         android:layout_height="92dp"
@@ -48,5 +49,12 @@
             android:textColor="?android:attr/textColorSecondary" />
 
     </LinearLayout>
+
+    <include
+        android:id="@+id/stargazer_buttons"
+        android:layout_width="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        layout="@layout/view_stargazer_buttons"
+        android:layout_height="wrap_content" />
 
 </dev.oneuiproject.oneui.widget.RoundedFrameLayout>

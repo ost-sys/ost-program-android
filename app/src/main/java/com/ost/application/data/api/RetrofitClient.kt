@@ -7,13 +7,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitClient {
     private const val BASE_URL = "https://api.github.com/"
 
-    //Generate your own
-    private const val ACCESS_TOKEN = ""
-
     private val client = OkHttpClient.Builder()
         .addInterceptor { chain ->
             val request = chain.request().newBuilder()
-                .addHeader("Authorization", "Bearer $ACCESS_TOKEN")
+                .addHeader("Authorization", "Bearer ")
                 .build()
             chain.proceed(request)
         }
@@ -29,3 +26,4 @@ object RetrofitClient {
             .create(GitHubService::class.java)
     }
 }
+

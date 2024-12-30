@@ -44,15 +44,15 @@ public class CPUInfoFragment extends BaseFragment {
         loadAboutDevice();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            binding.cpuManufacturer.setSummaryText(Build.SOC_MANUFACTURER);
+            binding.cpuManufacturer.setSummary(Build.SOC_MANUFACTURER);
         } else {
             binding.cpuManufacturer.setVisibility(View.GONE);
         }
 
-        binding.cpuName.setSummaryText(getCpuName());
-        binding.cpuAbi.setSummaryText(Arrays.toString(Build.SUPPORTED_ABIS));
-        binding.cpuCores.setSummaryText(String.valueOf(getNumberOfCores()));
-        binding.cpuCoresClock.setSummaryText(cpu.getClock_speed());
+        binding.cpuName.setSummary(getCpuName());
+        binding.cpuAbi.setSummary(Arrays.toString(Build.SUPPORTED_ABIS));
+        binding.cpuCores.setSummary(String.valueOf(getNumberOfCores()));
+        binding.cpuCoresClock.setSummary(cpu.getClock_speed());
 
         return binding.getRoot();
     }

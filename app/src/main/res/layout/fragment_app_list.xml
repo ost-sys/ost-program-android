@@ -39,9 +39,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textAlignment="center"
-                tools:ignore="TextContrastCheck"
-                android:text="No item found"
-                />
+                tools:ignore="TextContrastCheck" />
+
         </androidx.core.widget.NestedScrollView>
 
         <androidx.appcompat.widget.SeslProgressBar

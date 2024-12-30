@@ -224,4 +224,47 @@
     <string name="refreshing">Refreshing...</string>
     <string name="error_loading_stargazers">Error loading stargazers</string>
     <string name="search_user">Search user</string>
+    <string name="easter_egg_not_founded">Easter Egg is not founded in System UI or in Android Easter Egg application</string>
+    <string name="are_you_kidding_me">Are you kidding me?</string>
+    <string name="storage_permission_r">Permission to access storage is required</string>
+    <string name="index_scroll_settings">Index scroll settings</string>
+    <string name="autohide">Autohide</string>
+    <string name="s_already_refreshing">Stargazer\'s already refreshing.</string>
+    <string name="error_fetching_stargazers">Error fetching stargazers.</string>
+    <string name="latest_stargazers_fetched">Latest stargazers data successfully fetched!</string>
+    <string name="connection_error_occurred">Connection error occurred</string>
+    <string name="data_analysis_error">Data analysis error</string>
+    <string name="conversion_error">Conversion error</string>
+    <string name="_1_s_2f_s">1 %s is %.2f %s</string>
+    <string name="enter_your_token">Enter your token</string>
+    <string name="enter_your_token_text_input">Enter your token here. \n\nClick OK to open the site to register and receive your unique token</string>
+    <string name="currency_converter">Currency converter</string>
+    <string name="result">Result</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="convert">Convert</string>
+    <string name="image_saved_successfully">Image saved successfully</string>
+    <string name="failed_to_save_image">Failed to save image</string>
+    <string name="failed_to_open_output_stream">Failed to open output stream</string>
+    <string name="sim_card_is_not_detected">SIM card is not detected</string>
+    <string name="happy_new_year">Happy New Year!</string>
+    <string name="d_h_m_s">%d d. %d h. %d min. %d s.</string>
+    <string name="time_left_until_the_new_year">Time left until the New Year</string>
+    <string name="use_index_scroll">Use index scroll</string>
+    <string name="index_scroll">Index scroll</string>
+    <string name="black_white_noise">Black-White noise</string>
+    <string name="black_white_noise_display_time">Black-White noise display time</string>
+
+    <string-array name="currencies">
+        <item>RUB (Российский рубль)</item>
+        <item>BYN (Беларускі рубель)</item>
+        <item>UAH (Українська гривня)</item>
+        <item>EUR (Euro)</item>
+    </string-array>
+    <string name="dismiss">Dismiss</string>
+    <string name="resume">Resume</string>
+    <string name="clear_dismiss">Clear-dismiss</string>
+    <string name="clear_close">Clear-close</string>
+    <string name="search_on_action_mode">Search on action mode</string>
+    <string name="search_mode_on_back_behavior">Search mode on back behavior</string>
 </resources>

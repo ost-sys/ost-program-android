@@ -46,32 +46,33 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/camera_back_resolution"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/camera_resolution"/>
+                app:title="@string/camera_resolution"
+                app:showTopDivider="false"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/camera_back_focal_lenght"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/focal_lenght"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/focal_lenght"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/camera_back_stabilization"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/stabilization_support"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/stabilization_support"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/camera_back_flash"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/flash"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/flash"
+                app:showTopDivider="true"/>
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 
@@ -87,32 +88,33 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/camera_back_second_resolution"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/camera_resolution"/>
+                app:title="@string/camera_resolution"
+                app:showTopDivider="false"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/camera_back_second_focal_lenght"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/focal_lenght"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/focal_lenght"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/camera_back_second_stabilization"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/stabilization_support"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/stabilization_support"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/camera_back_second_flash"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/flash"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/flash"
+                app:showTopDivider="true"/>
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 
@@ -128,32 +130,33 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/camera_back_third_resolution"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/camera_resolution"/>
+                app:title="@string/camera_resolution"
+                app:showTopDivider="false"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/camera_back_third_focal_lenght"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/focal_lenght"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/focal_lenght"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/camera_back_third_stabilization"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/stabilization_support"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/stabilization_support"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/camera_back_third_flash"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/flash"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/flash"
+                app:showTopDivider="true"/>
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 
@@ -168,32 +171,33 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/camera_front_resolution"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/camera_resolution"/>
+                app:title="@string/camera_resolution"
+                app:showTopDivider="false"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/camera_front_focal_lenght"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/focal_lenght"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/focal_lenght"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/camera_front_stabilization"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/stabilization_support"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/stabilization_support"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/camera_front_flash"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/flash"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/flash"
+                app:showTopDivider="true"/>
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 

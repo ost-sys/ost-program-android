@@ -1,8 +1,8 @@
 package com.ost.application.data.api
 
+import androidx.annotation.Keep
 import com.ost.application.data.model.Stargazer
 import com.ost.application.data.model.StargazerDetails
-import com.ost.application.data.model.Release
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -19,10 +19,16 @@ interface GitHubService {
         @Path("username") username: String
     ): StargazerDetails
 
-    @GET("repos/{owner}/{repo}/releases/latest")
-    fun getLatestRelease(
+    @GET("repos/{owner}/{repo}/tags")
+    fun getTags(
         @Path("owner") owner: String,
         @Path("repo") repo: String
-    ): Call<Release>
+    ): Call<List<Tags>>
+
 }
 
+@Keep
+data class Tags(
+    @JvmField
+    val name: String
+)

@@ -10,8 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:seslUseCustomHeight="true"
-        app:seslHeightProportion="0.5"
-        android:fitsSystemWindows="true">
+        app:seslHeightProportion="0.5">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/about_ctl"
@@ -41,25 +40,34 @@
                     android:gravity="center"
                     android:text="@string/app_name"
                     android:textSize="30sp"
-                    android:textColor="?actionMenuTextColor"
+                    android:textColor="@color/oui_appinfolayout_app_label_text_color"
                     app:fontFamily="@font/samsungsharpsans_bold" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/about_header_app_version"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_gravity="center"
                     android:gravity="center"
-                    android:textSize="14sp"
-                    android:textColor="@color/about_page_secondary_text_color" />
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/about_update"
-                    style="@style/OneUI.AppInfoButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/check_for_updates"/>
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/about_header_app_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textColor="@color/oui_appinfolayout_sub_text_color" />
+
+                    <androidx.appcompat.widget.SeslProgressBar
+                        android:id="@+id/checking_update_main"
+                        style="@style/Widget.AppCompat.ProgressBar.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="6dp"
+                        android:indeterminate="true"
+                        android:visibility="gone" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -72,6 +80,7 @@
                         android:id="@+id/about_header_github"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
+                        android:tint="?actionMenuTextColor"
                         android:background="?attr/actionBarItemBackground"
                         app:srcCompat="@drawable/about_page_github" />
 
@@ -79,6 +88,7 @@
                         android:id="@+id/about_header_telegram"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
+                        android:tint="?actionMenuTextColor"
                         android:background="?attr/actionBarItemBackground"
                         app:srcCompat="@drawable/about_page_telegram" />
 
@@ -86,6 +96,7 @@
                         android:id="@+id/about_header_youtube"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
+                        android:tint="?actionMenuTextColor"
                         android:background="?attr/actionBarItemBackground"
                         app:srcCompat="@drawable/about_page_youtube" />
 
@@ -93,8 +104,17 @@
                         android:id="@+id/about_header_tt"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
+                        android:tint="?actionMenuTextColor"
                         android:background="?attr/actionBarItemBackground"
                         app:srcCompat="@drawable/about_page_tt" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/about_header_website"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:tint="?actionMenuTextColor"
+                        android:background="?attr/actionBarItemBackground"
+                        app:srcCompat="@drawable/ic_oui_internet_website" />
 
                 </LinearLayout>
 
@@ -118,54 +138,71 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <RelativeLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="24dp">
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/about_bottom_app_icon"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"
-                android:clickable="true"
-                android:focusable="true"/>
-
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp"
-                android:layout_toEndOf="@id/about_bottom_app_icon"
-                android:orientation="vertical">
+                android:paddingHorizontal="24dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/about_bottom_app_icon"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    android:textColor="?actionMenuTextColor"
-                    android:textSize="18sp"
-                    android:textAppearance="?android:attr/textAppearanceListItem" />
+                    android:layout_marginStart="20dp"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
+                    android:layout_toEndOf="@id/about_bottom_app_icon"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/about_bottom_app_version"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceListItemSecondary"
-                    android:textColor="?android:attr/textColorSecondary" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_name"
+                        android:textColor="@color/oui_appinfolayout_app_label_text_color"
+                        android:textSize="18sp"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        app:fontFamily="@font/samsungsharpsans_bold" />
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/about_bottom_app_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                        android:textColor="@color/oui_appinfolayout_sub_text_color" />
 
-        </RelativeLayout>
+                </LinearLayout>
+
+                <androidx.appcompat.widget.SeslProgressBar
+                    android:id="@+id/checking_update_second"
+                    style="@style/Widget.AppCompat.ProgressBar.Large"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:indeterminate="true"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
         <include android:id="@+id/about_bottom_content"
             layout="@layout/activity_about_content" />
 
     </LinearLayout>
 
-    <FrameLayout
+    <dev.oneuiproject.oneui.widget.RoundedFrameLayout
         android:id="@+id/about_swipe_up_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -173,15 +210,15 @@
         android:focusable="false">
 
         <com.airbnb.lottie.LottieAnimationView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="100dp"
-            android:paddingHorizontal="70dp"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_gravity="center"
             app:lottie_rawRes="@raw/lottie_swipe_up_anim"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            app:lottie_colorFilter="?android:attr/textColorPrimary" />
+            android:alpha=".50"
+            app:lottie_colorFilter="?android:attr/textColorSecondary" />
 
-    </FrameLayout>
+    </dev.oneuiproject.oneui.widget.RoundedFrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

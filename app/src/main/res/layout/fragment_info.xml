@@ -24,14 +24,15 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_me"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:IconDrawable="@drawable/ost_logo"
-                app:TitleText="@string/operating_system_tester"
-                app:SummaryText="Click here to find out information about me"/>
+                app:icon="@drawable/ost_logo"
+                app:title="@string/operating_system_tester"
+                app:summary="Click here to find out information about me"
+                app:showTopDivider="false"/>
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 
@@ -46,44 +47,45 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_tools_preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:IconDrawable="@drawable/ic_oui_theme"
-                app:TitleText="@string/preview_tool"
-                app:SummaryText="Adobe Photoshop 2024"/>
+                app:icon="@drawable/ic_oui_theme"
+                app:title="@string/preview_tool"
+                app:summary="Adobe Photoshop 2024"
+                app:showTopDivider="false"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_tools_recorder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:IconDrawable="@drawable/ic_oui_record"
-                app:TitleText="@string/video_recording_tool"
-                app:SummaryText="OBS"
-                app:isDividerViewVisible="true"/>
+                app:icon="@drawable/ic_oui_record"
+                app:title="@string/video_recording_tool"
+                app:summary="OBS"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_tools_vm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:IconDrawable="@drawable/ic_oui_samsung_dex"
-                app:TitleText="@string/vm"
-                app:SummaryText="VMware Workstation 17 Pro"
-                app:isDividerViewVisible="true"/>
+                app:icon="@drawable/ic_oui_samsung_dex"
+                app:title="@string/vm"
+                app:summary="VMware Workstation 17 Pro"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_tools_video_editor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:IconDrawable="@drawable/ic_oui_video_capture"
-                app:TitleText="@string/video_editing_tool"
-                app:SummaryText="Sony Vegas 2020"
-                app:isDividerViewVisible="true"/>
+                app:icon="@drawable/ic_oui_video_capture"
+                app:title="@string/video_editing_tool"
+                app:summary="Sony Vegas 2020"
+                app:showTopDivider="true"/>
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 
@@ -98,34 +100,35 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_devices_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:IconDrawable="@drawable/ic_oui_device_outline"
-                app:TitleText="Galaxy S21 FE 5G"
-                app:SummaryText="SM-G990B"/>
+                app:icon="@drawable/ic_oui_device_outline"
+                app:title="Galaxy S21 FE 5G"
+                app:summary="SM-G990B"
+                app:showTopDivider="false"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_devices_pc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:IconDrawable="@drawable/ic_oui_link_to_windows"
-                app:TitleText="@string/computer"
-                app:SummaryText="@string/information_pc"
-                app:isDividerViewVisible="true"/>
+                app:icon="@drawable/ic_oui_link_to_windows"
+                app:title="@string/computer"
+                app:summary="@string/information_pc"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_devices_headphone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:IconDrawable="@drawable/ic_oui_buds_pro_outline"
-                app:TitleText="Galaxy Buds 2"
-                app:SummaryText="@string/information_headphones"
-                app:isDividerViewVisible="true"/>
+                app:icon="@drawable/ic_oui_buds_pro_outline"
+                app:title="Galaxy Buds 2"
+                app:summary="@string/information_headphones"
+                app:showTopDivider="true"/>
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 
@@ -140,14 +143,15 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_devices_second_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:IconDrawable="@drawable/iphone_gen1_circle"
-                app:TitleText="iPhone 8"
-                app:SummaryText="iOS 16.7.10 • Apple A11 Bionic"/>
+                app:icon="@drawable/iphone_gen1_circle"
+                app:title="iPhone 8"
+                app:summary="iOS 16.7.10 • Apple A11 Bionic"
+                app:showTopDivider="false"/>
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 

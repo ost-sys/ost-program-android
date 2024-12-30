@@ -46,10 +46,10 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
 
     private void updateNetworkInfo() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            binding.checkPermission.setSummaryText(getString(R.string.press_to_grant_permission));
+            binding.checkPermission.setSummary(getString(R.string.press_to_grant_permission));
             binding.checkPermission.setEnabled(true);
         } else {
-            binding.checkPermission.setSummaryText(getString(R.string.permission_granted));
+            binding.checkPermission.setSummary(getString(R.string.permission_granted));
             binding.checkPermission.setEnabled(false);
             showNetworkInfo();
         }
@@ -65,11 +65,11 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
             if (!Objects.equals(carrierName, "")) {
                 binding.networkTitle.setText(carrierName);
             } else {
-                binding.networkTitle.setText("SIM card not detected");
+                binding.networkTitle.setText(getString(R.string.sim_card_is_not_detected));
             }
-            binding.networkOperatorCountry.setSummaryText(countryCode.toUpperCase());
-            binding.networkPhoneType.setSummaryText(networkType());
-            binding.networkConnectivityStatus.setSummaryText(connectivityStatus);
+            binding.networkOperatorCountry.setSummary(countryCode.toUpperCase());
+            binding.networkPhoneType.setSummary(networkType());
+            binding.networkConnectivityStatus.setSummary(connectivityStatus);
         }
     }
 
@@ -119,7 +119,7 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
                 updateNetworkInfo();
             } else {
                 Toast.makeText(getActivity(), getString(R.string.grant_permission_to_continue), Toast.LENGTH_SHORT).show();
-                binding.checkPermission.setSummaryText(getString(R.string.check_permission));
+                binding.checkPermission.setSummary(getString(R.string.check_permission));
                 binding.checkPermission.setEnabled(true);
             }
         }

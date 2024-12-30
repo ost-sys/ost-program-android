@@ -32,7 +32,7 @@ val Context.appPreferences: DataStore<Preferences> by preferencesDataStore(name 
  * replacing the legacy xml-based preference.
  */
 class PreferenceDataStoreImpl private constructor(
-    private val dataStore: DataStore<Preferences>
+    val dataStore: DataStore<Preferences>
 ): PreferenceDataStore(), CoroutineScope {
 
     companion object{

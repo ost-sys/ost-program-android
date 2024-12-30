@@ -18,7 +18,7 @@ sealed class StargazersListItemUiModel{
     fun toStableId(): Long{
         return when(this){
             is GroupItem -> groupName.hashCode().toLong()
-            is StargazerItem -> stargazer.hashCode().toLong()
+            is StargazerItem -> stargazer.id.toLong()
             is SeparatorItem -> indexText.hashCode().toLong()
         }
     }

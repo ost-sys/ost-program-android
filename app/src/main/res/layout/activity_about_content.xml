@@ -23,12 +23,13 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_bottom_ost"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:IconDrawable="@drawable/ost_logo"
-                app:TitleText="@string/operating_system_tester" />
+                app:icon="@drawable/ost_logo"
+                app:title="@string/operating_system_tester"
+                app:showTopDivider="false"/>
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 
@@ -43,28 +44,29 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_bottom_dev_yann"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:IconDrawable="@drawable/about_page_avatar_yann"
-                app:TitleText="Yanndroid" />
+                app:icon="@drawable/about_page_avatar_yann"
+                app:title="Yanndroid"
+                app:showTopDivider="false"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_bottom_dev_salvo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:IconDrawable="@drawable/about_page_avatar_salvo"
-                app:TitleText="Salvo Giangreco"
-                app:isDividerViewVisible="true" />
+                app:icon="@drawable/about_page_avatar_salvo"
+                app:title="Salvo Giangreco"
+                app:showTopDivider="true" />
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_bottom_dev_tribalfs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:IconDrawable="@drawable/about_page_avatar_tribalfs"
-                app:TitleText="Tribalfs"
-                app:isDividerViewVisible="true" />
+                app:icon="@drawable/about_page_avatar_tribalfs"
+                app:title="Tribalfs"
+                app:showTopDivider="true" />
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 
@@ -80,28 +82,29 @@
             android:layout_marginBottom="20dp"
             android:orientation="vertical">
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_bottom_oss_program"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/open_source_program"
-                app:SummaryText="Open source code of this application"/>
+                app:title="@string/open_source_program"
+                app:summary="Open source code of this program"
+                app:showTopDivider="false"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_bottom_oss_apache"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="Apache License 2.0"
-                app:SummaryText="androidx  •  material-components-android • sesl-androidx  •  sesl-material-components-android  •  lottie"
-                app:isDividerViewVisible="true" />
+                app:title="Apache License 2.0"
+                app:summary="androidx  •  material-components-android • sesl-androidx  •  sesl-material-components-android  •  lottie"
+                app:showTopDivider="true" />
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/about_bottom_oss_mit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="MIT License"
-                app:SummaryText="oneui-core  •  oneui-design"
-                app:isDividerViewVisible="true" />
+                app:title="MIT License"
+                app:summary="oneui-core  •  oneui-design"
+                app:showTopDivider="true" />
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 
@@ -134,7 +137,7 @@
             <TextView
                 android:id="@+id/about_bottom_relative_design6"
                 style="@style/OneUI.RelativeLinkTextViewStyle"
-                android:text="OneUI6 Design Lib" />" />
+                android:text="OneUI6 Design Lib" />
 
         </dev.oneuiproject.oneui.widget.RelatedCard>
 

@@ -5,6 +5,13 @@
     tools:ignore="AppCompatResource">
 
     <item
+        android:id="@+id/check_update"
+        android:icon="@drawable/ic_oui_refresh"
+        android:title="@string/check_for_updates"
+        app:iconTint="?actionMenuTextColor"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/menu_app_info"
         android:icon="@drawable/ic_oui_info_outline"
         android:title="@string/app_info"

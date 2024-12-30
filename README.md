@@ -14,9 +14,9 @@ The program was created to quickly reboot the phone into different modes, for ex
 
 ## Program translators and who participated in the development
 - [zhh4eny](https://t.me/zh4eny) - Created a MD file. 
-- [Radomyr](https://github.com/BRamil0) - For help to translate application to Ukranian.
-- [Anton](https://github.com/Anton-Aboba1234) - For help to translate application to Ukranian
-- [Bohdan](https://github.com/bohdan157) - For help to translate application to Ukranian
+- [Radomyr](https://github.com/BRamil0) - For help to translate application to Ukrainian.
+- [Anton](https://github.com/Anton-Aboba1234) - For help to translate application to Ukrainian
+- [Bohdan](https://github.com/bohdan157) - For help to translate application to Ukrainian
 
 ## Credites
 - [Tribalfs](https://github.com/tribalfs/oneui-design)

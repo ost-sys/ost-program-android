@@ -41,17 +41,17 @@ public class CameraInfoFragment extends BaseFragment {
         try {
             String rearCameraId = findCameraId(cameraManager, CameraCharacteristics.LENS_FACING_BACK);
             if (rearCameraId != null) {
-                binding.cameraBackResolution.setSummaryText(getResolution(cameraManager, rearCameraId));
-                binding.cameraBackFocalLenght.setSummaryText(getFocalLength(cameraManager, rearCameraId));
-                binding.cameraBackStabilization.setSummaryText(getStabilizationSupport(cameraManager, rearCameraId));
-                binding.cameraBackFlash.setSummaryText(getFlashSupport(cameraManager, rearCameraId));
+                binding.cameraBackResolution.setSummary(getResolution(cameraManager, rearCameraId));
+                binding.cameraBackFocalLenght.setSummary(getFocalLength(cameraManager, rearCameraId));
+                binding.cameraBackStabilization.setSummary(getStabilizationSupport(cameraManager, rearCameraId));
+                binding.cameraBackFlash.setSummary(getFlashSupport(cameraManager, rearCameraId));
             }
             String secondRearCameraId = getSecondRearCameraId(cameraManager);
             if (secondRearCameraId != null) {
-                binding.cameraBackSecondResolution.setSummaryText(getResolution(cameraManager, secondRearCameraId));
-                binding.cameraBackSecondFocalLenght.setSummaryText(getFocalLength(cameraManager, secondRearCameraId));
-                binding.cameraBackSecondStabilization.setSummaryText(getStabilizationSupport(cameraManager, secondRearCameraId));
-                binding.cameraBackSecondFlash.setSummaryText(getFlashSupport(cameraManager, secondRearCameraId));
+                binding.cameraBackSecondResolution.setSummary(getResolution(cameraManager, secondRearCameraId));
+                binding.cameraBackSecondFocalLenght.setSummary(getFocalLength(cameraManager, secondRearCameraId));
+                binding.cameraBackSecondStabilization.setSummary(getStabilizationSupport(cameraManager, secondRearCameraId));
+                binding.cameraBackSecondFlash.setSummary(getFlashSupport(cameraManager, secondRearCameraId));
             } else {
                 binding.second.setVisibility(View.GONE);
                 binding.cameraBackSecondResolution.setVisibility(View.GONE);
@@ -61,10 +61,10 @@ public class CameraInfoFragment extends BaseFragment {
             }
             String thirdRearCameraId = getThirdRearCameraId(cameraManager);
             if (thirdRearCameraId != null) {
-                binding.cameraBackThirdResolution.setSummaryText(getResolution(cameraManager, thirdRearCameraId));
-                binding.cameraBackThirdFocalLenght.setSummaryText(getFocalLength(cameraManager, thirdRearCameraId));
-                binding.cameraBackThirdStabilization.setSummaryText(getStabilizationSupport(cameraManager, thirdRearCameraId));
-                binding.cameraBackThirdFlash.setSummaryText(getFlashSupport(cameraManager, thirdRearCameraId));
+                binding.cameraBackThirdResolution.setSummary(getResolution(cameraManager, thirdRearCameraId));
+                binding.cameraBackThirdFocalLenght.setSummary(getFocalLength(cameraManager, thirdRearCameraId));
+                binding.cameraBackThirdStabilization.setSummary(getStabilizationSupport(cameraManager, thirdRearCameraId));
+                binding.cameraBackThirdFlash.setSummary(getFlashSupport(cameraManager, thirdRearCameraId));
             } else {
                 binding.third.setVisibility(View.GONE);
                 binding.cameraBackThirdResolution.setVisibility(View.GONE);
@@ -74,10 +74,10 @@ public class CameraInfoFragment extends BaseFragment {
             }
             String frontCameraId = findCameraId(cameraManager, CameraCharacteristics.LENS_FACING_FRONT);
             if (frontCameraId != null) {
-                binding.cameraFrontResolution.setSummaryText(getResolution(cameraManager, frontCameraId));
-                binding.cameraFrontFocalLenght.setSummaryText(getFocalLength(cameraManager, frontCameraId));
-                binding.cameraFrontStabilization.setSummaryText(getStabilizationSupport(cameraManager, frontCameraId));
-                binding.cameraFrontFlash.setSummaryText(getFlashSupport(cameraManager, frontCameraId));
+                binding.cameraFrontResolution.setSummary(getResolution(cameraManager, frontCameraId));
+                binding.cameraFrontFocalLenght.setSummary(getFocalLength(cameraManager, frontCameraId));
+                binding.cameraFrontStabilization.setSummary(getStabilizationSupport(cameraManager, frontCameraId));
+                binding.cameraFrontFlash.setSummary(getFlashSupport(cameraManager, frontCameraId));
             }
             boolean hasMultipleRearCameras = hasMultipleRearCameras(cameraManager);
             binding.cameraModules.setText(hasMultipleRearCameras ? getString(R.string.multiple_rear_cameras_detected) : getString(R.string.single_rear_camera));

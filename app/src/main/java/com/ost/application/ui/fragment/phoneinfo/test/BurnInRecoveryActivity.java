@@ -1,5 +1,6 @@
 package com.ost.application.ui.fragment.phoneinfo.test;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -20,7 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import com.ost.application.R;
-import com.ost.application.SettingsActivity;
+import com.ost.application.activity.settings.SettingsActivity;
 
 import java.util.Random;
 
@@ -37,6 +38,7 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
     private static final int MODE_NOISE = 0;
     private static final int MODE_HORIZONTAL_LINES = 1;
     private static final int MODE_VERTICAL_LINES = 2;
+    private static final int MODE_BLACK_WHITE_NOISE = 3;
 
     private int originalBrightness = -1;
     private int originalBrightnessMode = -1;
@@ -50,6 +52,9 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
                         View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
                         View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         );
+
+        getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         noiseView = new NoiseView(this);
         setContentView(noiseView);
 
@@ -77,9 +82,10 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
             int noiseDuration = sharedPreferences.getInt("noise_duration", 1);
             int horizontalLinesDuration = sharedPreferences.getInt("horizontal_lines_duration", 1); // Consistent key
             int verticalLinesDuration = sharedPreferences.getInt("vertical_lines_duration", 1); // Consistent key
+            int blackWhiteNoiseDuration = sharedPreferences.getInt("black_white_noise_duration", 1);
 
             handler = new Handler(Looper.getMainLooper());
-            startModeCycle(totalDuration, noiseDuration, horizontalLinesDuration, verticalLinesDuration);
+            startModeCycle(totalDuration, noiseDuration, horizontalLinesDuration, verticalLinesDuration, blackWhiteNoiseDuration);
         }
 
         noiseView.setOnLongClickListener(v -> {
@@ -97,6 +103,12 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
         if (handler != null) {
             handler.removeCallbacksAndMessages(null);
         }
+        restoreOriginalBrightnessSettings();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         restoreOriginalBrightnessSettings();
     }
     private void saveCurrentBrightnessSettings() {
@@ -165,11 +177,12 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
         }
     }
 
-    private void startModeCycle(int totalDuration, int noiseDuration, int horizontalLinesDuration, int verticalLinesDuration) {
+    private void startModeCycle(int totalDuration, int noiseDuration, int horizontalLinesDuration, int verticalLinesDuration, int blackWhiteNoiseDuration) {
         int[] modeDurations = {
                 noiseDuration * 60 * 1000, // Шум
                 horizontalLinesDuration * 60 * 1000, // Горизонтальные линии
-                verticalLinesDuration * 60 * 1000  // Вертикальные линии
+                verticalLinesDuration * 60 * 1000, // Вертикальные линии
+                noiseDuration * 60 * 1000  // Чёрно-белый шум
         };
 
         Runnable modeSwitcher = new Runnable() {
@@ -233,7 +246,7 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
                 bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
             }
 
-            int[] pixels = new int[width * height];
+            @SuppressLint("DrawAllocation") int[] pixels = new int[width * height];
 
             switch (mode) {
                 case MODE_NOISE:
@@ -257,6 +270,13 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
                         for (int y = 0; y < height; y++) {
                             pixels[y * width + x] = color;
                         }
+                    }
+                    break;
+
+                case MODE_BLACK_WHITE_NOISE:
+                    for (int i = 0; i < pixels.length; i++) {
+                        int gray = random.nextInt(256);
+                        pixels[i] = Color.rgb(gray, gray, gray);
                     }
                     break;
             }

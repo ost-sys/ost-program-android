@@ -65,6 +65,12 @@ public class PixelTestActivity extends AppCompatActivity {
         super.onDestroy();
         restoreOriginalBrightnessSettings();
     }
+    
+    @Override
+    protected void onStop() {
+        super.onStop();
+        restoreOriginalBrightnessSettings();
+    }
 
     private void saveCurrentBrightnessSettings() {
         try {

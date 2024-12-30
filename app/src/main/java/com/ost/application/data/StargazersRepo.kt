@@ -1,154 +1,167 @@
 package com.ost.application.data
 
 import android.content.Context
-import android.graphics.Color
-import android.os.Parcelable
-import androidx.annotation.ColorInt
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.ost.application.data.api.NetworkDataSource
+import com.ost.application.data.datastore.PreferenceDataStoreImpl
+import com.ost.application.data.model.FetchState
+import com.ost.application.data.model.FetchState.INITED
+import com.ost.application.data.model.FetchState.INITING
+import com.ost.application.data.model.FetchState.INIT_ERROR
+import com.ost.application.data.model.FetchState.NOT_INIT
+import com.ost.application.data.model.FetchState.REFRESHED
+import com.ost.application.data.model.FetchState.REFRESHING
+import com.ost.application.data.model.FetchState.REFRESH_ERROR
+import com.ost.application.data.model.SearchModeOnActionMode
 import com.ost.application.data.model.Stargazer
-import dev.oneuiproject.oneui.layout.ToolbarLayout.SearchModeOnBackBehavior
-import com.ost.application.data.api.RetrofitClient
-import com.ost.application.data.datastore.appPreferences
+import com.ost.application.data.model.StargazersSettings
 import com.ost.application.data.room.StargazersDB
+import com.ost.application.data.util.determineDarkMode
+import com.ost.application.data.util.toFetchStatus
+import dev.oneuiproject.oneui.layout.ToolbarLayout
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
-import kotlinx.parcelize.Parcelize
+import retrofit2.HttpException
+import kotlin.coroutines.CoroutineContext
 
-enum class SearchModeOnActionMode{
-    DISMISS,
-    RESUME
+sealed class RefreshResult{
+    object Updated : RefreshResult()
+    object UpdateRunning : RefreshResult()
+    object NetworkException : RefreshResult()
+    data class OtherException(val exception: Throwable) : RefreshResult()
 }
 
-enum class DarkMode {
-    AUTO,
-    DISABLED,
-    ENABLED
-}
+class StargazersRepo(
+    context: Context,
+    override val coroutineContext: CoroutineContext = Dispatchers.IO + SupervisorJob()
+): CoroutineScope {
 
-
-
-@Parcelize
-data class StargazersSettings(
-    val isTextModeIndexScroll: Boolean = false,
-    val autoHideIndexScroll: Boolean = true,
-    val searchOnActionMode: SearchModeOnActionMode = SearchModeOnActionMode.DISMISS,
-    val searchModeBackBehavior: SearchModeOnBackBehavior = SearchModeOnBackBehavior.CLEAR_DISMISS,
-    @ColorInt
-    val searchHighlightColor: Int = Color.parseColor("#2196F3"),
-    val darkModeOption: DarkMode = DarkMode.AUTO,
-    val enableIndexScroll: Boolean = true
-) : Parcelable
-
-class StargazersRepo (context: Context) {
     private val appContext = context.applicationContext
-    private val database = StargazersDB.getDatabase(appContext)
+    private val database = StargazersDB.getDatabase(appContext, this)
 
-    private val dataStore: DataStore<Preferences> = appContext.appPreferences
+    private val prefDataStoreImpl = PreferenceDataStoreImpl.getInstance(appContext)
+    private val dataStore = prefDataStoreImpl.dataStore
 
     val stargazersFlow: Flow<List<Stargazer>> = database.stargazerDao().getAllStargazers()
 
-    suspend fun refreshStargazers(onRefreshComplete: (isSuccess: Boolean) -> Unit) = withContext(Dispatchers.IO) {
-        try {
-            fetchStargazers()?.let {
-                updateLocalDb(it)
-                onRefreshComplete(true)
-            } ?: run {
-                onRefreshComplete(false)
+    private val refreshMutex = Mutex()
+
+    suspend fun refreshStargazers(callback: ((result: RefreshResult) -> Unit)? = null) =
+        withContext(Dispatchers.IO) {
+            if (!refreshMutex.tryLock()) {
+                callback?.invoke(RefreshResult.UpdateRunning)
+                return@withContext
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            onRefreshComplete(false)
-        }
-    }
 
-    private suspend fun updateLocalDb(stargazers: List<Stargazer>){
-        database.stargazerDao().replaceAll(stargazers)
-    }
-
-    private suspend fun fetchStargazers(): List<Stargazer>? = withContext(Dispatchers.IO){
-        val repoList= listOf(
-            "ost-program-android",
-            "ost-sys.github.io")
-
-        try {
-            with(RetrofitClient.instance) {
-                repoList.map {
-                    async { getStargazers("ost-sys", it) }
-                }.awaitAll()
-                    .flatten()
-                    .distinct()
-                    .map {
-                        async {
-                            val userDetails = getUserDetails(it.login)
-                            it.copy(
-                                name = userDetails.name,
-                                location = userDetails.location,
-                                company = userDetails.company,
-                                email = userDetails.email,
-                                twitter_username = userDetails.twitter_username,
-                                blog = userDetails.blog,
-                                bio = userDetails.bio,
-                            )
-                        }
+            setOnStartFetchStatus()
+            NetworkDataSource.fetchStargazers()
+                .onSuccess {
+                    database.stargazerDao().replaceAll(it)
+                    updateLastRefresh(System.currentTimeMillis())
+                    setOnFinishFetchStatus(true)
+                    callback?.invoke(RefreshResult.Updated)
+                }
+                .onFailure {
+                    setOnFinishFetchStatus(false)
+                    when(it){
+                        is HttpException -> callback?.invoke(RefreshResult.NetworkException)
+                        else -> callback?.invoke(RefreshResult.OtherException(it))
                     }
-                    .awaitAll()
-                    .sortedWith(compareBy(
-                        { it.getDisplayName().first().isDigit() },
-                        { it.getDisplayName().uppercase() }
-                    ))
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return@withContext null
+                }
+
+            refreshMutex.unlock()
+        }
+
+    val fetchStatusFlow: Flow<FetchState> = dataStore.data.map { it[PREF_INIT_FETCH_STATE].toFetchStatus() }
+
+    private var fetchStatusCache: FetchState = NOT_INIT
+
+    init {
+        launch {
+            fetchStatusCache = fetchStatusFlow.first()
         }
     }
 
-    val stargazersSettingsFlow: Flow<StargazersSettings>  = dataStore.data.map {
-        val darkModeAutoValue = it[PREF_AUTO_DARK_MODE] ?: false
-        val darkMode = if (darkModeAutoValue){
-            DarkMode.AUTO
-        }else {
-            when(it[PREF_DARK_MODE]){
-                "0" -> DarkMode.DISABLED
-                else -> DarkMode.ENABLED
-            }
+    private fun setOnStartFetchStatus() {
+        when (fetchStatusCache) {
+            NOT_INIT, INIT_ERROR -> setFetchStatus(INITING)
+            INITED, REFRESH_ERROR, REFRESHED -> setFetchStatus(REFRESHING)
+            INITING, REFRESHING -> Unit
         }
-        
-        val searchModeBackBehavior = it[PREF_SEARCHMODE_BACK_BEHAVIOR].let { smob ->
-            if (smob == null) SearchModeOnBackBehavior.CLEAR_DISMISS else SearchModeOnBackBehavior.entries[smob.toInt()]
-        }
+    }
 
-        val searchModeOnActionMode = it[PREF_ACTIONMODE_SEARCH].let { smoam ->
-            if (smoam == null) SearchModeOnActionMode.DISMISS else SearchModeOnActionMode.entries[smoam.toInt()]
+    private fun setOnFinishFetchStatus(isSuccess: Boolean) {
+        when (fetchStatusCache) {
+            REFRESHING -> setFetchStatus(if (isSuccess) REFRESHED else REFRESH_ERROR)
+            INITING -> setFetchStatus(if (isSuccess) INITED else INIT_ERROR)
+            else -> Unit
         }
+    }
+
+    fun setFetchStatus(state: FetchState) {
+        fetchStatusCache = state
+        prefDataStoreImpl.putInt(PREF_INIT_FETCH_STATE.name, state.ordinal)
+    }
+
+    fun updateLastRefresh(timeMillis: Long) = prefDataStoreImpl.putLong(PREF_LAST_REFRESH.name, timeMillis)
+
+    val stargazersSettingsFlow: Flow<StargazersSettings> = dataStore.data.map {
+        val darkMode = determineDarkMode(
+            it[PREF_DARK_MODE] ?: "0",
+            it[PREF_AUTO_DARK_MODE] ?: true)
 
         StargazersSettings(
             isTextModeIndexScroll = it[PREF_INDEXSCROLL_TEXT_MODE] ?: false,
             autoHideIndexScroll = it[PREF_INDEXSCROLL_AUTO_HIDE] ?: true,
-            searchOnActionMode = searchModeOnActionMode,
-            searchModeBackBehavior = searchModeBackBehavior,
-            searchHighlightColor = it[PREF_SEACH_HIGHLIGHT_COLOR]?: Color.parseColor("#2196F3"),
-            darkModeOption =  darkMode,
-            enableIndexScroll = it[PREF_INDEXSCROLL_ENABLE] ?: true
+            searchOnActionMode = it[PREF_ACTIONMODE_SEARCH].toSearchModeOnActionMode(),
+            searchModeBackBehavior = it[PREF_SEARCHMODE_BACK_BEHAVIOR].toSearchModeOnBackBehavior(),
+            darkModeOption = darkMode,
+            enableIndexScroll = it[PREF_INDEXSCROLL_ENABLE] ?: true,
+            lastRefresh = it[PREF_LAST_REFRESH] ?: 0,
+            initTipShown = it[PREF_INIT_TIP_SHOWN] ?: false,
+            updateAvailable = it[PREF_UPDATE_AVAILABLE] ?: false
         )
     }
 
-    companion object{
+    suspend fun getStargazersById(ids: IntArray) = database.stargazerDao().getStargazersById(ids)
+
+    companion object {
+        @Volatile
+        private var INSTANCE: StargazersRepo? = null
+
+        fun getInstance(context: Context): StargazersRepo = INSTANCE
+            ?: synchronized(this) {
+                StargazersRepo(context.applicationContext).also {
+                    INSTANCE = it
+                }
+            }
+
         val PREF_INDEXSCROLL_ENABLE = booleanPreferencesKey("enableIndexScroll")
         val PREF_INDEXSCROLL_TEXT_MODE = booleanPreferencesKey("indexScrollTextMode")
         val PREF_INDEXSCROLL_AUTO_HIDE = booleanPreferencesKey("indexScrollAutoHide")
         val PREF_ACTIONMODE_SEARCH = stringPreferencesKey("actionModeSearch")
         val PREF_SEARCHMODE_BACK_BEHAVIOR = stringPreferencesKey("searchModeBackBehavior")
-        val PREF_SEACH_HIGHLIGHT_COLOR = intPreferencesKey ("searchColor")
         val PREF_DARK_MODE = stringPreferencesKey("darkMode")
         val PREF_AUTO_DARK_MODE = booleanPreferencesKey("darkModeAuto")
+        val PREF_LAST_REFRESH = longPreferencesKey("lastRefresh")
+        val PREF_UPDATE_AVAILABLE = booleanPreferencesKey("updateAvailable")
+        private val PREF_INIT_TIP_SHOWN = booleanPreferencesKey("initTipShown")
+        private val PREF_INIT_FETCH_STATE = intPreferencesKey("initFetch")
     }
+
+    private fun String?.toSearchModeOnBackBehavior() =
+        if (this == null) ToolbarLayout.SearchModeOnBackBehavior.CLEAR_DISMISS else ToolbarLayout.SearchModeOnBackBehavior.entries[toInt()]
+
+    private fun String?.toSearchModeOnActionMode() =
+        if (this == null) SearchModeOnActionMode.DISMISS else SearchModeOnActionMode.entries[toInt()]
 }

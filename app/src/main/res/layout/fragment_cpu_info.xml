@@ -49,46 +49,47 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/cpu_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/soc_model"/>
+                app:title="@string/soc_model"
+                app:showTopDivider="false"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/cpu_manufacturer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/soc_manufacturer"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/soc_manufacturer"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/cpu_abi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/application_binary_interface"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/application_binary_interface"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/cpu_cores"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/cores"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/cores"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/cpu_cores_clock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/frequency_min_max"
-                app:isDividerViewVisible="true"/>
+                app:title="@string/frequency_min_max"
+                app:showTopDivider="true"/>
 
-            <com.ost.application.ui.core.widget.CardView
+            <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/gpu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:TitleText="@string/gpu"
-                app:isDividerViewVisible="true"
+                app:title="@string/gpu"
+                app:showTopDivider="true"
                 android:visibility="gone"/>
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>

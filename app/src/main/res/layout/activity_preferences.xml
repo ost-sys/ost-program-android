@@ -10,9 +10,13 @@
     app:expanded="false"
     tools:title="ToolbarLayout">
 
-    <dev.oneuiproject.oneui.widget.RoundFrameLayout
-        android:id="@+id/frag_container"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_settings"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:layout_location="main_content"
+        app:navGraph="@navigation/settings_navigation"/>
 
 </dev.oneuiproject.oneui.layout.ToolbarLayout>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragment.phoneinfo.DefaultInfoFragment"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/main_image"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/ic_oui_symbol_dollar"/>
+
+            <TextView
+                android:id="@+id/main_currency"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?actionMenuTextColor"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:hint="@string/result"/>
+
+        </LinearLayout>
+
+        <dev.oneuiproject.oneui.widget.Separator
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <dev.oneuiproject.oneui.widget.RoundLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/oui_background_color"
+            android:orientation="vertical">
+
+            <dev.oneuiproject.oneui.widget.CardItemView
+                android:id="@+id/main_from"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/from"
+                app:showTopDivider="false" />
+
+            <Spinner
+                android:id="@+id/spinner_from"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"/>
+
+            <dev.oneuiproject.oneui.widget.CardItemView
+                android:id="@+id/main_to"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/to"
+                app:showTopDivider="true"/>
+
+            <Spinner
+                android:id="@+id/spinner_to"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"/>
+
+        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+        <dev.oneuiproject.oneui.widget.Separator
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <dev.oneuiproject.oneui.widget.RoundLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp"
+            android:background="@color/oui_background_color"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/token"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/enter_your_token"/>
+
+            <Button
+                android:id="@+id/button_convert"
+                style="@style/OneUI.ButtonStyleColored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center"
+                android:text="@string/convert"/>
+
+        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

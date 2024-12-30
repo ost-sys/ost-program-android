@@ -1,14 +1,17 @@
 package com.ost.application
 
+import android.app.Activity.RESULT_OK
 import android.app.Dialog
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.os.BundleCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -20,11 +23,16 @@ import com.ost.application.ProfileActivity.Companion.KEY_STARGAZER
 import com.ost.application.data.model.Stargazer
 import com.ost.application.databinding.ActivityStargazerQrBinding
 import com.ost.application.ui.core.toast
+import com.ost.application.ui.core.util.SharingUtils.isSamsungQuickShareAvailable
+import com.ost.application.ui.core.util.SharingUtils.shareForResult
+import java.io.File
+import java.io.FileOutputStream
 
 class QRBottomSheet : BottomSheetDialogFragment() {
 
     private var _binding: ActivityStargazerQrBinding? = null
     private val binding get() = _binding!!
+    private var tempImageFile: File? = null
 
     companion object {
         fun newInstance(stargazer: Stargazer): QRBottomSheet {
@@ -79,41 +87,45 @@ class QRBottomSheet : BottomSheetDialogFragment() {
                 override fun onLoadCleared(placeholder: Drawable?) {}
             })
 
-        binding.quickShareBtn.setOnClickListener {
-            val shareIntent = Intent(Intent.ACTION_SEND)
-            shareIntent.type = "text/plain"
-            shareIntent.putExtra(Intent.EXTRA_TEXT, stargazer.html_url)
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, stargazer.getDisplayName())
-            shareIntent.putExtra(Intent.EXTRA_TITLE, getString(R.string.share_via))
-
-            val pm = requireContext().packageManager
-            val resInfoList = pm.queryIntentActivities(shareIntent, PackageManager.MATCH_DEFAULT_ONLY)
-
-            var shareAppPackageName = ""
-
-            val quickShareAvailable = resInfoList.any { it.activityInfo.packageName.startsWith("com.google.android.gms") }
-            if (quickShareAvailable) {
-                shareAppPackageName = "com.google.android.gms"
-            } else {
-                val samsungShareAvailable = resInfoList.any { it.activityInfo.packageName == "com.samsung.android.app.sharelive" }
-                if (samsungShareAvailable) {
-                    shareAppPackageName = "com.samsung.android.app.sharelive"
-                } else {
-                    startActivity(Intent.createChooser(shareIntent, getString(R.string.share_via)))
+        binding.quickShareBtn.apply {
+            text =  if (context.isSamsungQuickShareAvailable()) context.getString(R.string.quick_share) else context.getString(R.string.share)
+            setOnClickListener {
+                val storageDir = requireContext().filesDir
+                tempImageFile = File(storageDir, "${stargazer.getDisplayName()}_qrCode_${System.currentTimeMillis()}.png")
+                FileOutputStream(tempImageFile).use { out ->
+                    binding.qrCode.drawable.toBitmap().compress(Bitmap.CompressFormat.PNG, 100, out)
                 }
-            }
-
-            shareIntent.setPackage(shareAppPackageName)
-            try {
-                startActivity(shareIntent)
-            } catch (e: Exception) {
-                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_via)))
-                Log.e("ShareError", "Error launching share intent: ${e.message}")
+                tempImageFile!!.shareForResult(requireContext(), shareImageResultLauncher)
             }
         }
 
         binding.saveBtn.setOnClickListener {
-            toast("Todo(Save image)")
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            intent.type = "image/png"
+            intent.putExtra(Intent.EXTRA_TITLE, "${stargazer.getDisplayName()}_qrCode_${System.currentTimeMillis()}.png")
+            saveImageResultLauncher.launch(intent)
+        }
+    }
+
+    private var shareImageResultLauncher = registerForActivityResult(StartActivityForResult()) {
+        tempImageFile?.delete()
+    }
+
+    private var saveImageResultLauncher  = registerForActivityResult(
+        StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.resultCode == RESULT_OK) {
+            val bitmap = binding.qrCode.drawable.toBitmap()
+            requireContext().contentResolver.openOutputStream(result.data!!.data!!)?.use { outputStream ->
+                if (bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)) {
+                    toast(getString(R.string.image_saved_successfully))
+                } else {
+                    toast(getString(R.string.failed_to_save_image))
+                }
+            } ?: run {
+                toast(getString(R.string.failed_to_open_output_stream))
+            }
         }
     }
 }

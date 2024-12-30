@@ -18,25 +18,27 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper.END
 import androidx.recyclerview.widget.ItemTouchHelper.START
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.ost.application.MainActivity
+import com.ost.application.MainActivity.Companion.KEY_REPO_NAME
 import com.ost.application.ProfileActivity
 import com.ost.application.ProfileActivity.Companion.KEY_STARGAZER
 import com.ost.application.ProfileActivity.Companion.KEY_TRANSITION_AVATAR
 import com.ost.application.ProfileActivity.Companion.KEY_TRANSITION_CONTAINER
 import com.ost.application.ProfileActivity.Companion.KEY_TRANSITION_NAME
 import com.ost.application.R
+import com.ost.application.OSTApp
 import com.ost.application.data.StargazersRepo
+import com.ost.application.data.model.FetchState
 import com.ost.application.databinding.FragmentStargazersListBinding
 import com.ost.application.ui.core.base.BaseFragment
 import com.ost.application.ui.core.toast
+import com.ost.application.ui.core.util.SharingUtils.share
 import com.ost.application.ui.core.util.isOnline
 import com.ost.application.ui.core.util.launchAndRepeatWithViewLifecycle
 import com.ost.application.ui.core.util.openUrl
 import com.ost.application.ui.core.util.seslSetFastScrollerEnabledForApi24
-import com.ost.application.ui.fragment.stargazerslist.StargazersListViewModel.Companion.SWITCH_TO_HPB_DELAY
-import com.ost.application.ui.fragment.stargazerslist.StargazersListViewModel.LoadState
 import com.ost.application.ui.fragment.stargazerslist.adapter.StargazersAdapter
-import com.ost.application.ui.fragment.stargazerslist.adapter.StargazersListItemDecoration
 import com.ost.application.ui.fragment.stargazerslist.model.StargazersListItemUiModel
 import com.ost.application.ui.fragment.stargazerslist.util.updateIndexer
 import dev.oneuiproject.oneui.delegates.AppBarAwareYTranslator
@@ -48,6 +50,8 @@ import dev.oneuiproject.oneui.layout.ToolbarLayout
 import dev.oneuiproject.oneui.layout.ToolbarLayout.SearchModeOnBackBehavior
 import dev.oneuiproject.oneui.layout.startActionMode
 import dev.oneuiproject.oneui.layout.startSearchMode
+import dev.oneuiproject.oneui.utils.ItemDecorRule
+import dev.oneuiproject.oneui.utils.SemItemDecoration
 import dev.oneuiproject.oneui.widget.TipPopup
 import dev.oneuiproject.oneui.widget.TipPopup.Direction
 import dev.oneuiproject.oneui.widget.TipPopup.Mode
@@ -58,7 +62,6 @@ import kotlinx.coroutines.launch
 
 class StargazersListFragment : BaseFragment(), ViewYTranslator by AppBarAwareYTranslator() {
 
-    private var tipPopupShown = false
     private var tipPopup: TipPopup? = null
     private lateinit var stargazersAdapter: StargazersAdapter
 
@@ -84,7 +87,25 @@ class StargazersListFragment : BaseFragment(), ViewYTranslator by AppBarAwareYTr
         setupFabClickListener()
         observeUIState()
 
-        showFragmentMenu(!isHidden)
+        if (savedInstanceState == null) {
+            arguments?.getString(KEY_REPO_NAME)?.let {
+                stargazersViewModel.setRepoFilter(it)
+            }
+        }else{
+            if (savedInstanceState.getBoolean(KEY_IS_ACTION_MODE)) {
+                val selectedIds = savedInstanceState.getLongArray(KEY_ACTION_MODE_SELECTED_IDS)!!
+                launchActionMode(selectedIds.toTypedArray())
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        if ((requireActivity() as MainActivity).drawerLayout.isActionMode) {
+            outState.putBoolean(KEY_IS_ACTION_MODE, true)
+            outState.putLongArray(KEY_ACTION_MODE_SELECTED_IDS,
+                stargazersAdapter.getSelectedIds().asSet().toLongArray())
+        }
+        super.onSaveInstanceState(outState)
     }
 
 
@@ -95,7 +116,16 @@ class StargazersListFragment : BaseFragment(), ViewYTranslator by AppBarAwareYTr
                 it.setupOnClickListeners()
                 stargazersAdapter = it
             })
-            addItemDecoration(StargazersListItemDecoration(requireContext()))
+            addItemDecoration(
+                SemItemDecoration(requireContext(),
+                    dividerRule = ItemDecorRule.SELECTED{
+                        it.itemViewType == StargazersListItemUiModel.StargazerItem.VIEW_TYPE
+                    },
+                    subHeaderRule = ItemDecorRule.SELECTED{
+                        it.itemViewType == StargazersListItemUiModel.SeparatorItem.VIEW_TYPE
+                    }
+                ).apply { setDividerInsetStart(78.dpToPx(resources)) }
+            )
             setItemAnimator(null)
             enableCoreSeslFeatures(fastScrollerEnabled = false)
 
@@ -107,15 +137,14 @@ class StargazersListFragment : BaseFragment(), ViewYTranslator by AppBarAwareYTr
 
             binding.fab.hideOnScroll(this@rv/*, binding.indexscrollView*/)
 
-            binding.indexscrollView.apply {
-                setIndexScrollMargin(0, 78.dpToPx(resources))
-                attachToRecyclerView(this@rv)
-            }
+            binding.indexscrollView.attachToRecyclerView(this@rv)
         }
 
-        with((requireActivity() as MainActivity).drawerLayout.appBarLayout) {
-            translateYWithAppBar(setOf(binding.nsvNoItem, binding.loadingPb), this, this@StargazersListFragment)
-        }
+        translateYWithAppBar(
+            setOf(binding.nsvNoItem, binding.loadingPb),
+            (requireActivity() as MainActivity).drawerLayout.appBarLayout,
+            this@StargazersListFragment
+        )
     }
 
     private fun setupFabClickListener() {
@@ -142,12 +171,14 @@ class StargazersListFragment : BaseFragment(), ViewYTranslator by AppBarAwareYTr
 
     private fun configureSwipeRefresh() {
         binding.swiperefreshView.apply {
-            seslSetRefreshOnce(true)
             setOnRefreshListener {
                 stargazersViewModel.refreshStargazers()
                 viewLifecycleOwner.lifecycleScope.launch {
                     delay(SWITCH_TO_HPB_DELAY)
                     isRefreshing = false
+                    if (stargazersViewModel.stargazersListScreenStateFlow.value.fetchStatus == FetchState.REFRESHING) {
+                        binding.horizontalPb.isVisible = true
+                    }
                 }
             }
         }
@@ -168,45 +199,31 @@ class StargazersListFragment : BaseFragment(), ViewYTranslator by AppBarAwareYTr
     }
 
 
-    private fun observeUIState(){
-        val stargazersRepo = StargazersRepo(requireContext())
-        val viewModelFactory = StargazersListViewModelFactory(stargazersRepo, requireContext().applicationContext)
-        stargazersViewModel = ViewModelProvider(this, viewModelFactory)[StargazersListViewModel::class.java]
+    private fun observeUIState() {
+        val stargazersRepo = StargazersRepo.getInstance(requireContext())
+        val viewModelFactory = StargazersListViewModelFactory(
+            stargazersRepo, requireContext().applicationContext as OSTApp
+        )
+
+        stargazersViewModel =
+            ViewModelProvider(this, viewModelFactory)[StargazersListViewModel::class.java]
 
         launchAndRepeatWithViewLifecycle {
             launch {
                 stargazersViewModel.stargazersListScreenStateFlow
                     .collectLatest {
-                        when (it.loadState) {
-                            LoadState.LOADING -> {
-                                binding.loadingPb.isVisible = true
-                                binding.horizontalPb.isVisible = false
-                                binding.retryBtn.isVisible = false
-                            }
-
-                            LoadState.REFRESHING -> {
-                                binding.loadingPb.isVisible = false
-                                binding.horizontalPb.isVisible = true
-                                binding.retryBtn.isVisible = false
-
-                            }
-
-                            LoadState.LOADED,
-                            LoadState.ERROR -> {
-                                binding.loadingPb.isVisible = false
-                                binding.horizontalPb.isVisible = false
-                                binding.retryBtn.isVisible =
-                                    it.loadState == LoadState.ERROR && it.itemsList.isEmpty()
-                            }
-                        }
                         val itemsList = it.itemsList
+
+                        updateLoadingStateViews(it.fetchStatus, itemsList.isEmpty())
                         stargazersAdapter.submitList(itemsList)
+
                         if (itemsList.isNotEmpty()) {
                             updateRecyclerViewVisibility(true, it.noItemText)
                             binding.indexscrollView.updateIndexer(itemsList)
                         } else {
                             updateRecyclerViewVisibility(false, it.noItemText)
                         }
+
                         stargazersAdapter.highlightWord = it.query
                     }
             }
@@ -214,22 +231,67 @@ class StargazersListFragment : BaseFragment(), ViewYTranslator by AppBarAwareYTr
             launch {
                 stargazersViewModel.stargazerSettingsStateFlow
                     .collectLatest {
-                        if (it.enableIndexScroll) {
-                            binding.indexscrollView.isVisible = true
-                            binding.stargazersList.seslSetFastScrollerEnabledForApi24(false)
-                        } else {
-                            binding.indexscrollView.isVisible = false
-                            binding.stargazersList.seslSetFastScrollerEnabledForApi24(true)
-                        }
+                        binding.stargazersList.seslSetFastScrollerEnabledForApi24(!it.enableIndexScroll)
+
                         binding.indexscrollView.apply {
                             setAutoHide(it.autoHideIndexScroll)
                             setIndexBarTextMode(it.isTextModeIndexScroll)
+                            isVisible = it.enableIndexScroll
                         }
+
                         stargazersAdapter.searchHighlightColor = it.searchHighlightColor
+
+                        val shouldAutoRefresh = it.lastRefresh != 0L &&
+                                (System.currentTimeMillis() - it.lastRefresh) > 1000*60*60*15
+
+                        if (shouldAutoRefresh){
+                            //Just do it silently
+                            stargazersViewModel.refreshStargazers(false)
+                        }
+                    }
+            }
+
+            launch {
+                stargazersViewModel.userMessage
+                    .collect{
+                        if (it != null){
+                            Snackbar.make(requireActivity().window.decorView, it, Snackbar.LENGTH_SHORT).show()
+                        }
                     }
             }
         }
     }
+
+    private var lastStateReceived: FetchState? = null
+
+    private fun updateLoadingStateViews(loadState: FetchState, isEmpty: Boolean) {
+        if (lastStateReceived == loadState) return
+        lastStateReceived = loadState
+
+        when (loadState) {
+            FetchState.NOT_INIT -> Unit
+            FetchState.INITING -> {
+                binding.loadingPb.isVisible = true
+            }
+            FetchState.INIT_ERROR,
+            FetchState.REFRESH_ERROR -> {
+                binding.loadingPb.isVisible = false
+                binding.horizontalPb.isVisible = false
+                binding.retryBtn.isVisible = isEmpty
+            }
+            FetchState.INITED,
+            FetchState.REFRESHED -> {
+                binding.loadingPb.isVisible = false
+                binding.horizontalPb.isVisible = false
+                binding.retryBtn.isVisible = false
+            }
+            FetchState.REFRESHING -> {
+                binding.retryBtn.isVisible = false
+
+            }
+        }
+    }
+
 
 
     private fun updateRecyclerViewVisibility(visible: Boolean, noItemText: String){
@@ -274,6 +336,8 @@ class StargazersListFragment : BaseFragment(), ViewYTranslator by AppBarAwareYTr
             },
             isRightSwipeEnabled = {viewHolder ->
                 viewHolder.itemViewType == StargazersListItemUiModel.StargazerItem.VIEW_TYPE
+                        && (stargazersAdapter.getItemByPosition(viewHolder.layoutPosition)
+                        as StargazersListItemUiModel.StargazerItem).stargazer.blog != ""
                         && !stargazersAdapter.isActionMode
             },
             onSwiped = { position, swipeDirection, _ ->
@@ -306,24 +370,18 @@ class StargazersListFragment : BaseFragment(), ViewYTranslator by AppBarAwareYTr
                     stargazersAdapter.onToggleActionMode(false)
                     binding.fab.isVisible = !drawerLayout.isSearchMode
                 },
-                onSelectMenuItem = {
+                onSelectMenuItem = { it ->
                     when (it.itemId) {
                         R.id.menu_contacts_am_share -> {
-                            val selectedItems = stargazersAdapter.getSelectedItems()
-                            val shareUrls = selectedItems
-                                .filterIsInstance<StargazersListItemUiModel.StargazerItem>()
-                                .joinToString(separator = "\n") { it.stargazer.getDisplayName() + " - " + it.stargazer.html_url }
-
-                            if (shareUrls.isNotBlank()) {
-                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                                    type = "text/plain"
-                                    putExtra(Intent.EXTRA_TEXT, shareUrls)
-                                }
-                                startActivity(Intent.createChooser(shareIntent,
-                                    getString(R.string.share_stargazers_urls)))
+                            lifecycleScope.launch {
+                                stargazersAdapter.getSelectedIds().asSet()
+                                    .map { id -> id.toInt() }//convert back to stargazer's id
+                                    .toIntArray()
+                                    .let { stargazersViewModel.getStargazersById(it) }
+                                    .map { it.asVCardFile(requireContext()) }
+                                    .share(requireContext())
+                                drawerLayout.endActionMode()
                             }
-
-                            (requireActivity() as MainActivity).drawerLayout.endActionMode()
                             true
                         }
                         else -> false
@@ -337,16 +395,20 @@ class StargazersListFragment : BaseFragment(), ViewYTranslator by AppBarAwareYTr
     }
 
     private val menuProvider = object : MenuProvider {
+        private var menu: Menu? = null
 
+        override fun onPrepareMenu(menu: Menu) {
+            super.onPrepareMenu(menu)
+            menu.findItem(R.id.menu_stargazers_search).setVisible(true)
+        }
         override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
             menuInflater.inflate(R.menu.menu_main, menu)
-            val searchMenuItem = menu.findItem(R.id.menu_apppicker_search)
-            searchMenuItem.setVisible(true)
+            this.menu = menu
         }
 
         override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
             return when (menuItem.itemId) {
-                R.id.menu_apppicker_search -> {
+                R.id.menu_stargazers_search -> {
                     (requireActivity() as MainActivity).drawerLayout
                         .launchSearchMode(stargazersViewModel.getSearchModeOnBackBehavior())
                     true
@@ -434,4 +496,11 @@ class StargazersListFragment : BaseFragment(), ViewYTranslator by AppBarAwareYTr
     override fun getIconResId(): Int = dev.oneuiproject.oneui.R.drawable.ic_oui_star_outline
 
     override fun getTitle(): CharSequence = getString(R.string.stargazers)
+
+    companion object {
+        private const val TAG = "StargazersListFragment"
+        const val SWITCH_TO_HPB_DELAY = 1_500L
+        private const val KEY_IS_ACTION_MODE = "isActionMode"
+        private const val KEY_ACTION_MODE_SELECTED_IDS = "selectedIds"
+    }
 }

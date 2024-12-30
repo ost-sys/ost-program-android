@@ -2,7 +2,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/dark_mode_settings">
 
         <dev.oneuiproject.oneui.preference.HorizontalRadioPreference
             android:dependency="darkModeAuto"
@@ -16,16 +17,49 @@
         <SwitchPreferenceCompat
             android:disableDependentsState="true"
             android:key="darkModeAuto"
+            android:defaultValue="true"
             android:title="@string/system_default" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/index_scroll">
+
+        <SeslSwitchPreferenceScreen
+            android:key="enableIndexScroll"
+            android:title="@string/use_index_scroll"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/search">
+
+        <ListPreference
+            android:title='@string/search_mode_on_back_behavior'
+            android:key="searchModeBackBehavior"
+            android:defaultValue="0"
+            app:entries="@array/preferences_searchmode_entries"
+            app:entryValues="@array/preferences_searchmode_values"
+            app:useSimpleSummaryProvider="true" />
+
+        <DropDownPreference
+            android:key="actionModeSearch"
+            android:title="@string/search_on_action_mode"
+            android:defaultValue="0"
+            app:entries="@array/preferences_searchoptions_entries"
+            app:entryValues="@array/preferences_searchoptions_values"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/fix_dead_pixels">
 
         <SwitchPreferenceCompat
             android:key="brightness_control"
             android:title="@string/brightness_control"
             android:defaultValue="false" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory>
 
         <dev.oneuiproject.oneui.preference.SeekBarPreferencePro
             android:key="total_duration"
@@ -45,6 +79,19 @@
             app:showTickMark="true"
             android:title="@string/noise"
             android:summary="@string/noise_display_time"
+            app:centerBasedSeekBar="false"
+            app:seamlessSeekBar="false"
+            android:defaultValue="1"
+            android:max="10"
+            app:min="1"
+            app:seekBarMode="level_bar"
+            app:adjustable="true" />
+
+        <dev.oneuiproject.oneui.preference.SeekBarPreferencePro
+            android:key="black_white_noise_duration"
+            app:showTickMark="true"
+            android:title="@string/black_white_noise"
+            android:summary="@string/black_white_noise_display_time"
             app:centerBasedSeekBar="false"
             app:seamlessSeekBar="false"
             android:defaultValue="1"
