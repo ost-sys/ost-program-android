@@ -267,4 +267,6 @@
     <string name="clear_close">Clear-close</string>
     <string name="search_on_action_mode">Search on action mode</string>
     <string name="search_mode_on_back_behavior">Search mode on back behavior</string>
+    <string name="changelog">Changelog</string>
+    <string name="error">Error</string>
 </resources>

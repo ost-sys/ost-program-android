@@ -494,6 +494,9 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
                 mBinding.checkingUpdateMain.setVisibility(View.GONE);
                 mBinding.checkingUpdateSecond.setVisibility(View.GONE);
             }
+        } else if (item.getItemId() == R.id.menu_main_changelog) {
+            Intent intent = new Intent(AboutActivity.this, ChangelogActivity.class);
+            startActivity(intent);
         }
         return false;
     }

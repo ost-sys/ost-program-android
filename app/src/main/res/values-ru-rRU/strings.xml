@@ -252,4 +252,6 @@
     <string name="clear_close">Очистить-закрыть</string>
     <string name="search_on_action_mode">Поиск по режиму действия</string>
     <string name="search_mode_on_back_behavior">Режим поиска при обратном поведении</string>
+    <string name="changelog">Список изменений</string>
+    <string name="error">Ошибка</string>
 </resources>

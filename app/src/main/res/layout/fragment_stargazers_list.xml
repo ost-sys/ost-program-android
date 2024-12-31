@@ -50,35 +50,35 @@
             android:layout_height="match_parent"
             android:visibility="gone"
             tools:visibility="visible">
+
             <LinearLayout
                 android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvNoItem"
-                android:textSize="16sp"
-                android:textColor="?actionMenuTextColor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textAlignment="center"
-                tools:text="No item"
-                />
+                <TextView
+                    android:id="@+id/tvNoItem"
+                    android:textSize="16sp"
+                    android:textColor="?actionMenuTextColor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    tools:text="No item" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/retryBtn"
-                android:layout_marginTop="24dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:clickable="true"
-                android:focusable="true"
-                android:visibility="gone"
-                tools:visibility="visible"
-                android:text="@string/retry"
-                />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/retryBtn"
+                    android:layout_marginTop="24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:text="@string/retry"
+                    />
 
             </LinearLayout>
 

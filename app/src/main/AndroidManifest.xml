@@ -157,6 +157,9 @@
             android:name=".AboutActivity"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize" />
         <activity
+            android:name=".ChangelogActivity"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize" />
+        <activity
             android:name=".ui.fragment.phoneinfo.test.PixelTestActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"

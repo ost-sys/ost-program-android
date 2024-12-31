@@ -12,6 +12,13 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/menu_main_changelog"
+        android:icon="@drawable/ic_oui_list"
+        android:title="@string/changelog"
+        app:iconTint="?actionMenuTextColor"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/menu_app_info"
         android:icon="@drawable/ic_oui_info_outline"
         android:title="@string/app_info"

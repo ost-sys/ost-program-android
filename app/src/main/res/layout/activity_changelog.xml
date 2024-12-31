@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dev.oneuiproject.oneui.layout.ToolbarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbarLayout"
+    app:expanded="false"
+    app:expandable="false"
+    app:title="@string/changelog"
+    app:navigationIcon="@drawable/ic_oui_back">
+
+    <ListView
+        android:id="@+id/changelogListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="?attr/listDividerColor"
+        android:background="@color/oui_background_color"
+        android:dividerHeight="1dp"/>
+
+</dev.oneuiproject.oneui.layout.ToolbarLayout>
