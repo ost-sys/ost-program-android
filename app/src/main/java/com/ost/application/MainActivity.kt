@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(), DrawerListAdapter.DrawerListener {
                 val year = now.get(Calendar.YEAR)
 
                 if (now.get(Calendar.MONTH) == Calendar.JANUARY && now.get(Calendar.DAY_OF_MONTH) == 1) {
-                    mBinding!!.drawerLayout.setExpandedSubtitle(getString(R.string.happy_new_year))
+                    mBinding!!.drawerLayout.setTitle(getString(R.string.happy_new_year), getString(R.string.app_name))
                 } else {
                     val nextYear = year + 1
                     val targetDate = Calendar.getInstance().apply {
@@ -174,7 +174,12 @@ class MainActivity : AppCompatActivity(), DrawerListAdapter.DrawerListener {
             mBinding!!.drawerLayout.setCollapsedSubtitle(
                 (newFragment as FragmentInfo).title
             )
-            mBinding!!.drawerLayout.setTitle(getString(R.string.time_left_until_the_new_year), getString(R.string.app_name))
+            val now = Calendar.getInstance()
+            if (now.get(Calendar.MONTH) == Calendar.JANUARY && now.get(Calendar.DAY_OF_MONTH) == 1) {
+                mBinding!!.drawerLayout.setTitle(getString(R.string.happy_new_year), getString(R.string.app_name))
+            } else {
+                mBinding!!.drawerLayout.setTitle(getString(R.string.time_left_until_the_new_year), getString(R.string.app_name))
+            }
         }
         mBinding!!.drawerLayout.setDrawerOpen(false, true)
 
