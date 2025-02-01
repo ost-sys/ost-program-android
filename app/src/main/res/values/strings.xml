@@ -254,13 +254,6 @@
     <string name="index_scroll">Index scroll</string>
     <string name="black_white_noise">Black-White noise</string>
     <string name="black_white_noise_display_time">Black-White noise display time</string>
-
-    <string-array name="currencies">
-        <item>RUB (Российский рубль)</item>
-        <item>BYN (Беларускі рубель)</item>
-        <item>UAH (Українська гривня)</item>
-        <item>EUR (Euro)</item>
-    </string-array>
     <string name="dismiss">Dismiss</string>
     <string name="resume">Resume</string>
     <string name="clear_dismiss">Clear-dismiss</string>
@@ -269,4 +262,9 @@
     <string name="search_mode_on_back_behavior">Search mode on back behavior</string>
     <string name="changelog">Changelog</string>
     <string name="error">Error</string>
+    <string name="hold_to_exit">Hold your finger on the screen to exit</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="failed_to_get_vpn_status">Failed to get VPN status</string>
 </resources>

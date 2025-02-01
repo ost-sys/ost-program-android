@@ -2,13 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
     <PreferenceCategory
         android:title="@string/dark_mode_settings">
 
         <dev.oneuiproject.oneui.preference.HorizontalRadioPreference
             android:dependency="darkModeAuto"
             android:key="darkMode"
-            android:title="@string/dark_mode_settings"
             app:entries="@array/preferences_darkmode_entries"
             app:entriesImage="@array/preferences_darkmode_entries_image"
             app:entryValues="@array/preferences_darkmode_values"

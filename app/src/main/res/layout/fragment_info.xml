@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<dev.oneuiproject.oneui.widget.RoundedFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,175 +13,197 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <dev.oneuiproject.oneui.widget.Separator
+        <LinearLayout
+            android:id="@+id/about_me"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/developer"/>
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:clickable="true">
 
-        <dev.oneuiproject.oneui.widget.RoundLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/oui_background_color"
-            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/about_me_logo"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/ic_oui_error"/>
 
-            <dev.oneuiproject.oneui.widget.CardItemView
-                android:id="@+id/about_me"
+            <TextView
+                android:id="@+id/about_me_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:icon="@drawable/ost_logo"
-                app:title="@string/operating_system_tester"
-                app:summary="Click here to find out information about me"
-                app:showTopDivider="false"/>
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="24dp"
+                android:text="Hi! Click here to see developer information"
+                android:textStyle="bold"/>
 
-        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
-
-        <dev.oneuiproject.oneui.widget.Separator
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/video_tools"/>
-
-        <dev.oneuiproject.oneui.widget.RoundLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/oui_background_color"
-            android:orientation="vertical">
-
-            <dev.oneuiproject.oneui.widget.CardItemView
-                android:id="@+id/about_tools_preview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:icon="@drawable/ic_oui_theme"
-                app:title="@string/preview_tool"
-                app:summary="Adobe Photoshop 2024"
-                app:showTopDivider="false"/>
-
-            <dev.oneuiproject.oneui.widget.CardItemView
-                android:id="@+id/about_tools_recorder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:icon="@drawable/ic_oui_record"
-                app:title="@string/video_recording_tool"
-                app:summary="OBS"
-                app:showTopDivider="true"/>
-
-            <dev.oneuiproject.oneui.widget.CardItemView
-                android:id="@+id/about_tools_vm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:icon="@drawable/ic_oui_samsung_dex"
-                app:title="@string/vm"
-                app:summary="VMware Workstation 17 Pro"
-                app:showTopDivider="true"/>
-
-            <dev.oneuiproject.oneui.widget.CardItemView
-                android:id="@+id/about_tools_video_editor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:icon="@drawable/ic_oui_video_capture"
-                app:title="@string/video_editing_tool"
-                app:summary="Sony Vegas 2020"
-                app:showTopDivider="true"/>
-
-        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
-
-        <dev.oneuiproject.oneui.widget.Separator
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/current_devices" />
-
-        <dev.oneuiproject.oneui.widget.RoundLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/oui_background_color"
-            android:orientation="vertical">
-
-            <dev.oneuiproject.oneui.widget.CardItemView
-                android:id="@+id/about_devices_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:icon="@drawable/ic_oui_device_outline"
-                app:title="Galaxy S21 FE 5G"
-                app:summary="SM-G990B"
-                app:showTopDivider="false"/>
-
-            <dev.oneuiproject.oneui.widget.CardItemView
-                android:id="@+id/about_devices_pc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:icon="@drawable/ic_oui_link_to_windows"
-                app:title="@string/computer"
-                app:summary="@string/information_pc"
-                app:showTopDivider="true"/>
-
-            <dev.oneuiproject.oneui.widget.CardItemView
-                android:id="@+id/about_devices_headphone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:icon="@drawable/ic_oui_buds_pro_outline"
-                app:title="Galaxy Buds 2"
-                app:summary="@string/information_headphones"
-                app:showTopDivider="true"/>
-
-        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
-
-        <dev.oneuiproject.oneui.widget.Separator
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/second_devices"/>
-
-        <dev.oneuiproject.oneui.widget.RoundLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/oui_background_color"
-            android:orientation="vertical">
-
-            <dev.oneuiproject.oneui.widget.CardItemView
-                android:id="@+id/about_devices_second_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:icon="@drawable/iphone_gen1_circle"
-                app:title="iPhone 8"
-                app:summary="iOS 16.7.10 • Apple A11 Bionic"
-                app:showTopDivider="false"/>
-
-        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
-
+        </LinearLayout>
+        
         <dev.oneuiproject.oneui.widget.Separator
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <dev.oneuiproject.oneui.widget.RelatedCard
+        <dev.oneuiproject.oneui.widget.RoundedNestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            app:title="@string/social_links">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/home_bottom_relative_ost_youtube"
-                style="@style/OneUI.RelativeLinkTextViewStyle"
-                android:text="@string/youtube" />
+            <dev.oneuiproject.oneui.widget.RoundLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/home_bottom_relative_ost_telegram"
-                style="@style/OneUI.RelativeLinkTextViewStyle"
-                android:text="@string/telegram" />
+                <dev.oneuiproject.oneui.widget.Separator
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/video_tools"/>
 
-            <TextView
-                android:id="@+id/home_bottom_relative_ost_github"
-                style="@style/OneUI.RelativeLinkTextViewStyle"
-                android:text="@string/github" />
+                <dev.oneuiproject.oneui.widget.RoundLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/oui_background_color"
+                    android:orientation="vertical">
 
-        </dev.oneuiproject.oneui.widget.RelatedCard>
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/about_tools_preview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:icon="@drawable/ic_oui_theme"
+                        app:title="@string/preview_tool"
+                        app:summary="Adobe Photoshop 2024"
+                        app:showTopDivider="false"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/about_tools_recorder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:icon="@drawable/ic_oui_record"
+                        app:title="@string/video_recording_tool"
+                        app:summary="OBS"
+                        app:showTopDivider="true"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/about_tools_vm"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:icon="@drawable/ic_oui_samsung_dex"
+                        app:title="@string/vm"
+                        app:summary="VMware Workstation 17 Pro"
+                        app:showTopDivider="true"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/about_tools_video_editor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:icon="@drawable/ic_oui_video_capture"
+                        app:title="@string/video_editing_tool"
+                        app:summary="Sony Vegas 2020"
+                        app:showTopDivider="true"/>
+
+                </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+                <dev.oneuiproject.oneui.widget.Separator
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/current_devices" />
+
+                <dev.oneuiproject.oneui.widget.RoundLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/oui_background_color"
+                    android:orientation="vertical">
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/about_devices_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:icon="@drawable/ic_oui_device_outline"
+                        app:title="Galaxy S21 FE 5G"
+                        app:summary="SM-G990B"
+                        app:showTopDivider="false"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/about_devices_pc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:icon="@drawable/ic_oui_link_to_windows"
+                        app:title="@string/computer"
+                        app:summary="@string/information_pc"
+                        app:showTopDivider="true"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/about_devices_headphone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:icon="@drawable/ic_oui_buds_pro_outline"
+                        app:title="Galaxy Buds 2"
+                        app:summary="@string/information_headphones"
+                        app:showTopDivider="true"/>
+
+                </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+                <dev.oneuiproject.oneui.widget.Separator
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/second_devices"/>
+
+                <dev.oneuiproject.oneui.widget.RoundLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/oui_background_color"
+                    android:orientation="vertical">
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/about_devices_second_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:icon="@drawable/iphone_gen1_circle"
+                        app:title="iPhone 8"
+                        app:summary="iOS 16.7.10 • Apple A11 Bionic"
+                        app:showTopDivider="false"/>
+
+                </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+                <dev.oneuiproject.oneui.widget.Separator
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <dev.oneuiproject.oneui.widget.RelatedCard
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:title="@string/social_links">
+
+                    <TextView
+                        android:id="@+id/home_bottom_relative_ost_youtube"
+                        style="@style/OneUI.RelativeLinkTextViewStyle"
+                        android:text="@string/youtube" />
+
+                    <TextView
+                        android:id="@+id/home_bottom_relative_ost_telegram"
+                        style="@style/OneUI.RelativeLinkTextViewStyle"
+                        android:text="@string/telegram" />
+
+                    <TextView
+                        android:id="@+id/home_bottom_relative_ost_github"
+                        style="@style/OneUI.RelativeLinkTextViewStyle"
+                        android:text="@string/github" />
+
+                </dev.oneuiproject.oneui.widget.RelatedCard>
+
+            </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+
+        </dev.oneuiproject.oneui.widget.RoundedNestedScrollView>
 
     </LinearLayout>
 
-</androidx.core.widget.NestedScrollView>
+</dev.oneuiproject.oneui.widget.RoundedFrameLayout>

@@ -11,7 +11,6 @@
         android:id="@+id/stargazer_github_btn"
         android:layout_width="46dp"
         android:layout_height="46dp"
-        android:scaleType="center"
         android:tint="?actionMenuTextColor"
         android:background="?attr/actionBarItemBackground"
         app:srcCompat="@drawable/about_page_github" />

@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
-import com.ost.application.data.DarkMode
 import com.ost.application.data.StargazersRepo
+import com.ost.application.data.model.DarkMode
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 

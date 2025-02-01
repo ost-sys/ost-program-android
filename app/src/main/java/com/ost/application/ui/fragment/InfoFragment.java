@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.ost.application.R;
 import com.ost.application.databinding.FragmentInfoBinding;
 
@@ -28,6 +31,17 @@ public class InfoFragment extends BaseFragment implements View.OnClickListener {
         binding = FragmentInfoBinding.inflate(inflater, container, false);
 
         initContent();
+
+        RequestOptions requestOptions = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .placeholder(R.drawable.ic_oui_refresh)
+                .error(R.drawable.ic_oui_error)
+                .circleCrop();
+
+        Glide.with(binding.getRoot())
+                .load("https://avatars.githubusercontent.com/u/66862161?v=4")
+                .apply(requestOptions)
+                .into(binding.aboutMeLogo);
 
         return binding.getRoot();
     }

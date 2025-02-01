@@ -17,7 +17,6 @@ import com.ost.application.ui.core.base.BaseFragment;
 
 import java.util.Objects;
 
-
 public class BatteryInfoFragment extends BaseFragment {
 
     private FragmentBatteryInfoBinding binding;
@@ -42,7 +41,7 @@ public class BatteryInfoFragment extends BaseFragment {
         return binding.getRoot();
     }
 
-    @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
+    @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n", "ResourceType"})
     private void updateBatteryInfo(Intent intent) {
         double level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         float temp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1);
@@ -66,17 +65,14 @@ public class BatteryInfoFragment extends BaseFragment {
         if (plugged == BatteryManager.BATTERY_PLUGGED_AC) {
             chargingStatus = getString(R.string.charging);
             binding.batteryIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_oui_lightning));
-            binding.batteryLevel.setTextColor(getResources().getColor(R.color.green));
             binding.batteryLevel.setText(chargingStatus + ": " + (int) level + "%");
         } else if (plugged == BatteryManager.BATTERY_PLUGGED_USB) {
             chargingStatus = getString(R.string.charging_via_usb);
             binding.batteryIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_oui_usb));
-            binding.batteryLevel.setTextColor(getResources().getColor(R.color.blue));
             binding.batteryLevel.setText(chargingStatus + ": " + (int) level + "%");
         } else if (plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS) {
             chargingStatus = getString(R.string.wireless_charging);
             binding.batteryIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_oui_lightning_outline));
-            binding.batteryLevel.setTextColor(getResources().getColor(R.color.yellow));
             binding.batteryLevel.setText(chargingStatus + ": " + (int) level + "%");
         } else {
             chargingStatus = getString(R.string.discharging);
@@ -84,13 +80,10 @@ public class BatteryInfoFragment extends BaseFragment {
                 int batteryPct = (int) level;
                 if (batteryPct >= 85) {
                     binding.batteryIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_oui_battery_filled));
-                    binding.batteryLevel.setTextColor(getResources().getColor(R.color.green));
                 } else if (batteryPct > 15) {
                     binding.batteryIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_oui_batterylevel));
-                    binding.batteryLevel.setTextColor(getResources().getColor(R.color.oui_primary_text_color));
                 } else {
                     binding.batteryIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_oui_battery));
-                    binding.batteryLevel.setTextColor(getResources().getColor(R.color.red));
                 }
                 binding.batteryLevel.setText(batteryPct + "%");
             }

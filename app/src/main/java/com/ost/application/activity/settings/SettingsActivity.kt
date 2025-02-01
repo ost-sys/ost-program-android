@@ -13,7 +13,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val binding =ActivityPreferencesBinding.inflate(layoutInflater).apply {
             setContentView(root)
-            toolbarLayout.setNavigationButtonAsBack()
+            toolbarLayout.showNavigationButtonAsBack = true
         }
 
         val navHostFragment = binding.navHostSettings.getFragment() as NavHostFragment

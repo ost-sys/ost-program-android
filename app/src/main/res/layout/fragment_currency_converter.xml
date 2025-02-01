@@ -24,7 +24,8 @@
                 android:id="@+id/main_image"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/ic_oui_symbol_dollar"/>
+                android:src="@drawable/ic_oui_symbol_dollar"
+                app:tint="?actionMenuTextColor"/>
 
             <TextView
                 android:id="@+id/main_currency"

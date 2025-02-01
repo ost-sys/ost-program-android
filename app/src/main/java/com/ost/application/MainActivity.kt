@@ -19,8 +19,8 @@ import com.ost.application.activity.settings.SettingsActivity
 import com.ost.application.databinding.ActivityMainBinding
 import com.ost.application.ui.core.base.FragmentInfo
 import com.ost.application.ui.core.drawer.DrawerListAdapter
-import com.ost.application.ui.fragment.InfoFragment
 import com.ost.application.ui.fragment.CurrencyConverterFragment
+import com.ost.application.ui.fragment.InfoFragment
 import com.ost.application.ui.fragment.PowerMenuFragment
 import com.ost.application.ui.fragment.applist.AppListFragment
 import com.ost.application.ui.fragment.phoneinfo.BatteryInfoFragment
@@ -32,6 +32,7 @@ import com.ost.application.ui.fragment.phoneinfo.NetworkInfoFragment
 import com.ost.application.ui.fragment.stargazerslist.StargazersListFragment
 import com.topjohnwu.superuser.Shell
 import com.topjohnwu.superuser.internal.UiThreadHandler.handler
+import dev.oneuiproject.oneui.layout.DrawerLayout
 import dev.oneuiproject.oneui.layout.NavDrawerLayout
 import dev.oneuiproject.oneui.utils.ActivityUtils
 import dev.oneuiproject.oneui.widget.Toast
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity(), DrawerListAdapter.DrawerListener {
     private var mBinding: ActivityMainBinding? = null
     private var mFragmentManager: FragmentManager? = null
     private val fragments: MutableList<Fragment?> = ArrayList()
+    var adapter: DrawerListAdapter? = null
 
     @SuppressLint("ShowToast", "MissingInflatedId", "WrongThread")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,7 +79,7 @@ class MainActivity : AppCompatActivity(), DrawerListAdapter.DrawerListener {
                     }
 
                     val remainingTime = calculateRemainingTime(targetDate.timeInMillis)
-                    mBinding!!.drawerLayout.setExpandedSubtitle(remainingTime)
+                    mBinding!!.drawerLayout.expandedSubtitle = remainingTime
                 }
 
                 handler.postDelayed(this, 1000)
@@ -86,6 +88,19 @@ class MainActivity : AppCompatActivity(), DrawerListAdapter.DrawerListener {
 
         handler.post(countdownRunnable)
     }
+
+    private val offsetRunner: Runnable = object : Runnable {
+        override fun run() {
+            applyOffset()
+            mBinding!!.drawerLayout.postDelayed(this, 10)
+        }
+    }
+
+    private fun applyOffset() {
+        val offset = mBinding!!.drawerLayout.drawerOffset
+        adapter!!.setOffset(offset)
+    }
+
 
     private fun initFragmentList() {
         fragments.add(CurrencyConverterFragment())
@@ -106,23 +121,42 @@ class MainActivity : AppCompatActivity(), DrawerListAdapter.DrawerListener {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun initDrawer() {
-        mBinding!!.drawerLayout.setDrawerButtonIcon(getDrawable(dev.oneuiproject.oneui.R.drawable.ic_oui_settings_outline))
-        mBinding!!.drawerLayout.setDrawerButtonTooltip(getString(R.string.settings))
-        mBinding!!.drawerLayout.setDrawerButtonOnClickListener {
+        adapter = DrawerListAdapter(this, fragments, this)
+        mBinding!!.drawerLayout.setHeaderButtonIcon(getDrawable(dev.oneuiproject.oneui.R.drawable.ic_oui_settings_outline))
+        mBinding!!.drawerLayout.setHeaderButtonTooltip(getString(R.string.settings))
+        mBinding!!.drawerLayout.setHeaderButtonOnClickListener { v ->
             ActivityUtils.startPopOverActivity(
-                this@MainActivity,
-                Intent(this@MainActivity, SettingsActivity::class.java),
+                this,
+                Intent(this, SettingsActivity::class.java),
                 null,
-                ActivityUtils.POP_OVER_POSITION_TOP or
-                        (if (isRTL) ActivityUtils.POP_OVER_POSITION_RIGHT else ActivityUtils.POP_OVER_POSITION_LEFT)
+                ActivityUtils.POP_OVER_POSITION_TOP or ActivityUtils.POP_OVER_POSITION_CENTER_HORIZONTAL
             )
         }
+
         mBinding!!.drawerListView.layoutManager = LinearLayoutManager(this)
-        mBinding!!.drawerListView.adapter =
-            DrawerListAdapter(this, fragments, this)
+        mBinding!!.drawerListView.adapter = adapter
         mBinding!!.drawerListView.itemAnimator = null
         mBinding!!.drawerListView.setHasFixedSize(true)
         mBinding!!.drawerListView.seslSetLastRoundedCorner(true)
+        mBinding!!.drawerLayout.setNavRailContentMinSideMargin(10);
+        mBinding!!.drawerLayout.setDrawerStateListener { state ->
+            if (!mBinding!!.drawerLayout.isLargeScreenMode) return@setDrawerStateListener
+            mBinding!!.drawerLayout.removeCallbacks(offsetRunner)
+            when (state) {
+                DrawerLayout.DrawerState.OPEN -> null
+                DrawerLayout.DrawerState.CLOSE -> applyOffset()
+                DrawerLayout.DrawerState.CLOSING, DrawerLayout.DrawerState.OPENING -> mBinding!!.drawerLayout.post(offsetRunner)
+            }
+        }
+
+        val initialOffset = if (mBinding!!.drawerLayout.isLargeScreenMode) {
+            mBinding!!.drawerLayout.drawerOffset
+        } else {
+            1f
+        }
+        adapter!!.setOffset(initialOffset)
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -171,9 +205,7 @@ class MainActivity : AppCompatActivity(), DrawerListAdapter.DrawerListener {
                 mBinding!!.drawerLayout.isExpandable = true
                 mBinding!!.drawerLayout.setExpanded(false, false)
             }
-            mBinding!!.drawerLayout.setCollapsedSubtitle(
-                (newFragment as FragmentInfo).title
-            )
+            mBinding!!.drawerLayout.collapsedSubtitle = (newFragment as FragmentInfo).title
             val now = Calendar.getInstance()
             if (now.get(Calendar.MONTH) == Calendar.JANUARY && now.get(Calendar.DAY_OF_MONTH) == 1) {
                 mBinding!!.drawerLayout.setTitle(getString(R.string.happy_new_year), getString(R.string.app_name))
@@ -240,4 +272,5 @@ class MainActivity : AppCompatActivity(), DrawerListAdapter.DrawerListener {
 
         return String.format(getString(R.string.d_h_m_s), days, hours, minutes, seconds)
     }
+
 }

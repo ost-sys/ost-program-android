@@ -22,7 +22,8 @@
                 android:id="@+id/network_icon"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/ic_oui_mobile_data"/>
+                android:src="@drawable/ic_oui_wifi_no_connection"
+                app:tint="?actionMenuTextColor"/>
 
             <TextView
                 android:id="@+id/network_title"
@@ -64,6 +65,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="@string/network_connectivity_status"
+                app:showTopDivider="true"/>
+
+            <dev.oneuiproject.oneui.widget.CardItemView
+                android:id="@+id/network_vpn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="VPN"
                 app:showTopDivider="true"/>
 
         </dev.oneuiproject.oneui.widget.RoundLinearLayout>

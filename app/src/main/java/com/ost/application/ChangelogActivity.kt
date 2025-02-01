@@ -30,7 +30,7 @@ class ChangelogActivity : AppCompatActivity() {
         changelogListView = findViewById(R.id.changelogListView)
 
         toolbarLayout = findViewById(R.id.toolbarLayout)
-        toolbarLayout.setNavigationButtonAsBack()
+        toolbarLayout.showNavigationButtonAsBack = true
 
         fetchChangelog()
     }

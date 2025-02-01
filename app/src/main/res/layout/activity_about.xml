@@ -31,6 +31,7 @@
                     android:id="@+id/about_header_app_icon"
                     android:layout_width="72dp"
                     android:layout_height="72dp"
+                    android:src="@mipmap/ic_launcher"
                     android:antialias="true" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -60,7 +61,7 @@
 
                     <androidx.appcompat.widget.SeslProgressBar
                         android:id="@+id/checking_update_main"
-                        style="@style/Widget.AppCompat.ProgressBar.Small"
+                        style="@style/Widget.AppCompat.ProgressBar.Small.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="6dp"
@@ -185,9 +186,9 @@
 
                 <androidx.appcompat.widget.SeslProgressBar
                     android:id="@+id/checking_update_second"
-                    style="@style/Widget.AppCompat.ProgressBar.Large"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    style="@style/Widget.AppCompat.ProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
                     android:indeterminate="true"

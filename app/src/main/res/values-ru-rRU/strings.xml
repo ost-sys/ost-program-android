@@ -254,4 +254,8 @@
     <string name="search_mode_on_back_behavior">Режим поиска при обратном поведении</string>
     <string name="changelog">Список изменений</string>
     <string name="error">Ошибка</string>
+    <string name="hold_to_exit">Удерживайте палец на экране, чтобы выйти</string>
+    <string name="connected">Подключён</string>
+    <string name="disconnected">Отключён</string>
+    <string name="failed_to_get_vpn_status">Не удалось получить статус VPN</string>
 </resources>

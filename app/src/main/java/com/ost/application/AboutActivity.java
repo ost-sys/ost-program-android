@@ -59,7 +59,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-import dev.oneuiproject.oneui.layout.internal.util.ToolbarLayoutUtils;
 import dev.oneuiproject.oneui.widget.TipPopup;
 import dev.oneuiproject.oneui.widget.Toast;
 
@@ -489,7 +488,7 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
                 new AlertDialog.Builder(AboutActivity.this)
                         .setTitle(getString(R.string.version) + ": " + BuildConfig.VERSION_NAME)
                         .setMessage(changelog)
-                        .setPositiveButton("OK", null)
+                        .setPositiveButton(getString(android.R.string.ok), null)
                         .show();
                 mBinding.checkingUpdateMain.setVisibility(View.GONE);
                 mBinding.checkingUpdateSecond.setVisibility(View.GONE);
@@ -507,20 +506,19 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
     }
     @SuppressLint("RestrictedApi")
     private void resetAppBar(Configuration config) {
-        ToolbarLayoutUtils.hideStatusBarForLandscape(this, config.orientation);
-        ToolbarLayoutUtils.updateListBothSideMargin(this,
-                mBinding.aboutBottomContainer);
 
         if (config.orientation != Configuration.ORIENTATION_LANDSCAPE
                 && !isInMultiWindowMode()) {
             mBinding.aboutAppBar.seslSetCustomHeightProportion(true, 0.5f);
             mBinding.aboutAppBar.addOnOffsetChangedListener(mAppBarListener);
             mBinding.aboutAppBar.setExpanded(true, false);
+            mBackPressedCallback.setEnabled(true);
             mBinding.aboutSwipeUpContainer.setVisibility(View.VISIBLE);
             ViewGroup.LayoutParams lp = mBinding.aboutSwipeUpContainer.getLayoutParams();
             lp.height = getResources().getDisplayMetrics().heightPixels / 2;
         } else {
             mBinding.aboutAppBar.setExpanded(false, false);
+            mBackPressedCallback.setEnabled(false);
             mBinding.aboutAppBar.seslSetCustomHeightProportion(true, 0);
             mBinding.aboutAppBar.removeOnOffsetChangedListener(mAppBarListener);
             mBinding.aboutBottomContainer.setAlpha(1f);
@@ -549,12 +547,8 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
                 "0x000000",
                 "OK Google",
                 "ыыыыыыыыыыыыы",
-                "java.lang.NoClassDefFoundError: com.sun.jna.Native",
-                "Блять",
                 "Hello and, again, welcome to the Aperture Science computer-aided enrichment center.",
-                "Easier to assimilate than explain anyway",
-                "User is dead",
-                getString(R.string.grant_permission_to_continue),
+                "Easier to assimilate than explain",
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         );
 

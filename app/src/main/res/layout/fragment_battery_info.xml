@@ -22,7 +22,8 @@
                 android:id="@+id/battery_icon"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/ic_oui_category_battery"/>
+                android:src="@drawable/ic_oui_category_battery"
+                app:tint="?actionMenuTextColor"/>
 
             <TextView
                 android:id="@+id/battery_level"
@@ -30,7 +31,8 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
                 android:textSize="24sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:textColor="?actionMenuTextColor"/>
 
         </LinearLayout>
 

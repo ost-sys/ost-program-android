@@ -362,7 +362,7 @@ class StargazersListFragment : BaseFragment(), ViewYTranslator by AppBarAwareYTr
         with (requireActivity() as MainActivity) {
             binding.fab.isVisible = false
             drawerLayout.startActionMode(
-                onInflateMenu = { menu ->
+                onInflateMenu = { menu, menuinflator ->
                     stargazersAdapter.onToggleActionMode(true, initialSelected)
                     requireActivity().menuInflater.inflate(R.menu.menu_stargazers_am, menu)
                 },
@@ -389,7 +389,6 @@ class StargazersListFragment : BaseFragment(), ViewYTranslator by AppBarAwareYTr
                 },
                 onSelectAll = { isChecked: Boolean -> stargazersAdapter.onToggleSelectAll(isChecked) },
                 allSelectorStateFlow = stargazersViewModel.allSelectorStateFlow,
-                keepSearchMode = stargazersViewModel.getKeepSearchModeOnActionMode()
             )
         }
     }
@@ -427,7 +426,7 @@ class StargazersListFragment : BaseFragment(), ViewYTranslator by AppBarAwareYTr
                 true
             },
             onStart = {
-                searchView.queryHint = context.getString(R.string.search_user)
+                it.queryHint = context.getString(R.string.search_user)
                 binding.fab.isVisible = false
             },
             onEnd = {

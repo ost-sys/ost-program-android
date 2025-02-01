@@ -18,12 +18,17 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.preference.PreferenceManager;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.ost.application.R;
 import com.ost.application.activity.settings.SettingsActivity;
 
+import java.util.Objects;
 import java.util.Random;
+
+import dev.oneuiproject.oneui.widget.TipPopup;
 
 public class BurnInRecoveryActivity extends AppCompatActivity {
     private final Random random = new Random();
@@ -80,8 +85,8 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
         } else {
             int totalDuration = sharedPreferences.getInt("total_duration", 30);
             int noiseDuration = sharedPreferences.getInt("noise_duration", 1);
-            int horizontalLinesDuration = sharedPreferences.getInt("horizontal_lines_duration", 1); // Consistent key
-            int verticalLinesDuration = sharedPreferences.getInt("vertical_lines_duration", 1); // Consistent key
+            int horizontalLinesDuration = sharedPreferences.getInt("horizontal_lines_duration", 1);
+            int verticalLinesDuration = sharedPreferences.getInt("vertical_lines_duration", 1);
             int blackWhiteNoiseDuration = sharedPreferences.getInt("black_white_noise_duration", 1);
 
             handler = new Handler(Looper.getMainLooper());
@@ -94,6 +99,9 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
             finish();
             return true;
         });
+
+        noiseView.setOnClickListener(v -> Toast.makeText(this, R.string.hold_to_exit, Toast.LENGTH_SHORT).show());
+
     }
 
     @Override
@@ -179,10 +187,10 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
 
     private void startModeCycle(int totalDuration, int noiseDuration, int horizontalLinesDuration, int verticalLinesDuration, int blackWhiteNoiseDuration) {
         int[] modeDurations = {
-                noiseDuration * 60 * 1000, // Шум
-                horizontalLinesDuration * 60 * 1000, // Горизонтальные линии
-                verticalLinesDuration * 60 * 1000, // Вертикальные линии
-                noiseDuration * 60 * 1000  // Чёрно-белый шум
+                noiseDuration * 60 * 1000,
+                horizontalLinesDuration * 60 * 1000,
+                verticalLinesDuration * 60 * 1000,
+                blackWhiteNoiseDuration * 60 * 1000
         };
 
         Runnable modeSwitcher = new Runnable() {
@@ -193,7 +201,6 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
             public void run() {
                 if (!isRunning) return;
 
-                // Проверяем, не превысили ли общее время восстановления
                 long elapsedTime = System.currentTimeMillis() - startTime;
                 if (elapsedTime >= totalDuration * 60 * 1000) {
                     isRunning = false;
@@ -202,16 +209,13 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Устанавливаем текущий режим
                 currentMode = modeIndex;
                 noiseView.setMode(currentMode);
 
-                // Переходим к следующему режиму
                 modeIndex = (modeIndex + 1) % modeDurations.length;
 
                 Log.d("BurnInRecovery", "Switching to mode " + modeIndex + ", Duration: " + modeDurations[modeIndex]);
 
-                // Планируем следующий режим
                 handler.postDelayed(this, modeDurations[modeIndex]);
             }
         };

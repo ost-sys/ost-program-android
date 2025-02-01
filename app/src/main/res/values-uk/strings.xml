@@ -254,4 +254,8 @@
     <string name="search_mode_on_back_behavior">Режим пошуку при зворотній поведінці</string>
     <string name="changelog">Список змін</string>
     <string name="error">Помилка</string>
+    <string name="hold_to_exit">Утримуйте палець на екрані, щоб вийти</string>
+    <string name="connected">Підключено</string>
+    <string name="disconnected">Вимкнено</string>
+    <string name="failed_to_get_vpn_status">Не вдалося отримати статус VPN</string>
 </resources>

@@ -57,7 +57,7 @@ class ProfileActivity : AppCompatActivity(){
         postponeEnterTransition()
 
         mBinding.toolbarLayout.apply {
-            setNavigationButtonAsBack()
+            showNavigationButtonAsBack = true
             isExpandable = false
             toolbar.fadeIn()
         }

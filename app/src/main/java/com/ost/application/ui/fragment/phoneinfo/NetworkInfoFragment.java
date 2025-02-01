@@ -1,9 +1,13 @@
 package com.ost.application.ui.fragment.phoneinfo;
 
+import static com.topjohnwu.superuser.internal.UiThreadHandler.handler;
+
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Icon;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -32,16 +36,31 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
     public static int TYPE_WIFI = 1;
     public static int TYPE_MOBILE = 2;
     public static int TYPE_NOT_CONNECTED = 0;
+    private Runnable updateRunnable;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentNetworkInfoBinding.inflate(inflater, container, false);
 
-        updateNetworkInfo();
+        updateRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateNetworkInfo();
+                handler.postDelayed(this, 500);
+            }
+        };
+
+        handler.post(updateRunnable);
 
         binding.checkPermission.setOnClickListener(this);
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        showNetworkInfo();
     }
 
     private void updateNetworkInfo() {
@@ -70,6 +89,25 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
             binding.networkOperatorCountry.setSummary(countryCode.toUpperCase());
             binding.networkPhoneType.setSummary(networkType());
             binding.networkConnectivityStatus.setSummary(connectivityStatus);
+            binding.networkIcon.setImageIcon(getConnectivityStatusIcon(getActivity()));
+
+            checkVPNStatus();
+        }
+    }
+
+    private void checkVPNStatus() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager != null) {
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+            if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_VPN) {
+                binding.networkVpn.setSummary(getString(R.string.connected));
+            } else {
+                binding.networkVpn.setSummary(getString(R.string.disconnected));
+            }
+        } else {
+            binding.networkVpn.setSummary(getString(R.string.failed_to_get_vpn_status));
         }
     }
 
@@ -132,7 +170,15 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public int getIconResId() {
-        return dev.oneuiproject.oneui.R.drawable.ic_oui_mobile_data;
+        int conn = getConnectivityStatus(getActivity());
+        if (conn == TYPE_WIFI) {
+            return dev.oneuiproject.oneui.R.drawable.ic_oui_wifi;
+        } else if (conn == TYPE_MOBILE) {
+            return dev.oneuiproject.oneui.R.drawable.ic_oui_mobile_data;
+        } else if (conn == TYPE_NOT_CONNECTED) {
+            return dev.oneuiproject.oneui.R.drawable.ic_oui_wifi_no_connection;
+        }
+        return dev.oneuiproject.oneui.R.drawable.ic_oui_wifi;
     }
 
     @Override
@@ -160,6 +206,19 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
             status = getString(R.string.not_connected_to_internet);
         }
         return status;
+    }
+
+    public Icon getConnectivityStatusIcon(Context context) {
+        int conn = getConnectivityStatus(context);
+        int resId = 0;
+        if (conn == TYPE_WIFI) {
+            resId = dev.oneuiproject.oneui.R.drawable.ic_oui_wifi;
+        } else if (conn == TYPE_MOBILE) {
+            resId = dev.oneuiproject.oneui.R.drawable.ic_oui_mobile_data;
+        } else if (conn == TYPE_NOT_CONNECTED) {
+            resId = dev.oneuiproject.oneui.R.drawable.ic_oui_wifi_no_connection;
+        }
+        return Icon.createWithResource(context, resId);
     }
 
     public static int getConnectivityStatus(Context context) {

@@ -24,7 +24,8 @@
                 android:id="@+id/power_menu_icon"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/ic_oui_power"/>
+                android:src="@drawable/ic_oui_power"
+                app:tint="?actionMenuTextColor"/>
 
             <TextView
                 android:id="@+id/power_menu_text"
@@ -64,7 +65,7 @@
                 app:icon="@drawable/ic_oui_restart"
                 app:title="@string/reboot"
                 app:summary="@string/reboot_system_s"
-                app:isDividerViewVisible="true"/>
+                app:showTopDivider="true"/>
 
             <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/recovery"

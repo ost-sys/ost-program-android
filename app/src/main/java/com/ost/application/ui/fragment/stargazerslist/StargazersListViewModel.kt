@@ -1,7 +1,6 @@
 package com.ost.application.ui.fragment.stargazerslist
 
 import android.annotation.SuppressLint
-import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,8 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.ost.application.OSTApp
 import com.ost.application.R
 import com.ost.application.data.RefreshResult
-import dev.oneuiproject.oneui.delegates.AllSelectorState
-import dev.oneuiproject.oneui.layout.ToolbarLayout
 import com.ost.application.data.StargazersRepo
 import com.ost.application.data.model.FetchState
 import com.ost.application.data.model.SearchModeOnActionMode
@@ -18,6 +15,8 @@ import com.ost.application.data.model.StargazersSettings
 import com.ost.application.ui.core.util.isOnline
 import com.ost.application.ui.fragment.stargazerslist.model.StargazersListUiState
 import com.ost.application.ui.fragment.stargazerslist.util.toFilteredStargazerUiModelList
+import dev.oneuiproject.oneui.delegates.AllSelectorState
+import dev.oneuiproject.oneui.layout.ToolbarLayout
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
