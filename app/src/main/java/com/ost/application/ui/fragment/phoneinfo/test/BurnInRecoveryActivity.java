@@ -1,12 +1,17 @@
 package com.ost.application.ui.fragment.phoneinfo.test;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,10 +23,18 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+<<<<<<< Updated upstream
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.snackbar.Snackbar;
+=======
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.preference.PreferenceManager;
+
+import com.ost.application.MainActivity;
+>>>>>>> Stashed changes
 import com.ost.application.R;
 import com.ost.application.activity.settings.SettingsActivity;
 
@@ -31,13 +44,14 @@ import java.util.Random;
 import dev.oneuiproject.oneui.widget.TipPopup;
 
 public class BurnInRecoveryActivity extends AppCompatActivity {
+    private static final String CHANNEL_ID = "burn_in_recovery_channel";
+    private static final int NOTIFICATION_ID = 1;
     private final Random random = new Random();
     private boolean isRunning = true;
     private Handler handler;
     private NoiseView noiseView;
 
     private static final int REQUEST_WRITE_SETTINGS = 100;
-    private static final long MODE_DURATION = 60 * 1000;
 
     private int currentMode = 0;
     private static final int MODE_NOISE = 0;
@@ -112,6 +126,7 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
             handler.removeCallbacksAndMessages(null);
         }
         restoreOriginalBrightnessSettings();
+
     }
 
     @Override
@@ -205,6 +220,7 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
                 if (elapsedTime >= totalDuration * 60 * 1000) {
                     isRunning = false;
                     Toast.makeText(BurnInRecoveryActivity.this, getString(R.string.exiting), Toast.LENGTH_SHORT).show();
+                    showCompletionNotification();
                     finish();
                     return;
                 }
@@ -289,6 +305,41 @@ public class BurnInRecoveryActivity extends AppCompatActivity {
             canvas.drawBitmap(bitmap, 0, 0, paint);
 
             invalidate();
+        }
+    }
+
+    private void showCompletionNotification() {
+        NotificationChannel channel = new NotificationChannel(
+                CHANNEL_ID,
+                getString(R.string.app_name),
+                NotificationManager.IMPORTANCE_HIGH
+        );
+        channel.setDescription(getString(R.string.success));
+        NotificationManager manager = getSystemService(NotificationManager.class);
+        if (manager != null) {
+            manager.createNotificationChannel(channel);
+        }
+
+        Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(dev.oneuiproject.oneui.R.drawable.ic_oui_screen_resolution)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText("Fixing dead/burnt pixels is complete")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setSound(soundUri)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        if (notificationManager.areNotificationsEnabled()) {
+            notificationManager.notify(NOTIFICATION_ID, builder.build());
         }
     }
 }

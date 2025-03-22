@@ -1,8 +1,5 @@
 package com.ost.application.sysinfo;
 
-/**
- * Created by HoVanLy on 5/30/2016.
- */
 public class Cpu {
     private String model;
     private String cores;

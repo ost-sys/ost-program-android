@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dev.oneuiproject.oneui.widget.RoundedFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragment.WatchDeviceFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/wear_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_oui_galaxy_watch"
+                app:tint="?actionMenuTextColor" />
+
+            <TextView
+                android:id="@+id/wear_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?actionMenuTextColor"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="ex. Galaxy Watch 4"/>
+
+            <dev.oneuiproject.oneui.widget.Separator
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/wear_find_device"
+                style="@style/OneUI.ButtonStyleColored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Find a paired wearable device"/>
+
+        </LinearLayout>
+
+        <dev.oneuiproject.oneui.widget.Separator
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <dev.oneuiproject.oneui.widget.RoundedNestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </dev.oneuiproject.oneui.widget.RoundedNestedScrollView>
+
+    </LinearLayout>
+
+</dev.oneuiproject.oneui.widget.RoundedFrameLayout>

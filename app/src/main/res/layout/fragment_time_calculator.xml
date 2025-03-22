@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dev.oneuiproject.oneui.widget.RoundedFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/about_me"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="24dp"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:clickable="true">
+
+            <ImageView
+                android:id="@+id/time_calculator_icon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_oui_time_outline"
+                app:tint="?actionMenuTextColor"/>
+
+            <TextView
+                android:id="@+id/time_calculator_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?actionMenuTextColor"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:hint="@string/result"/>
+
+            <dev.oneuiproject.oneui.widget.Separator
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <dev.oneuiproject.oneui.widget.RoundedNestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <dev.oneuiproject.oneui.widget.RoundedLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <dev.oneuiproject.oneui.widget.Separator
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/minuend"/>
+
+                <dev.oneuiproject.oneui.widget.RoundedLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/oui_background_color"
+                    android:orientation="vertical">
+
+                    <androidx.picker.widget.SeslDatePicker
+                        android:id="@+id/time_calculator_first_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingVertical="10dp"
+                        android:theme="@style/DatePickerTheme"/>
+
+                    <androidx.picker.widget.SeslTimePicker
+                        android:id="@+id/time_calculator_first_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </dev.oneuiproject.oneui.widget.RoundedLinearLayout>
+
+                <dev.oneuiproject.oneui.widget.Separator
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/subtrahend"/>
+
+                <dev.oneuiproject.oneui.widget.RoundedLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/oui_background_color"
+                    android:orientation="vertical">
+
+                    <androidx.picker.widget.SeslDatePicker
+                        android:id="@+id/time_calculator_second_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingVertical="10dp"
+                        android:theme="@style/DatePickerTheme"/>
+
+                    <androidx.picker.widget.SeslTimePicker
+                        android:id="@+id/time_calculator_second_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </dev.oneuiproject.oneui.widget.RoundedLinearLayout>
+
+                <dev.oneuiproject.oneui.widget.Separator
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </dev.oneuiproject.oneui.widget.RoundedLinearLayout>
+
+        </dev.oneuiproject.oneui.widget.RoundedNestedScrollView>
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/time_calculator_calculate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_oui_calculation"/>
+
+</dev.oneuiproject.oneui.widget.RoundedFrameLayout>

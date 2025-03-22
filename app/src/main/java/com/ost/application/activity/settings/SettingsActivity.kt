@@ -11,7 +11,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding =ActivityPreferencesBinding.inflate(layoutInflater).apply {
+        val binding = ActivityPreferencesBinding.inflate(layoutInflater).apply {
             setContentView(root)
             toolbarLayout.showNavigationButtonAsBack = true
         }

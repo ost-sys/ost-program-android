@@ -23,19 +23,25 @@
 
             <ImageView
                 android:id="@+id/cpu_icon"
+<<<<<<< Updated upstream
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/ic_oui_error"
                 app:tint="@color/red" />
+=======
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_oui_enhanced_processing"
+                app:tint="?actionMenuTextColor" />
+>>>>>>> Stashed changes
 
             <TextView
                 android:id="@+id/cpu_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textSize="24sp"
-                android:text="@string/still_on_beta"
-                android:textColor="@color/red"
+                android:textSize="20sp"
+                android:textColor="?actionMenuTextColor"
                 android:textStyle="bold"/>
 
         </LinearLayout>
@@ -48,6 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+<<<<<<< Updated upstream
             <dev.oneuiproject.oneui.widget.RoundLinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -98,6 +105,64 @@
                     android:visibility="gone"/>
 
             </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+=======
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <dev.oneuiproject.oneui.widget.RoundedLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/oui_background_color"
+                    android:orientation="vertical">
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/cpu_manufacturer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/soc_manufacturer"
+                        app:showTopDivider="false"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/cpu_abi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/application_binary_interface"
+                        app:showTopDivider="true"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/cpu_cores"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/cores"
+                        app:showTopDivider="true"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/cpu_cores_clock"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/frequency_min_max"
+                        app:showTopDivider="true"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/gpu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/gpu"
+                        app:showTopDivider="true"
+                        android:visibility="gone"/>
+
+                </dev.oneuiproject.oneui.widget.RoundedLinearLayout>
+
+                <dev.oneuiproject.oneui.widget.BottomTipView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:title="@string/attention"
+                    app:summary="@string/still_on_beta" />
+
+            </LinearLayout>
+>>>>>>> Stashed changes
 
         </dev.oneuiproject.oneui.widget.RoundedNestedScrollView>
 

@@ -90,7 +90,6 @@
     <string name="check_root">Check ROOT</string>
     <string name="show_letters">Show letters</string>
     <string name="hide_letters">Hide letters</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="phone">Phone</string>
     <string name="tablet">Tablet</string>
     <string name="device">Device</string>
@@ -98,8 +97,8 @@
     <string name="gb">GB</string>
     <string name="total">Total</string>
     <string name="used">Used</string>
-    <string name="supported">Supported</string>
-    <string name="unsupported">Unsupported</string>
+    <string name="support">Support</string>
+    <string name="unsupport">Unsupport</string>
     <string name="about_phone">About this phone</string>
     <string name="about_tablet">About this tablet</string>
     <string name="about_device">About this device</string>
@@ -166,7 +165,6 @@
     <string name="check_permission">Check permission</string>
     <string name="fingers_registered">Fingers registered</string>
     <string name="fingers_not_registered">Fingers not registered</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="multiple_rear_cameras_detected">Multiple rear cameras detected</string>
     <string name="single_rear_camera">Single rear camera</string>
     <string name="unknown">Unknown</string>
@@ -235,7 +233,7 @@
     <string name="connection_error_occurred">Connection error occurred</string>
     <string name="data_analysis_error">Data analysis error</string>
     <string name="conversion_error">Conversion error</string>
-    <string name="_1_s_2f_s">1 %s is %.2f %s</string>
+    <string name="conversion_result">%1$.2f %2$s is %3$.2f %4$s</string>
     <string name="enter_your_token">Enter your token</string>
     <string name="enter_your_token_text_input">Enter your token here. \n\nClick OK to open the site to register and receive your unique token</string>
     <string name="currency_converter">Currency converter</string>
@@ -263,8 +261,55 @@
     <string name="changelog">Changelog</string>
     <string name="error">Error</string>
     <string name="hold_to_exit">Hold your finger on the screen to exit</string>
+<<<<<<< Updated upstream
     <!-- TODO: Remove or change this placeholder text -->
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
     <string name="failed_to_get_vpn_status">Failed to get VPN status</string>
+=======
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="failed_to_get_vpn_status">Failed to get VPN status</string>
+    <string name="click_to_see_developer_information">Hi! Click here to see developer information</string>
+    <string name="year">Year</string>
+    <string name="month">Month</string>
+    <string name="day">Day</string>
+    <string name="hour">Hour</string>
+    <string name="minute">Minute</string>
+    <string name="years">Years</string>
+    <string name="months">Months</string>
+    <string name="days">Days</string>
+    <string name="hours">Hours</string>
+    <string name="minutes">Minutes</string>
+    <string name="invalid_input">Invalid date or time input</string>
+    <string name="diff_years_format" translatable="false">%d %s</string>
+    <string name="years_one">Year</string>
+    <string name="years_two_four">Years</string>
+    <string name="years_five_nine">Years</string>
+    <string name="credits">Credits</string>
+    <string name="one_ui_design_lib">One UI Design Lib</string>
+    <string name="save_image">Save image</string>
+    <string name="dont_worry">Don\'t worry!</string>
+    <string name="privacy_text">Everything that is displayed in the application remains exclusively locally on the phone.</string>
+    <string name="close">Close</string>
+    <string name="calculate">Calculate</string>
+    <string name="minuend">Minuend</string>
+    <string name="subtrahend">Subtrahend</string>
+    <string name="first_time_zone">First time zone</string>
+    <string name="second_time_zone">Second time zone</string>
+    <string name="unknown_network_error">Unknown network error</string>
+    <string name="time_zone">Time zone</string>
+    <string name="time">Time</string>
+    <string name="currency">Currency</string>
+    <string name="tools">Tools</string>
+    <string name="open_source_code_of_this_program">Open source code of this program</string>
+    <string name="ip_address">IP address</string>
+    <string name="stylus_support">Stylus support</string>
+    <string name="enter_the_number">Enter the number</string>
+    <string name="invalid_amount_entered">Are you sure you\'re writing numbers and not symbols?</string>
+    <string name="failed_to_obtain_ip">Failed to obtain IP</string>
+    <string name="error_obtaining_ip">Error obtaining IP</string>
+    <string name="enable_all_permission_r">Go to settings and enable all permission</string>
+    <string name="all_permissions_required">All permissions are required for this app</string>
+>>>>>>> Stashed changes
 </resources>

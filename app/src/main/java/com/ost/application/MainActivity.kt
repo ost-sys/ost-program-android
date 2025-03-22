@@ -2,15 +2,17 @@ package com.ost.application
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.LayoutDirection
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -19,9 +21,19 @@ import com.ost.application.activity.settings.SettingsActivity
 import com.ost.application.databinding.ActivityMainBinding
 import com.ost.application.ui.core.base.FragmentInfo
 import com.ost.application.ui.core.drawer.DrawerListAdapter
+<<<<<<< Updated upstream
 import com.ost.application.ui.fragment.CurrencyConverterFragment
+=======
+import com.ost.application.ui.core.util.appSettingOpen
+import com.ost.application.ui.core.util.warningPermissionDialog
+import com.ost.application.ui.fragment.ConvertersFragment
+import com.ost.application.ui.fragment.converters.CurrencyConverterFragment
+>>>>>>> Stashed changes
 import com.ost.application.ui.fragment.InfoFragment
 import com.ost.application.ui.fragment.PowerMenuFragment
+import com.ost.application.ui.fragment.WatchDeviceFragment
+import com.ost.application.ui.fragment.converters.TimeCalculatorFragment
+import com.ost.application.ui.fragment.converters.TimeZoneConverterFragment
 import com.ost.application.ui.fragment.applist.AppListFragment
 import com.ost.application.ui.fragment.phoneinfo.BatteryInfoFragment
 import com.ost.application.ui.fragment.phoneinfo.CPUInfoFragment
@@ -44,6 +56,21 @@ class MainActivity : AppCompatActivity(), DrawerListAdapter.DrawerListener {
     private var mFragmentManager: FragmentManager? = null
     private val fragments: MutableList<Fragment?> = ArrayList()
     var adapter: DrawerListAdapter? = null
+<<<<<<< Updated upstream
+=======
+
+    private val multiplePermissionId = 14
+    private val multiplePermissionNameList = if (Build.VERSION.SDK_INT >= 33) {
+        arrayListOf(
+            Manifest.permission.POST_NOTIFICATIONS,
+            Manifest.permission.READ_PHONE_STATE,
+        )
+    } else {
+        arrayListOf(
+            Manifest.permission.READ_PHONE_STATE,
+        )
+    }
+>>>>>>> Stashed changes
 
     @SuppressLint("ShowToast", "MissingInflatedId", "WrongThread")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,7 +130,10 @@ class MainActivity : AppCompatActivity(), DrawerListAdapter.DrawerListener {
 
 
     private fun initFragmentList() {
-        fragments.add(CurrencyConverterFragment())
+        fragments.add(ConvertersFragment())
+        fragments.add(PowerMenuFragment())
+        fragments.add(AppListFragment())
+        fragments.add(StargazersListFragment())
         fragments.add(null)
         fragments.add(DefaultInfoFragment())
         fragments.add(CPUInfoFragment())
@@ -111,10 +141,6 @@ class MainActivity : AppCompatActivity(), DrawerListAdapter.DrawerListener {
         fragments.add(DisplayInfoFragment())
         fragments.add(NetworkInfoFragment())
         fragments.add(CameraInfoFragment())
-        fragments.add(null)
-        fragments.add(PowerMenuFragment())
-        fragments.add(AppListFragment())
-        fragments.add(StargazersListFragment())
         fragments.add(null)
         fragments.add(InfoFragment())
     }
@@ -124,7 +150,11 @@ class MainActivity : AppCompatActivity(), DrawerListAdapter.DrawerListener {
         adapter = DrawerListAdapter(this, fragments, this)
         mBinding!!.drawerLayout.setHeaderButtonIcon(getDrawable(dev.oneuiproject.oneui.R.drawable.ic_oui_settings_outline))
         mBinding!!.drawerLayout.setHeaderButtonTooltip(getString(R.string.settings))
+<<<<<<< Updated upstream
         mBinding!!.drawerLayout.setHeaderButtonOnClickListener { v ->
+=======
+        mBinding!!.drawerLayout.setHeaderButtonOnClickListener {
+>>>>>>> Stashed changes
             ActivityUtils.startPopOverActivity(
                 this,
                 Intent(this, SettingsActivity::class.java),
@@ -223,39 +253,81 @@ class MainActivity : AppCompatActivity(), DrawerListAdapter.DrawerListener {
 
     override fun onStart() {
         super.onStart()
+        checkMultiplePermission()
+    }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val res = checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
-            if (res != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(Manifest.permission.READ_PHONE_STATE), 123)
+    private fun checkMultiplePermission(): Boolean {
+        val listPermissionNeeded = arrayListOf<String>()
+        for (permission in multiplePermissionNameList) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    permission
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                listPermissionNeeded.add(permission)
             }
         }
+        if (listPermissionNeeded.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this,
+                listPermissionNeeded.toTypedArray(),
+                multiplePermissionId
+            )
+            return false
+        }
+        return true
     }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
-        permissions: Array<String>, grantResults: IntArray
+        permissions: Array<out String>,
+        grantResults: IntArray,
     ) {
-        if (requestCode == REQUEST_CODE_ASK_PERMISSIONS) {
-            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(
-                    applicationContext,
-                    getString(R.string.read_phone_state_denied),
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == multiplePermissionId) {
+            if (grantResults.isNotEmpty()) {
+                var isGrant = true
+                for (element in grantResults) {
+                    if (element == PackageManager.PERMISSION_DENIED) {
+                        isGrant = false
+                    }
+                }
+                if (!isGrant) {
+                    var someDenied = false
+                    for (permission in permissions) {
+                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
+                                this,
+                                permission
+                            )
+                        ) {
+                            if (ActivityCompat.checkSelfPermission(
+                                    this,
+                                    permission
+                                ) == PackageManager.PERMISSION_DENIED
+                            ) {
+                                someDenied = true
+                            }
+                        }
+                    }
+                    if (someDenied) {
+                        appSettingOpen(this)
+                    } else {
+                        warningPermissionDialog(this) { _: DialogInterface, which: Int ->
+                            when (which) {
+                                DialogInterface.BUTTON_POSITIVE ->
+                                    checkMultiplePermission()
+                            }
+                        }
+                    }
+                }
             }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
 
     companion object {
-        private const val REQUEST_CODE_ASK_PERMISSIONS = 1002
         const val KEY_REPO_NAME = "repoName"
     }
-
-    private val isRTL: Boolean get() = resources.configuration.layoutDirection == LayoutDirection.RTL
 
     private fun calculateRemainingTime(targetTimeMillis: Long): String {
         val now = System.currentTimeMillis()
@@ -273,4 +345,9 @@ class MainActivity : AppCompatActivity(), DrawerListAdapter.DrawerListener {
         return String.format(getString(R.string.d_h_m_s), days, hours, minutes, seconds)
     }
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 }

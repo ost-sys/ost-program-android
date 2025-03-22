@@ -18,7 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.concurrent.Executor;
+
 import androidx.annotation.NonNull;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
 
 import com.jaredrummler.android.device.DeviceName;
 import com.ost.application.R;
@@ -62,6 +66,9 @@ public class DefaultInfoFragment extends BaseFragment implements View.OnClickLis
         });
 
         handler.post(updateRunnable);
+
+        binding.aboutPhoneFingerprintScanner.setOnClickListener(v -> showBiometricPrompt());
+
         return binding.getRoot();
     }
 
@@ -82,27 +89,20 @@ public class DefaultInfoFragment extends BaseFragment implements View.OnClickLis
         double externalTotal;
         double externalFree;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            internalTotal = ((internalStatFs.getBlockCountLong() * internalStatFs.getBlockSizeLong()) / (1024.0 * 1024 * 1024));
-            internalFree = (internalStatFs.getAvailableBlocksLong() * internalStatFs.getBlockSizeLong()) / (1024.0 * 1024 * 1024);
-            externalTotal = (externalStatFs.getBlockCountLong() * externalStatFs.getBlockSizeLong()) / (1024.0 * 1024 * 1024);
-            externalFree = (externalStatFs.getAvailableBlocksLong() * externalStatFs.getBlockSizeLong()) / (1024.0 * 1024 * 1024);
-        } else {
-            internalTotal = ((long) internalStatFs.getBlockCount() * (long) internalStatFs.getBlockSize()) / (1024.0 * 1024 * 1024);
-            internalFree = ((long) internalStatFs.getAvailableBlocks() * (long) internalStatFs.getBlockSize()) / (1024.0 * 1024 * 1024);
-            externalTotal = ((long) externalStatFs.getBlockCount() * (long) externalStatFs.getBlockSize()) / (1024.0 * 1024 * 1024);
-            externalFree = ((long) externalStatFs.getAvailableBlocks() * (long) externalStatFs.getBlockSize()) / (1024.0 * 1024 * 1024);
-        }
+        internalTotal = ((internalStatFs.getBlockCountLong() * internalStatFs.getBlockSizeLong()) / (1024.0 * 1024 * 1024));
+        internalFree = (internalStatFs.getAvailableBlocksLong() * internalStatFs.getBlockSizeLong()) / (1024.0 * 1024 * 1024);
+        externalTotal = (externalStatFs.getBlockCountLong() * externalStatFs.getBlockSizeLong()) / (1024.0 * 1024 * 1024);
+        externalFree = (externalStatFs.getAvailableBlocksLong() * externalStatFs.getBlockSizeLong()) / (1024.0 * 1024 * 1024);
 
         double total = internalTotal + externalTotal;
         double free = internalFree + externalFree;
         double used = total - free;
 
-        String availMemoryString = String.format("%.1f", availMemory);
-        String totalMemoryString = String.format("%.1f", totalMemory);
-        String totalString = String.format("%.1f", total);
-        String freeString = String.format("%.1f", free);
-        String usedString = String.format("%.1f", used);
+        @SuppressLint("DefaultLocale") String availMemoryString = String.format("%.1f", availMemory);
+        @SuppressLint("DefaultLocale") String totalMemoryString = String.format("%.1f", totalMemory);
+        @SuppressLint("DefaultLocale") String totalString = String.format("%.1f", total);
+        @SuppressLint("DefaultLocale") String freeString = String.format("%.1f", free);
+        @SuppressLint("DefaultLocale") String usedString = String.format("%.1f", used);
 
         binding.aboutPhoneAndroid.setSummary(Build.VERSION.RELEASE);
         binding.aboutPhoneBrand.setSummary(Build.BRAND);
@@ -132,12 +132,12 @@ public class DefaultInfoFragment extends BaseFragment implements View.OnClickLis
 
         if (fingerprintManager != null && fingerprintManager.isHardwareDetected()) {
             if (fingerprintManager.hasEnrolledFingerprints()) {
-                binding.aboutPhoneFingerprintScanner.setSummary(getString(R.string.supported) + "\n" + getString(R.string.fingers_registered));
+                binding.aboutPhoneFingerprintScanner.setSummary(getString(R.string.support) + "\n" + getString(R.string.fingers_registered));
             } else {
-                binding.aboutPhoneFingerprintScanner.setSummary(getString(R.string.supported) + "\n" + getString(R.string.fingers_not_registered));
+                binding.aboutPhoneFingerprintScanner.setSummary(getString(R.string.support) + "\n" + getString(R.string.fingers_not_registered));
             }
         } else {
-            binding.aboutPhoneFingerprintScanner.setSummary(getString(R.string.unsupported));
+            binding.aboutPhoneFingerprintScanner.setSummary(getString(R.string.unsupport));
         }
         binding.aboutPhoneAndroid.setOnClickListener(this);
     }
@@ -173,6 +173,39 @@ public class DefaultInfoFragment extends BaseFragment implements View.OnClickLis
             handler.postDelayed(resetClickCountRunnable, maxClickTime);
         }
     }
+    private void showBiometricPrompt() {
+        assert getActivity() != null;
+        Executor executor = ContextCompat.getMainExecutor(getActivity());
+        BiometricPrompt biometricPrompt = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            biometricPrompt = new BiometricPrompt(this, executor, new BiometricPrompt.AuthenticationCallback() {
+                @Override
+                public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                    super.onAuthenticationSucceeded(result);
+                    Toast.makeText(getActivity(), getString(R.string.success), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                    super.onAuthenticationError(errorCode, errString);
+                    Toast.makeText(getActivity(), errString, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onAuthenticationFailed() {
+                    super.onAuthenticationFailed();
+                    Toast.makeText(getActivity(),getString(R.string.fail), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Test fingerprint scanner")
+                .setNegativeButtonText(getString(android.R.string.cancel))
+                .build();
+
+        biometricPrompt.authenticate(promptInfo);
+    }
 
     private void performAction() {
         long uptimeMillis = SystemClock.uptimeMillis();
@@ -180,15 +213,12 @@ public class DefaultInfoFragment extends BaseFragment implements View.OnClickLis
             String activity = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 activity = "com.android.egg.landroid.MainActivity";
-            } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU
-                    && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
-                    || Build.VERSION.SDK_INT == Build.VERSION_CODES.O
-                    || Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1){
-                Toast.makeText(getActivity(), getString(R.string.easter_egg_not_founded), Toast.LENGTH_SHORT).show();
             } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
                 activity = "com.android.egg.quares.QuaresActivity";
             } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.P) {
                 activity = "com.android.egg.paint.PaintActivity";
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.easter_egg_not_founded), Toast.LENGTH_SHORT).show();
             }
             if (activity != null) {
                 startActivity(Intent.makeMainActivity(new ComponentName("com.android.egg", activity)));
@@ -197,13 +227,11 @@ public class DefaultInfoFragment extends BaseFragment implements View.OnClickLis
     }
 
     public String getBuildNumber() {
-
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
             return getSystemProperty("ro.build.id");
         } else {
             return getSystemProperty("ro.system.build.id");
         }
-
     }
 
     private final Runnable resetClickCountRunnable = () -> clickCount = 0;

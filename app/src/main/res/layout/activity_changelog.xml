@@ -3,18 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/toolbarLayout"
     app:expanded="false"
-    app:expandable="false"
+    app:expandable="true"
     app:title="@string/changelog"
+    tools:expanded="true"
     app:navigationIcon="@drawable/ic_oui_back">
 
-    <ListView
-        android:id="@+id/changelogListView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/changelogRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="?attr/listDividerColor"
         android:background="@color/oui_background_color"
-        android:dividerHeight="1dp"/>
+        tools:listitem="@layout/changelog_list_item" />
 
 </dev.oneuiproject.oneui.layout.ToolbarLayout>

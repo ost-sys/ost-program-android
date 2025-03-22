@@ -22,8 +22,13 @@
 
             <ImageView
                 android:id="@+id/power_menu_icon"
+<<<<<<< Updated upstream
                 android:layout_width="120dp"
                 android:layout_height="120dp"
+=======
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+>>>>>>> Stashed changes
                 android:src="@drawable/ic_oui_power"
                 app:tint="?actionMenuTextColor"/>
 
@@ -34,7 +39,7 @@
                 android:textColor="?actionMenuTextColor"
                 android:textAlignment="center"
                 android:text="@string/access_request_sent"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold"/>
 
         </LinearLayout>
@@ -43,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <dev.oneuiproject.oneui.widget.RoundLinearLayout
+        <dev.oneuiproject.oneui.widget.RoundedLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/oui_background_color"
@@ -103,7 +108,7 @@
                 app:summary="@string/reboot_fastbootd_s"
                 app:showTopDivider="true"/>
 
-        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+        </dev.oneuiproject.oneui.widget.RoundedLinearLayout>
 
     </LinearLayout>
 

@@ -10,7 +10,7 @@
     app:title="@string/app_name"
     tools:isOpen="true">
 
-    <dev.oneuiproject.oneui.widget.RoundFrameLayout
+    <dev.oneuiproject.oneui.widget.RoundedFrameLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,6 +22,58 @@
         app:layout_location="drawer_panel"
         android:layout_marginVertical="10dp"
         android:orientation="vertical">
+<<<<<<< Updated upstream
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/drawer_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="vertical"
+            tools:listitem="@layout/view_drawer_list_item"/>
+
+        <ImageButton
+            android:id="@+id/drawer_hide_btn"
+            style="@style/OneUI.ButtonStyleTransparent"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="20dp"
+            android:alpha="0.4"
+            android:padding="6dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_oui_back"
+            android:rotation="180"
+            android:visibility="gone"
+            app:tint="@android:color/darker_gray"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_location="footer">
+
+        <ImageButton
+            android:id="@+id/drawer_show_btn"
+            android:layout_marginHorizontal="8dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:scaleType="fitXY"
+            android:padding="6dp"
+            android:alpha="0.4"
+            android:layout_gravity="center_vertical|start"
+            style="@style/OneUI.ButtonStyleTransparent"
+            android:src="@drawable/ic_oui_back"
+            android:rotation="90"
+            android:visibility="gone"
+            app:tint="@android:color/darker_gray"
+            tools:visibility="visible"/>
+
+    </FrameLayout>
+=======
+>>>>>>> Stashed changes
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/drawer_list_view"
@@ -72,4 +124,4 @@
 
     </FrameLayout>
 
-</dev.oneuiproject.oneui.layout.NavDrawerLayout >
+</dev.oneuiproject.oneui.layout.NavDrawerLayout>

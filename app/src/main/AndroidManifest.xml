@@ -6,15 +6,21 @@
         android:name="android.hardware.telephony"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MANAGE_MEDIA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
@@ -27,12 +33,6 @@
         tools:ignore="CoarseFineLocation,ProtectedPermissions" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission
-        android:name="android.permission.ACCESS_FINE_LOCATION"
-        tools:ignore="CoarseFineLocation" />
-    <uses-permission
-        android:name="android.permission.CAMERA"
-        tools:ignore="PermissionImpliesUnsupportedChromeOsHardware" />
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -52,7 +52,11 @@
         tools:targetApi="tiramisu">
 
         <service
+<<<<<<< Updated upstream
             android:name=".ui.tiles.TileService"
+=======
+            android:name=".ui.services.TileService"
+>>>>>>> Stashed changes
             android:enabled="true"
             android:exported="true"
             android:icon="@drawable/ic_oui_power"
@@ -91,7 +95,7 @@
             android:name=".AboutActivity"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize" />
         <activity
-            android:name=".ChangelogActivity"
+            android:name=".activity.changelog.ChangelogActivity"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize" />
         <activity
             android:name=".ui.fragment.phoneinfo.test.PixelTestActivity"

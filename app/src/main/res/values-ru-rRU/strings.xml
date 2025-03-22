@@ -92,8 +92,8 @@
     <string name="gb">ГБ</string>
     <string name="total">Всего</string>
     <string name="used">Использовано</string>
-    <string name="supported">Поддерживается</string>
-    <string name="unsupported">Не поддерживается</string>
+    <string name="support">Поддерживается</string>
+    <string name="unsupport">Не поддерживается</string>
     <string name="about_phone">Об этом телефоне</string>
     <string name="about_tablet">Об этом планшете</string>
     <string name="about_device">Об этом устройстве</string>
@@ -151,7 +151,7 @@
     <string name="grant_permission_to_continue">Предоставьте разрешение для продолжения</string>
     <string name="network">Сеть</string>
     <string name="wifi_enabled">Wi-Fi включён</string>
-    <string name="mobile_data_enabled">Мобильный интернет включён</string>
+    <string name="mobile_data_enabled">Мобильные данные включены</string>
     <string name="not_connected_to_internet">Нет соединения с интернетом</string>
     <string name="operator_country">Страна оператора</string>
     <string name="phone_type">Тип телефона</string>
@@ -229,7 +229,7 @@
     <string name="connection_error_occurred">Произошла ошибка соединения</string>
     <string name="data_analysis_error">Ошибка анализа данных</string>
     <string name="conversion_error">Ошибка преобразования</string>
-    <string name="_1_s_2f_s">1 %s это %.2f %s</string>
+    <string name="conversion_result">%1$.2f %2$s - %3$.2f %4$s</string>
     <string name="enter_your_token">Введите свой токен</string>
     <string name="enter_your_token_text_input">Введите свой токен здесь. \n\nНажмите «ОК», чтобы открыть сайт для регистрации и получения вашего уникального токена.</string>
     <string name="currency_converter">Конвертер валют</string>
@@ -258,4 +258,47 @@
     <string name="connected">Подключён</string>
     <string name="disconnected">Отключён</string>
     <string name="failed_to_get_vpn_status">Не удалось получить статус VPN</string>
+<<<<<<< Updated upstream
+=======
+    <string name="years_one">Год</string>
+    <string name="years_two_four">Года</string>
+    <string name="years_five_nine">Лет</string>
+    <string name="click_to_see_developer_information">Привет! Нажмите, чтобы увидеть информацию о разработчике</string>
+    <string name="year">Год</string>
+    <string name="month">Месяц</string>
+    <string name="day">День</string>
+    <string name="hour">Час</string>
+    <string name="minute">Минута</string>
+    <string name="years">Годы</string>
+    <string name="months">Месяца</string>
+    <string name="days">Дни</string>
+    <string name="hours">Часы</string>
+    <string name="minutes">Минуты</string>
+    <string name="invalid_input">Неверный ввод даты или времени</string>
+    <string name="credits">Благодарности</string>
+    <string name="one_ui_design_lib">Библиотека One UI дизайна</string>
+    <string name="save_image">Сохранить изображение</string>
+    <string name="dont_worry">Не волнуйтесь!</string>
+    <string name="privacy_text">Все, что отображается в приложении, остается исключительно локально на телефоне.</string>
+    <string name="close">Закрыть</string>
+    <string name="calculate">Вычислить</string>
+    <string name="minuend">Уменьшаемое</string>
+    <string name="subtrahend">Вычитаемое</string>
+    <string name="first_time_zone">Первый часовой пояс</string>
+    <string name="second_time_zone">Второй часовой пояс</string>
+    <string name="unknown_network_error">Неизвестная ошибка соединения</string>
+    <string name="time_zone">Часовой пояс</string>
+    <string name="time">Время</string>
+    <string name="currency">Валюта</string>
+    <string name="tools">Инструменты</string>
+    <string name="open_source_code_of_this_program">Открытый исходный код данной программы</string>
+    <string name="ip_address">IP-адрес</string>
+    <string name="stylus_support">Поддержка стилуса</string>
+    <string name="enter_the_number">Введите число</string>
+    <string name="invalid_amount_entered">А вы точно число пишите, а не символы?</string>
+    <string name="failed_to_obtain_ip">Не удалось получить IP</string>
+    <string name="error_obtaining_ip">Ошибка получения IP</string>
+    <string name="enable_all_permission_r">Перейдите в настройки и выдайте все разрешения</string>
+    <string name="all_permissions_required">Для этого приложения требуются все разрешения</string>
+>>>>>>> Stashed changes
 </resources>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<dev.oneuiproject.oneui.widget.RoundedFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,8 +10,8 @@
     <androidx.appcompat.widget.SeslProgressBar
         android:id="@+id/horizontal_pb"
         android:layout_width="match_parent"
-        android:layout_height="14dp"
-        android:layout_gravity="bottom"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
         android:indeterminate="true"
         android:paddingStart="?listPreferredItemPaddingStart"
         android:paddingEnd="?listPreferredItemPaddingEnd"
@@ -19,7 +19,7 @@
         tools:visibility="visible"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
 
-    <dev.oneuiproject.oneui.widget.RoundFrameLayout
+    <dev.oneuiproject.oneui.widget.RoundedFrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:roundedCorners="top_left|top_right">
@@ -100,6 +100,6 @@
             android:src="@drawable/ic_oui_star_outline"
             />
 
-    </dev.oneuiproject.oneui.widget.RoundFrameLayout>
+    </dev.oneuiproject.oneui.widget.RoundedFrameLayout>
 
-</LinearLayout>
+</dev.oneuiproject.oneui.widget.RoundedFrameLayout>

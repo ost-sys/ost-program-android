@@ -5,43 +5,57 @@ import static com.topjohnwu.superuser.internal.UiThreadHandler.handler;
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Icon;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.text.format.Formatter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.ost.application.R;
 import com.ost.application.databinding.FragmentNetworkInfoBinding;
 import com.ost.application.ui.core.base.BaseFragment;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import dev.oneuiproject.oneui.widget.Toast;
 
 public class NetworkInfoFragment extends BaseFragment implements View.OnClickListener {
     private FragmentNetworkInfoBinding binding;
-    private static final int REQUEST_PHONE_STATE = 101;
-
     public static int TYPE_WIFI = 1;
     public static int TYPE_MOBILE = 2;
     public static int TYPE_NOT_CONNECTED = 0;
     private Runnable updateRunnable;
+<<<<<<< Updated upstream
+=======
+    private boolean isMasked = false;
+    private String originalIp = "";
+    private boolean dataLoaded = false;
+>>>>>>> Stashed changes
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentNetworkInfoBinding.inflate(inflater, container, false);
 
+<<<<<<< Updated upstream
         updateRunnable = new Runnable() {
             @Override
             public void run() {
@@ -51,8 +65,22 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
         };
 
         handler.post(updateRunnable);
+=======
+        binding.networkIp.setOnClickListener(v -> {
+            if (originalIp.isEmpty()) {
+                originalIp = binding.networkIp.getSummary().toString();
+            }
+>>>>>>> Stashed changes
 
-        binding.checkPermission.setOnClickListener(this);
+            if (isMasked) {
+                binding.networkIp.setSummary(loadIP());
+            } else {
+                binding.networkIp.setSummary(originalIp.replaceAll("[^.:\n]", "*"));
+            }
+
+            isMasked = !isMasked;
+            loadIP();
+        });
 
         return binding.getRoot();
     }
@@ -60,6 +88,7 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
+<<<<<<< Updated upstream
         showNetworkInfo();
     }
 
@@ -71,7 +100,48 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
             binding.checkPermission.setSummary(getString(R.string.permission_granted));
             binding.checkPermission.setEnabled(false);
             showNetworkInfo();
+=======
+        if (!dataLoaded) {
+            loadData();
+            dataLoaded = true;
+>>>>>>> Stashed changes
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (updateRunnable != null) {
+            handler.removeCallbacks(updateRunnable);
+        }
+    }
+
+    private void loadData() {
+        updateRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateNetworkInfo();
+                handler.postDelayed(this, 500);
+            }
+        };
+
+        handler.post(updateRunnable);
+
+        binding.networkIp.setSummary(loadIP());
+    }
+
+    public String loadIP() {
+        if (getConnectivityStatus(getActivity()) == TYPE_WIFI) {
+            return getLocalIpAddress(getActivity()) + "\n" + getPublicIp();
+        } else if (getConnectivityStatus(getActivity()) == TYPE_MOBILE) {
+            return getMobileIpAddress();
+        } else {
+            return getString(R.string.not_connected_to_internet);
+        }
+    }
+
+    private void updateNetworkInfo() {
+        showNetworkInfo();
     }
 
     private void showNetworkInfo() {
@@ -90,6 +160,7 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
             binding.networkPhoneType.setSummary(networkType());
             binding.networkConnectivityStatus.setSummary(connectivityStatus);
             binding.networkIcon.setImageIcon(getConnectivityStatusIcon(getActivity()));
+<<<<<<< Updated upstream
 
             checkVPNStatus();
         }
@@ -108,6 +179,8 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
             }
         } else {
             binding.networkVpn.setSummary(getString(R.string.failed_to_get_vpn_status));
+=======
+>>>>>>> Stashed changes
         }
     }
 
@@ -138,31 +211,6 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
-    private void requestPhoneStatePermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_PHONE_STATE)) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PHONE_STATE);
-        } else {
-            Toast.makeText(getActivity(), getString(R.string.grant_permission_to_continue), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
-            startActivity(intent);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PHONE_STATE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                updateNetworkInfo();
-            } else {
-                Toast.makeText(getActivity(), getString(R.string.grant_permission_to_continue), Toast.LENGTH_SHORT).show();
-                binding.checkPermission.setSummary(getString(R.string.check_permission));
-                binding.checkPermission.setEnabled(true);
-            }
-        }
-    }
-
     @Override
     public int getLayoutResId() {
         return R.layout.fragment_network_info;
@@ -187,11 +235,10 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
     }
 
     public void onClick(View v) {
+        assert getActivity() != null;
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
             updateNetworkInfo();
             Toast.makeText(getActivity(), R.string.success, Toast.LENGTH_SHORT).show();
-        } else {
-            requestPhoneStatePermission();
         }
     }
 
@@ -233,5 +280,62 @@ public class NetworkInfoFragment extends BaseFragment implements View.OnClickLis
             }
         }
         return TYPE_NOT_CONNECTED;
+    }
+
+    public String getLocalIpAddress(Context context) {
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (wifiManager != null) {
+            return Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
+        }
+        return getString(R.string.failed_to_obtain_ip);
+    }
+
+    private String getPublicIp() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<String> future = executor.submit(() -> {
+            try {
+                URL url = new URL("https://api64.ipify.org?format=json");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                reader.close();
+
+                return new org.json.JSONObject(response.toString()).getString("ip");
+            } catch (Exception e) {
+                return getString(R.string.failed_to_obtain_ip);
+            }
+        });
+
+        try {
+            return future.get();
+        } catch (Exception e) {
+            return getString(R.string.error_obtaining_ip);
+        }
+    }
+
+
+    public String getMobileIpAddress() {
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface networkInterface = interfaces.nextElement();
+                Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress inetAddress = addresses.nextElement();
+                    if (!inetAddress.isLoopbackAddress() && inetAddress.isSiteLocalAddress()) {
+                        return inetAddress.getHostAddress();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return getString(R.string.failed_to_obtain_ip);
     }
 }

@@ -22,8 +22,13 @@
             android:gravity="center">
 
             <ImageView
+<<<<<<< Updated upstream
                 android:layout_width="120dp"
                 android:layout_height="120dp"
+=======
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+>>>>>>> Stashed changes
                 android:src="@drawable/ic_oui_camera_outline"
                 app:tint="?actionMenuTextColor"/>
 
@@ -33,25 +38,32 @@
                 android:layout_height="wrap_content"
                 android:textColor="?actionMenuTextColor"
                 android:textAlignment="center"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold"/>
 
-        </LinearLayout>
+            <dev.oneuiproject.oneui.widget.Separator
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-        <dev.oneuiproject.oneui.widget.Separator
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/rear_facing_camera"/>
+        </LinearLayout>
 
         <dev.oneuiproject.oneui.widget.RoundedNestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+<<<<<<< Updated upstream
+        <dev.oneuiproject.oneui.widget.RoundedNestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+=======
+>>>>>>> Stashed changes
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+<<<<<<< Updated upstream
                 <dev.oneuiproject.oneui.widget.RoundedLinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -198,6 +210,159 @@
                         app:showTopDivider="true"/>
 
                     <dev.oneuiproject.oneui.widget.CardItemView
+=======
+                <dev.oneuiproject.oneui.widget.Separator
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rear_facing_camera"/>
+
+                <dev.oneuiproject.oneui.widget.RoundedLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/oui_background_color"
+                    android:orientation="vertical">
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/camera_back_resolution"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/camera_resolution"
+                        app:showTopDivider="false"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/camera_back_focal_lenght"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/focal_lenght"
+                        app:showTopDivider="true"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/camera_back_stabilization"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/stabilization_support"
+                        app:showTopDivider="true"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/camera_back_flash"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/flash"
+                        app:showTopDivider="true"/>
+
+                </dev.oneuiproject.oneui.widget.RoundedLinearLayout>
+
+                <dev.oneuiproject.oneui.widget.Separator
+                    android:id="@+id/second"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rear_facing_camera_second"/>
+
+                <dev.oneuiproject.oneui.widget.RoundedLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/oui_background_color"
+                    android:orientation="vertical">
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/camera_back_second_resolution"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/camera_resolution"
+                        app:showTopDivider="false"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/camera_back_second_focal_lenght"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/focal_lenght"
+                        app:showTopDivider="true"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/camera_back_second_stabilization"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/stabilization_support"
+                        app:showTopDivider="true"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/camera_back_second_flash"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/flash"
+                        app:showTopDivider="true"/>
+
+                </dev.oneuiproject.oneui.widget.RoundedLinearLayout>
+
+                <dev.oneuiproject.oneui.widget.Separator
+                    android:id="@+id/third"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rear_facing_camera_third"/>
+
+                <dev.oneuiproject.oneui.widget.RoundedLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/oui_background_color"
+                    android:orientation="vertical">
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/camera_back_third_resolution"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/camera_resolution"
+                        app:showTopDivider="false"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/camera_back_third_focal_lenght"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/focal_lenght"
+                        app:showTopDivider="true"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/camera_back_third_stabilization"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/stabilization_support"
+                        app:showTopDivider="true"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/camera_back_third_flash"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/flash"
+                        app:showTopDivider="true"/>
+
+                </dev.oneuiproject.oneui.widget.RoundedLinearLayout>
+
+                <dev.oneuiproject.oneui.widget.Separator
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/front_camera"/>
+
+                <dev.oneuiproject.oneui.widget.RoundedLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/oui_background_color"
+                    android:orientation="vertical">
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/camera_front_resolution"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/camera_resolution"
+                        app:showTopDivider="false"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/camera_front_focal_lenght"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/focal_lenght"
+                        app:showTopDivider="true"/>
+
+                    <dev.oneuiproject.oneui.widget.CardItemView
+>>>>>>> Stashed changes
                         android:id="@+id/camera_front_stabilization"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

@@ -14,8 +14,13 @@ android {
         applicationId = "com.ost.application"
         minSdk = 26
         targetSdk = 35
+<<<<<<< Updated upstream
         versionCode = 243
         versionName = "2.4.3"
+=======
+        versionCode = 250
+        versionName = "2.5.0"
+>>>>>>> Stashed changes
 
         vectorDrawables.useSupportLibrary = true
 
@@ -81,20 +86,31 @@ configurations.implementation {
 
 dependencies {
 
+    implementation(libs.biometric)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation(libs.play.services.wearable)
 
+<<<<<<< Updated upstream
     implementation("sesl.androidx.core:core:1.15.0+1.0.11-sesl6+rev0")
     implementation("sesl.androidx.core:core-ktx:1.15.0+1.0.0-sesl6+rev0")
     implementation("sesl.androidx.fragment:fragment:1.8.4+1.0.0-sesl6+rev1")
+=======
+    implementation("sesl.androidx.core:core:1.15.0+1.0.15-sesl7+rev0")
+    implementation("sesl.androidx.core:core-ktx:1.15.0+1.0.0-sesl7+rev0")
+    implementation("sesl.androidx.customview:customview:1.2.0-alpha02+1.0.1-sesl6+rev0")
+    implementation("sesl.androidx.drawerlayout:drawerlayout:1.2.0+1.0.1-sesl6+rev3")
+    implementation("sesl.androidx.fragment:fragment:1.8.6+1.0.0-sesl6+rev0")
+>>>>>>> Stashed changes
     implementation("sesl.androidx.appcompat:appcompat:1.7.0+1.0.34-sesl6+rev8")
     implementation("sesl.androidx.picker:picker-basic:1.0.17+1.0.17-sesl6+rev2")
     implementation("sesl.androidx.picker:picker-color:1.0.6+1.0.6-sesl6+rev3")
     implementation("sesl.androidx.preference:preference:1.2.1+1.0.4-sesl6+rev3")
-    implementation("sesl.androidx.recyclerview:recyclerview:1.4.0-rc01+1.0.21-sesl6+rev0")
-    implementation("sesl.androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01+1.0.0-sesl6+rev0")
+    implementation("sesl.androidx.recyclerview:recyclerview:1.4.0+1.0.21-sesl6+rev0")
+    implementation("sesl.androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01+1.0.1-sesl7+rev0")
     implementation("sesl.androidx.apppickerview:apppickerview:1.0.1+1.0.1-sesl6+rev3")
+<<<<<<< Updated upstream
     implementation("sesl.androidx.indexscroll:indexscroll:1.0.3+1.0.3-sesl6+rev4")
     implementation("sesl.androidx.viewpager2:viewpager2:1.1.0+1.0.0-sesl6+rev0")
     implementation("sesl.com.google.android.material:material:1.12.0+1.0.23-sesl6+rev3")
@@ -104,8 +120,20 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.2.0")
     implementation("com.airbnb.android:lottie:6.6.0")
     implementation("androidx.webkit:webkit:1.12.1")
+=======
+    implementation("sesl.androidx.indexscroll:indexscroll:1.0.3+1.0.3-sesl6+rev5")
+    implementation("sesl.androidx.viewpager2:viewpager2:1.1.0+1.0.0-sesl6+rev0")
+    implementation("sesl.androidx.viewpager:viewpager:1.1.0-rc01+1.0.0-sesl6+rev0")
+    implementation("sesl.com.google.android.material:material:1.12.0+1.0.23-sesl6+rev3")
+    implementation("sesl.androidx.slidingpanelayout:slidingpanelayout:1.2.0+1.0.2-sesl6+rev7")
+    implementation("io.github.tribalfs:oneui-design:0.5.10+oneui6")
+    implementation("io.github.oneuiproject:icons:1.1.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
+    implementation("com.airbnb.android:lottie:6.6.2")
+    implementation("androidx.webkit:webkit:1.13.0")
+>>>>>>> Stashed changes
     implementation("androidx.asynclayoutinflater:asynclayoutinflater:1.0.0")
-    implementation("com.google.code.gson:gson:2.11.0")
+    implementation("com.google.code.gson:gson:2.12.1")
     implementation("com.github.topjohnwu.libsu:core:6.0.0")
     implementation("com.github.topjohnwu.libsu:service:6.0.0")
     implementation("com.github.topjohnwu.libsu:nio:6.0.0")
@@ -116,7 +144,7 @@ dependencies {
         exclude("net.java.dev.jna", "jna")
     }
     implementation("net.java.dev.jna:jna:5.15.0@aar")
-    implementation("androidx.datastore:datastore-preferences-android:1.1.1")
+    implementation("androidx.datastore:datastore-preferences-android:1.1.3")
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
@@ -126,13 +154,14 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     ksp("androidx.room:room-compiler:2.6.1")
-    implementation("androidx.compose.runtime:runtime:1.7.6")
-    implementation("androidx.compose.runtime:runtime-livedata:1.7.6")
-    implementation("androidx.compose.runtime:runtime-rxjava2:1.7.6")
+    implementation("androidx.compose.runtime:runtime:1.7.8")
+    implementation("androidx.compose.runtime:runtime-livedata:1.7.8")
+    implementation("androidx.compose.runtime:runtime-rxjava2:1.7.8")
     implementation("com.google.zxing:core:3.5.3")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.8.5")
-    implementation("androidx.navigation:navigation-ui-ktx:2.8.5")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.8.9")
+    implementation("androidx.navigation:navigation-ui-ktx:2.8.9")
     implementation("com.android.volley:volley:1.2.1")
+    implementation("androidx.window:window:1.3.0")
 }
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")

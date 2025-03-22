@@ -49,7 +49,7 @@ public class CPUInfoFragment extends BaseFragment {
             binding.cpuManufacturer.setVisibility(View.GONE);
         }
 
-        binding.cpuName.setSummary(getCpuName());
+        binding.cpuTitle.setText(getCpuName());
         binding.cpuAbi.setSummary(Arrays.toString(Build.SUPPORTED_ABIS));
         binding.cpuCores.setSummary(String.valueOf(getNumberOfCores()));
         binding.cpuCoresClock.setSummary(cpu.getClock_speed());

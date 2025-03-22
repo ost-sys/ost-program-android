@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name" translatable="false">OST Tools</string>
+    <string name="about_the_watch">About the watch</string>
+    <string name="cpu">CPU</string>
+    <string name="battery">Battery</string>
+    <string name="display">Display</string>
+    <string name="version">Version</string>
+    <string name="error">Error</string>
+    <string name="update_check_error">Update check error</string>
+    <string name="new_update_available">New update available</string>
+    <string name="you_are_updated">You are up-to-date!</string>
+    <string name="refresh_rate">Refresh rate</string>
+    <string name="screen_diagonal">Screen diagonal</string>
+    <string name="check_for_dead_pixels">Check for dead pixels</string>
+    <string name="good">Good</string>
+    <string name="overheat">Overheat</string>
+    <string name="dead">Dead</string>
+    <string name="over_voltage">Over voltage</string>
+    <string name="unspecified_failure">Unspecified failure</string>
+    <string name="cold">Cold</string>
+    <string name="unknown">Unknown</string>
+    <string name="mv">mV</string>
+    <string name="health">Health</string>
+    <string name="temperature">Temperature</string>
+    <string name="voltage">Voltage</string>
+    <string name="technology">Technology</string>
+    <string name="system_version">System version</string>
+    <string name="brand">Brand</string>
+    <string name="board">Board</string>
+    <string name="build_number">Build number</string>
+    <string name="build_fingerprint">Build fingerprint</string>
+    <string name="soc_manufacturer">SoC manufacturer</string>
+    <string name="cores">Cores</string>
+    <string name="loading">Loading...</string>
+    <string name="charging_ac">AC</string>
+    <string name="charging_usb">Charging (USB)</string>
+    <string name="charging_wireless">Charging (Wireless)</string>
+    <string name="battery_level">Battery level</string>
+    <string name="hz">Hz</string>
+    <string name="inches">inches</string>
+</resources>

@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SeslProgressBar;
@@ -40,7 +41,13 @@ import androidx.core.content.FileProvider;
 import androidx.core.graphics.Insets;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.appbar.AppBarLayout;
+import com.ost.application.activity.changelog.ChangelogActivity;
 import com.ost.application.databinding.ActivityAboutBinding;
 import com.ost.application.databinding.ActivityAboutContentBinding;
 
@@ -55,10 +62,17 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
+<<<<<<< Updated upstream
+=======
+import dev.oneuiproject.oneui.utils.ActivityUtils;
+import dev.oneuiproject.oneui.widget.CardItemView;
+>>>>>>> Stashed changes
 import dev.oneuiproject.oneui.widget.TipPopup;
 import dev.oneuiproject.oneui.widget.Toast;
 
@@ -78,6 +92,14 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
     private long downloadId;
     private AlertDialog downloadDialog;
     int update = 0;
+    private static final Map<String, String> AVATAR_URLS = new HashMap<>();
+
+    static {
+        AVATAR_URLS.put("OST", "https://avatars.githubusercontent.com/u/66862161?v=4");
+        AVATAR_URLS.put("Yanndroid", "https://avatars.githubusercontent.com/u/57589186?v=4");
+        AVATAR_URLS.put("Salvo", "https://avatars.githubusercontent.com/u/13062958?v=4");
+        AVATAR_URLS.put("Tribalfs", "https://avatars.githubusercontent.com/u/65062033?v=4");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,8 +128,42 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
         initContent();
         initOnBackPressed();
         checkUpdate();
+        loadAvatars();
 
     }
+
+    private void loadAvatars() {
+        loadAvatar(mBottomContent.aboutBottomOst, "OST");
+        loadAvatar(mBottomContent.aboutBottomDevYann, "Yanndroid");
+        loadAvatar(mBottomContent.aboutBottomDevSalvo, "Salvo");
+        loadAvatar(mBottomContent.aboutBottomDevTribalfs, "Tribalfs");
+    }
+
+    private void loadAvatar(CardItemView view, String nickname) {
+        String url = AVATAR_URLS.get(nickname);
+        if (url != null) {
+            Glide.with(view.getContext())
+                    .load(url)
+                    .apply(RequestOptions.circleCropTransform())
+                    .placeholder(R.drawable.samsung_contact)
+                    .error(R.drawable.ic_oui_error)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(new CustomTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                            view.setIcon(resource);
+                        }
+
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                            view.setIcon(placeholder);
+                        }
+                    });
+        } else {
+            view.setIcon(ContextCompat.getDrawable(view.getContext(), R.drawable.samsung_contact));
+        }
+    }
+
 
     private void checkUpdate() {
         update = 1;
@@ -268,7 +324,7 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
             downloadId = downloadManager.enqueue(request);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(AboutActivity.this);
-            builder.setTitle(getString(R.string.downloading_update))
+            builder.setTitle(getString(R.string.update))
                     .setMessage(getString(R.string.downloading_update))
                     .setCancelable(false)
                     .setView(dialogView)
@@ -398,7 +454,7 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
         }
     }
 
-    private OnBackPressedCallback mBackPressedCallback = new OnBackPressedCallback(false) {
+    private final OnBackPressedCallback mBackPressedCallback = new OnBackPressedCallback(false) {
         @Override
         public void handleOnBackPressed() {
             mBinding.aboutAppBar.setExpanded(true);
@@ -494,8 +550,10 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
                 mBinding.checkingUpdateSecond.setVisibility(View.GONE);
             }
         } else if (item.getItemId() == R.id.menu_main_changelog) {
-            Intent intent = new Intent(AboutActivity.this, ChangelogActivity.class);
-            startActivity(intent);
+            ActivityUtils.startPopOverActivity(this,
+                    new Intent(this, ChangelogActivity.class),
+                    null,
+                    ActivityUtils.POP_OVER_POSITION_TOP | ActivityUtils.POP_OVER_POSITION_RIGHT);
         }
         return false;
     }
@@ -585,15 +643,10 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
         mBottomContent.aboutBottomDevSalvo.setOnClickListener(this);
         mBottomContent.aboutBottomDevTribalfs.setOnClickListener(this);
 
-        mBottomContent.aboutBottomOssProgram.setOnClickListener(this);
-        mBottomContent.aboutBottomOssApache.setOnClickListener(this);
-        mBottomContent.aboutBottomOssMit.setOnClickListener(this);
+        mBottomContent.aboutBottomOsp.setOnClickListener(this);
 
-        mBottomContent.aboutBottomRelativeJetpack.setOnClickListener(this);
-        mBottomContent.aboutBottomRelativeMaterial.setOnClickListener(this);
-        mBottomContent.aboutBottomRelativeSeslAndroidx.setOnClickListener(this);
-        mBottomContent.aboutBottomRelativeSeslMaterial.setOnClickListener(this);
-        mBottomContent.aboutBottomRelativeDesign6.setOnClickListener(this);
+        mBottomContent.aboutBottomCredits.setOnClickListener(this);
+        mBottomContent.aboutBottomDesign.setOnClickListener(this);
     }
 
     private void setBottomContentEnabled(boolean enabled) {
@@ -606,11 +659,9 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
         mBottomContent.aboutBottomDevYann.setEnabled(enabled);
         mBottomContent.aboutBottomDevSalvo.setEnabled(enabled);
         mBottomContent.aboutBottomDevTribalfs.setEnabled(enabled);
-        mBottomContent.aboutBottomOssProgram.setEnabled(enabled);
-        mBottomContent.aboutBottomOssApache.setEnabled(enabled);
-        mBottomContent.aboutBottomOssMit.setEnabled(enabled);
-        mBottomContent.aboutBottomRelativeJetpack.setEnabled(enabled);
-        mBottomContent.aboutBottomRelativeMaterial.setEnabled(enabled);
+        mBottomContent.aboutBottomOsp.setEnabled(enabled);
+        mBottomContent.aboutBottomCredits.setEnabled(enabled);
+        mBottomContent.aboutBottomDesign.setEnabled(enabled);
     }
 
     @Override
@@ -636,24 +687,12 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
                 url = "https://github.com/salvogiangri";
             } else if (v.getId() == mBottomContent.aboutBottomDevTribalfs.getId()) {
                 url = "https://github.com/tribalfs";
-            } else if (v.getId() == mBottomContent.aboutBottomOssProgram.getId()) {
+            } else if (v.getId() == mBottomContent.aboutBottomOsp.getId()) {
                 url = "https://github.com/ost-sys/ost-program-android";
-            } else if (v.getId() == mBottomContent.aboutBottomOssApache.getId()) {
-                url = "https://www.apache.org/licenses/LICENSE-2.0.txt";
-            } else if (v.getId() == mBottomContent.aboutBottomOssMit.getId()) {
-                url = "https://github.com/OneUIProject/sesl/blob/main/LICENSE";
-            } else if (v.getId() == mBottomContent.aboutBottomRelativeJetpack.getId()) {
-                url = "https://developer.android.com/jetpack";
-            } else if (v.getId() == mBottomContent.aboutBottomRelativeMaterial.getId()) {
-                url = "https://material.io/develop/android";
-            } else if (v.getId() == mBottomContent.aboutBottomRelativeSeslAndroidx.getId()) {
-                url = "https://github.com/tribalfs/sesl-androidx";
-            } else if (v.getId() == mBottomContent.aboutBottomRelativeSeslMaterial.getId()) {
-                url = "https://github.com/tribalfs/sesl-material-components-android";
-            } else if (v.getId() == mBottomContent.aboutBottomRelativeDesign6.getId()) {
+            } else if (v.getId() == mBottomContent.aboutBottomCredits.getId()) {
+                url = "https://github.com/ost-sys/ost-program-android?tab=readme-ov-file#credites";
+            } else if (v.getId() == mBottomContent.aboutBottomDesign.getId()) {
                 url = "https://github.com/tribalfs/oneui-design";
-            } else if (v.getId() == mBottomContent.aboutBottomDevTribalfs.getId()) {
-                url = "https://github.com/tribalfs";
             }
 
             if (url != null) {

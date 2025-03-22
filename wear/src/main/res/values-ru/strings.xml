@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_the_watch">О часах</string>
+    <string name="cpu">ЦПУ</string>
+    <string name="battery">Батарея</string>
+    <string name="display">Дисплей</string>
+    <string name="version">Версия</string>
+    <string name="error">Ошибка</string>
+    <string name="update_check_error">Ошибка проверки обновления</string>
+    <string name="new_update_available">Доступна новая версия</string>
+    <string name="you_are_updated">Последняя версия установлена</string>
+    <string name="refresh_rate">Частота обновления</string>
+    <string name="screen_diagonal">Диагональ экрана</string>
+    <string name="check_for_dead_pixels">Проверка наличий битых пикслей</string>
+    <string name="good">Хорошее</string>
+    <string name="overheat">Перегрев</string>
+    <string name="dead">Мёртв</string>
+    <string name="over_voltage">Перенапряжение</string>
+    <string name="unspecified_failure">Неопознанная неисправность</string>
+    <string name="cold">Холодный</string>
+    <string name="unknown">Неизвестно</string>
+    <string name="mv">мВ</string>
+    <string name="health">Здоровье</string>
+    <string name="temperature">Температура</string>
+    <string name="voltage">Напряжение</string>
+    <string name="technology">Технология</string>
+    <string name="system_version">Версия системы</string>
+    <string name="brand">Бренд</string>
+    <string name="board">Плата</string>
+    <string name="build_number">Номер сборки</string>
+    <string name="build_fingerprint">Сборка fingerprint</string>
+    <string name="soc_manufacturer">Производитель сокета</string>
+    <string name="cores">Ядра</string>
+    <string name="loading">Загрузка...</string>
+    <string name="charging_ac">Провод.</string>
+    <string name="charging_usb">USB</string>
+    <string name="charging_wireless">Беспровод.</string>
+    <string name="battery_level">Уров. заряда</string>
+    <string name="hz">Гц</string>
+    <string name="inches">дюйм</string>
+</resources>

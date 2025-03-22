@@ -20,8 +20,13 @@
 
             <ImageView
                 android:id="@+id/display_screen_resolution_icon"
+<<<<<<< Updated upstream
                 android:layout_width="120dp"
                 android:layout_height="120dp"
+=======
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+>>>>>>> Stashed changes
                 android:src="@drawable/ic_oui_screen_resolution"
                 app:tint="?actionMenuTextColor"/>
 
@@ -30,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textColor="?actionMenuTextColor"
                 android:textStyle="bold"/>
 
@@ -49,7 +54,11 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+<<<<<<< Updated upstream
                 <dev.oneuiproject.oneui.widget.RoundLinearLayout
+=======
+                <dev.oneuiproject.oneui.widget.RoundedLinearLayout
+>>>>>>> Stashed changes
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/oui_background_color"
@@ -83,6 +92,7 @@
                         app:title="@string/orientation"
                         app:showTopDivider="true"/>
 
+<<<<<<< Updated upstream
                 </dev.oneuiproject.oneui.widget.RoundLinearLayout>
 
                 <dev.oneuiproject.oneui.widget.Separator
@@ -95,6 +105,27 @@
                     android:background="@color/oui_background_color"
                     android:orientation="vertical">
 
+=======
+                    <dev.oneuiproject.oneui.widget.CardItemView
+                        android:id="@+id/display_stylus_support"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:title="@string/stylus_support"
+                        app:showTopDivider="true"/>
+
+                </dev.oneuiproject.oneui.widget.RoundedLinearLayout>
+
+                <dev.oneuiproject.oneui.widget.Separator
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <dev.oneuiproject.oneui.widget.RoundedLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/oui_background_color"
+                    android:orientation="vertical">
+
+>>>>>>> Stashed changes
                     <dev.oneuiproject.oneui.widget.CardItemView
                         android:id="@+id/check_dead_pixels"
                         android:layout_width="match_parent"
@@ -110,7 +141,11 @@
                         app:summary="@string/fix_dead_pixels_w"
                         app:showTopDivider="true" />
 
+<<<<<<< Updated upstream
                 </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+=======
+                </dev.oneuiproject.oneui.widget.RoundedLinearLayout>
+>>>>>>> Stashed changes
 
             </LinearLayout>
 

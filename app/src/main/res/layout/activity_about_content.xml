@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:text="@string/developer" />
 
-        <dev.oneuiproject.oneui.widget.RoundLinearLayout
+        <dev.oneuiproject.oneui.widget.RoundedLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/oui_background_color"
@@ -27,18 +27,18 @@
                 android:id="@+id/about_bottom_ost"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:icon="@drawable/ost_logo"
+                app:icon="@drawable/samsung_contact"
                 app:title="@string/operating_system_tester"
                 app:showTopDivider="false"/>
 
-        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+        </dev.oneuiproject.oneui.widget.RoundedLinearLayout>
 
         <dev.oneuiproject.oneui.widget.Separator
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/one_ui_design_developers" />
 
-        <dev.oneuiproject.oneui.widget.RoundLinearLayout
+        <dev.oneuiproject.oneui.widget.RoundedLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/oui_background_color"
@@ -48,7 +48,7 @@
                 android:id="@+id/about_bottom_dev_yann"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:icon="@drawable/about_page_avatar_yann"
+                app:icon="@drawable/samsung_contact"
                 app:title="Yanndroid"
                 app:showTopDivider="false"/>
 
@@ -56,7 +56,7 @@
                 android:id="@+id/about_bottom_dev_salvo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:icon="@drawable/about_page_avatar_salvo"
+                app:icon="@drawable/samsung_contact"
                 app:title="Salvo Giangreco"
                 app:showTopDivider="true" />
 
@@ -64,18 +64,17 @@
                 android:id="@+id/about_bottom_dev_tribalfs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:icon="@drawable/about_page_avatar_tribalfs"
+                app:icon="@drawable/samsung_contact"
                 app:title="Tribalfs"
                 app:showTopDivider="true" />
 
-        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+        </dev.oneuiproject.oneui.widget.RoundedLinearLayout>
 
         <dev.oneuiproject.oneui.widget.Separator
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/open_source_licenses" />
+            android:layout_height="wrap_content" />
 
-        <dev.oneuiproject.oneui.widget.RoundLinearLayout
+        <dev.oneuiproject.oneui.widget.RoundedLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/oui_background_color"
@@ -83,63 +82,28 @@
             android:orientation="vertical">
 
             <dev.oneuiproject.oneui.widget.CardItemView
-                android:id="@+id/about_bottom_oss_program"
+                android:id="@+id/about_bottom_osp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="@string/open_source_program"
-                app:summary="Open source code of this program"
+                app:summary="@string/open_source_code_of_this_program"
                 app:showTopDivider="false"/>
 
             <dev.oneuiproject.oneui.widget.CardItemView
-                android:id="@+id/about_bottom_oss_apache"
+                android:id="@+id/about_bottom_credits"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="Apache License 2.0"
-                app:summary="androidx  •  material-components-android • sesl-androidx  •  sesl-material-components-android  •  lottie"
-                app:showTopDivider="true" />
+                app:title="@string/credits"
+                app:showTopDivider="true"/>
 
             <dev.oneuiproject.oneui.widget.CardItemView
-                android:id="@+id/about_bottom_oss_mit"
+                android:id="@+id/about_bottom_design"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="MIT License"
-                app:summary="oneui-core  •  oneui-design"
-                app:showTopDivider="true" />
+                app:title="@string/one_ui_design_lib"
+                app:showTopDivider="true"/>
 
-        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
-
-        <dev.oneuiproject.oneui.widget.RelatedCard
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            app:title="@string/useful_links">
-
-            <TextView
-                android:id="@+id/about_bottom_relative_jetpack"
-                style="@style/OneUI.RelativeLinkTextViewStyle"
-                android:text="Android Jetpack" />
-
-            <TextView
-                android:id="@+id/about_bottom_relative_material"
-                style="@style/OneUI.RelativeLinkTextViewStyle"
-                android:text="Material Components" />
-
-            <TextView
-                android:id="@+id/about_bottom_relative_sesl_androidx"
-                style="@style/OneUI.RelativeLinkTextViewStyle"
-                android:text="SESL Android Jetpack (Unofficial)" />
-
-            <TextView
-                android:id="@+id/about_bottom_relative_sesl_material"
-                style="@style/OneUI.RelativeLinkTextViewStyle"
-                android:text="SESL Material Components for Android (Unofficial)" />
-
-            <TextView
-                android:id="@+id/about_bottom_relative_design6"
-                style="@style/OneUI.RelativeLinkTextViewStyle"
-                android:text="OneUI6 Design Lib" />
-
-        </dev.oneuiproject.oneui.widget.RelatedCard>
+        </dev.oneuiproject.oneui.widget.RoundedLinearLayout>
 
     </LinearLayout>
 

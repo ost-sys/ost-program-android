@@ -77,7 +77,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:layout_marginStart="8dp"
-                    android:text="Save image" />
+                    android:text="@string/save_image" />
 
             </LinearLayout>
 

@@ -164,7 +164,7 @@ public class CameraInfoFragment extends BaseFragment {
     private String getStabilizationSupport(CameraManager cameraManager, String cameraId) throws Exception {
         CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(cameraId);
         int[] stabilizationModes = characteristics.get(CameraCharacteristics.CONTROL_AVAILABLE_VIDEO_STABILIZATION_MODES);
-        return (stabilizationModes != null && stabilizationModes.length > 0) ? getString(R.string.supported) : getString(R.string.unsupported);
+        return (stabilizationModes != null && stabilizationModes.length > 0) ? getString(R.string.support) : getString(R.string.unsupport);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -186,7 +186,7 @@ public class CameraInfoFragment extends BaseFragment {
     private String getFlashSupport(CameraManager cameraManager, String cameraId) throws Exception {
         CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(cameraId);
         Boolean flashAvailable = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
-        return (flashAvailable != null && flashAvailable) ? getString(R.string.supported) : getString(R.string.unsupported);
+        return (flashAvailable != null && flashAvailable) ? getString(R.string.support) : getString(R.string.unsupport);
     }
 
     @Override

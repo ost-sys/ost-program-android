@@ -22,8 +22,13 @@
 
             <ImageView
                 android:id="@+id/about_phone_image"
+<<<<<<< Updated upstream
                 android:layout_width="120dp"
                 android:layout_height="120dp"
+=======
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+>>>>>>> Stashed changes
                 android:src="@drawable/ic_oui_page_settings"
                 app:tint="?actionMenuTextColor" />
 
@@ -33,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="?actionMenuTextColor"
                 android:textAlignment="center"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold"/>
 
         </LinearLayout>

@@ -92,8 +92,8 @@
     <string name="gb">ГБ</string>
     <string name="total">Всього</string>
     <string name="used">Використано</string>
-    <string name="supported">Підтримується</string>
-    <string name="unsupported">Не підтримується</string>
+    <string name="support">Підтримується</string>
+    <string name="unsupport">Не підтримується</string>
     <string name="about_phone">Про цей телефон</string>
     <string name="about_tablet">Про цей планшет</string>
     <string name="about_device">Про цей пристрій</string>
@@ -227,7 +227,7 @@
     <string name="connection_error_occurred">Сталася помилка з\'єднання</string>
     <string name="data_analysis_error">Помилка аналізу даних</string>
     <string name="conversion_error">Помилка конвертації</string>
-    <string name="_1_s_2f_s">1 %s це %.2f %s</string>
+    <string name="conversion_result">%1$.2f %2$s - %3$.2f %4$s</string>
     <string name="enter_your_token">Введіть свій токен</string>
     <string name="enter_your_token_text_input">Введіть свій токен тут. \n\nНатисніть «ОК», щоб відкрити сайт для реєстрації та отримання вашого унікального токена.</string>
     <string name="currency_converter">Конвертер валют</string>
@@ -258,4 +258,47 @@
     <string name="connected">Підключено</string>
     <string name="disconnected">Вимкнено</string>
     <string name="failed_to_get_vpn_status">Не вдалося отримати статус VPN</string>
+<<<<<<< Updated upstream
+=======
+    <string name="years_one">Рік</string>
+    <string name="years_two_four">Роки</string>
+    <string name="years_five_nine">років</string>
+    <string name="minute">Хвилина</string>
+    <string name="years">Роки</string>
+    <string name="click_to_see_developer_information">Привіт! Натисніть, щоб отримати інформацію про розробника</string>
+    <string name="year">Рік</string>
+    <string name="month">Місяць</string>
+    <string name="day">День</string>
+    <string name="hour">Година</string>
+    <string name="months">Місяці</string>
+    <string name="days">Дні</string>
+    <string name="hours">Години</string>
+    <string name="minutes">Хвилини</string>
+    <string name="invalid_input">Невірне введення дати або часу</string>
+    <string name="credits">Подяки</string>
+    <string name="one_ui_design_lib">Бібліотека One UI дизайна</string>
+    <string name="save_image">Зберегти зображення</string>
+    <string name="dont_worry">Не хвилюйтесь!</string>
+    <string name="privacy_text">Все, що відображається в додатку, залишається виключно локально на телефоні.</string>
+    <string name="close">Зачинити</string>
+    <string name="calculate">Обчислити</string>
+    <string name="minuend">Зменшуване</string>
+    <string name="subtrahend">Віднімається</string>
+    <string name="first_time_zone">Перший часовий пояс</string>
+    <string name="second_time_zone">Другий часовий пояс</string>
+    <string name="unknown_network_error">Невідома помилка з\'єднання</string>
+    <string name="time_zone">Часовий пояс</string>
+    <string name="time">Час</string>
+    <string name="currency">Валюта</string>
+    <string name="tools">Інструменти</string>
+    <string name="open_source_code_of_this_program">Відкрити вихідний код даної програми</string>
+    <string name="ip_address">IP-адреса</string>
+    <string name="stylus_support">Підтримка стилуса</string>
+    <string name="enter_the_number">Введіть число</string>
+    <string name="invalid_amount_entered">А ви точно число пишіть, а чи не символи?</string>
+    <string name="failed_to_obtain_ip">Не вдалося отримати IP</string>
+    <string name="error_obtaining_ip">Помилка отримання IP</string>
+    <string name="enable_all_permission_r">Перейдіть до налаштувань і видайте всі дозволи</string>
+    <string name="all_permissions_required">Для цієї програми потрібні всі дозволи</string>
+>>>>>>> Stashed changes
 </resources>

@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <dev.oneuiproject.oneui.widget.RoundFrameLayout
+    <dev.oneuiproject.oneui.widget.RoundedFrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:roundedCorners="top_right|top_left"
@@ -25,7 +25,7 @@
             android:clipToPadding="false"
             android:layout_height="match_parent"/>
 
-        <androidx.core.widget.NestedScrollView
+        <dev.oneuiproject.oneui.widget.RoundedNestedScrollView
             android:id="@+id/nsvNoItem"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -41,7 +41,7 @@
                 android:textAlignment="center"
                 tools:ignore="TextContrastCheck" />
 
-        </androidx.core.widget.NestedScrollView>
+        </dev.oneuiproject.oneui.widget.RoundedNestedScrollView>
 
         <androidx.appcompat.widget.SeslProgressBar
             android:id="@+id/apppicker_progress"
@@ -59,6 +59,10 @@
             android:src="@drawable/ic_oui_add"
             />
 
+<<<<<<< Updated upstream
     </dev.oneuiproject.oneui.widget.RoundFrameLayout>
+=======
+    </dev.oneuiproject.oneui.widget.RoundedFrameLayout>
+>>>>>>> Stashed changes
 
 </LinearLayout>

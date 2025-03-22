@@ -20,8 +20,13 @@
 
             <ImageView
                 android:id="@+id/network_icon"
+<<<<<<< Updated upstream
                 android:layout_width="120dp"
                 android:layout_height="120dp"
+=======
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+>>>>>>> Stashed changes
                 android:src="@drawable/ic_oui_wifi_no_connection"
                 app:tint="?actionMenuTextColor"/>
 
@@ -30,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="?actionMenuTextColor"/>
 
@@ -40,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <dev.oneuiproject.oneui.widget.RoundLinearLayout
+        <dev.oneuiproject.oneui.widget.RoundedLinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/oui_background_color"
@@ -67,6 +72,7 @@
                 app:title="@string/network_connectivity_status"
                 app:showTopDivider="true"/>
 
+<<<<<<< Updated upstream
             <dev.oneuiproject.oneui.widget.CardItemView
                 android:id="@+id/network_vpn"
                 android:layout_width="match_parent"
@@ -86,14 +92,22 @@
             android:background="@color/oui_background_color"
             android:orientation="vertical">
 
+=======
+>>>>>>> Stashed changes
             <dev.oneuiproject.oneui.widget.CardItemView
-                android:id="@+id/check_permission"
+                android:id="@+id/network_ip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="@string/check_permission"
-                app:showTopDivider="false"/>
+                app:title="@string/ip_address"
+                app:showTopDivider="true"/>
 
-        </dev.oneuiproject.oneui.widget.RoundLinearLayout>
+        </dev.oneuiproject.oneui.widget.RoundedLinearLayout>
+
+        <dev.oneuiproject.oneui.widget.BottomTipView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/dont_worry"
+            app:summary="@string/privacy_text" />
 
     </LinearLayout>
 

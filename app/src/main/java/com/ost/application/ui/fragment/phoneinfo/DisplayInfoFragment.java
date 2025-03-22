@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.InputDevice;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,6 +103,12 @@ public class DisplayInfoFragment extends BaseFragment implements View.OnClickLis
         } else if (getActivity().getResources().getConfiguration().orientation == 2) {
             binding.displayScreenOrientation.setSummary(getString(R.string.landscape));
         }
+
+        if (hasStylusSupport()) {
+            binding.displayStylusSupport.setSummary(getString(R.string.support));
+        } else {
+            binding.displayStylusSupport.setSummary(getString(R.string.unsupport));
+        }
     }
 
     static String getDisplaySize(Activity activity) {
@@ -158,5 +165,16 @@ public class DisplayInfoFragment extends BaseFragment implements View.OnClickLis
         } else if (view.getId() == binding.fixDeadPixels.getId()) {
             launchPixelFixActivity();
         }
+    }
+
+    private boolean hasStylusSupport() {
+        int[] deviceIds = InputDevice.getDeviceIds();
+        for (int id : deviceIds) {
+            InputDevice device = InputDevice.getDevice(id);
+            if (device != null && device.supportsSource(InputDevice.SOURCE_STYLUS)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

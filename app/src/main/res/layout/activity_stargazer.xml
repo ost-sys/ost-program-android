@@ -39,7 +39,7 @@
                     android:layout_margin="8dp"
                     android:scaleType="fitXY"
                     android:elevation="12dp"
-                    tools:src="@drawable/ost_logo"/>
+                    tools:src="@drawable/samsung_contact"/>
 
                 <TextView
                     android:id="@+id/stargazer_name"
