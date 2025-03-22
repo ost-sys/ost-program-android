@@ -76,7 +76,6 @@ private val client = OkHttpClient.Builder()
 - [Radomyr](https://github.com/BRamil0), [Anton](https://github.com/Anton-Aboba1234), [Bohdan](https://github.com/bohdan157) - For translate to Ukrainian.
 - [Weever](https://github.com/Weever1337) - For a new API for currency converter
 - [Luminous418](https://github.com/Luminous418) - For translate to Spanish
-- []() - For translate to Polish
 
 ## Credits
 - [Tribalfs](https://github.com/tribalfs/oneui-design)
