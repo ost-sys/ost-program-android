@@ -51,6 +51,7 @@ WearOS app:
 </p>
 
 ## Usage
+- Get your token here - https://github.com/settings/tokens
 - Put your token in local.propreties:
 ```properties
 github.token=token_here
@@ -93,8 +94,5 @@ val result = service.getStargazers("your_username", repoName).map { stargazer ->
 - [Luminous418](https://github.com/Luminous418) - For translate to Spanish
 
 ## Credits
-- [zhh4eny](https://t.me/zh4eny) - Created a MD file. 
-- [Tribalfs](https://github.com/tribalfs/oneui-design)
+- [zhh4eny](https://t.me/zh4eny) - Created a MD file.
 - [Google](https://developer.android.com/jetpack) for their Jetpack and Material Components libraries.
-- [Samsung](https://www.samsung.com/) for their awesome OneUI Design.
-- [Yanndroid](https://github.com/Yanndroid) and [Salvo Giangreco](https://github.com/salvogiangri) who created the [OneUI4 Design library](https://github.com/OneUIProject/oneui-design) where this repository came from.
