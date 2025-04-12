@@ -1,6 +1,6 @@
 [versions]
 agp = "8.9.1"
-kotlin = "2.1.20"
+kotlin = "2.0.21"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -19,7 +19,7 @@ wearToolingPreview = "1.0.0"
 animationGraphicsAndroid = "1.7.8"
 horologist = "0.7.12-alpha"
 compose-ui-tooling = "1.4.1"
-org-jetbrains-kotlinx = "1.10.2"
+org-jetbrains-kotlinx = "1.10.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -73,4 +73,3 @@ kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-cor
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
