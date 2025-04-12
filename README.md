@@ -1,7 +1,7 @@
 <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" height="100"/>
 
 # OST Tools
-This project is based on the Jetpack Compose Material 3.
+This project is based on the Jetpack Compose, with Material Design 3.
 Functions:
 - Some information about the phone
 - Reboot to different modes (Recovery, Fastboot, Download Mode)
@@ -52,7 +52,7 @@ WearOS app:
 
 ## Usage
 - Get your token here - https://github.com/settings/tokens
-- Put your token in local.propreties:
+- Put your token in local.properties:
 ```properties
 github.token=token_here
 ```
@@ -72,13 +72,13 @@ val result = service.getStargazers("your_username", repoName).map { stargazer ->
     stargazer to repoName
 }
 ```
-- How to install app on WearOS and grand permissions:
+- How to install app on WearOS and grant permissions:
   - Pair your watch with PC using Wireless ADB ([Guildeline (XDA)](https://xdaforums.com/t/guide-how-to-connect-adb-over-wifi.3368602/))
   - Install app
   ```bash
   adb install wear-app-release.apk
   ```
-  - Grand permissions
+  - Grant permissions
   ```bash
   adb shell
   appops set com.ost.application MANAGE_EXTERNAL_STORAGE allow
@@ -90,9 +90,9 @@ val result = service.getStargazers("your_username", repoName).map { stargazer ->
 
 ## Translators
 - [Radomyr](https://github.com/BRamil0), [Anton](https://github.com/Anton-Aboba1234), [Bohdan](https://github.com/bohdan157) - For translate to Ukrainian.
-- [Weever](https://github.com/Weever1337) - For a new API for currency converter
 - [Luminous418](https://github.com/Luminous418) - For translate to Spanish
 
 ## Credits
 - [zhh4eny](https://t.me/zh4eny) - Created a MD file.
+- [Weever](https://github.com/Weever1337) - For a new API for currency converter
 - [Google](https://developer.android.com/jetpack) for their Jetpack and Material Components libraries.
