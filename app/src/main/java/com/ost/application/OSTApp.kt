@@ -1,9 +1,7 @@
 package com.ost.application
 
 import android.app.Application
-import com.ost.application.data.StargazersRepo
-import com.ost.application.ui.core.util.applyDarkMode
-import kotlinx.coroutines.flow.first
+import com.ost.application.data.model.StargazersRepo
 import kotlinx.coroutines.runBlocking
 
 class OSTApp : Application() {
@@ -13,7 +11,6 @@ class OSTApp : Application() {
     }
 
     private fun applyDarkModeFromPrefs() = runBlocking {
-        val darkMode = StargazersRepo.getInstance(this@OSTApp).stargazersSettingsFlow.first().darkModeOption
-        applyDarkMode(darkMode)
+        StargazersRepo.getInstance(this@OSTApp)
     }
 }

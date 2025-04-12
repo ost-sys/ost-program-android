@@ -1,31 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <color name="about_page_secondary_text_color">#ff8c8c8c</color>
-    <color name="primary_color">@color/oui_btn_colored_background</color>
-    <color name="secondary_color">#FF0091EA</color>
-    <color name="primary_dark_color">#FF1E4BC6</color>
-
-    <color name="primary">#2dba4e</color>
-    <color name="tertiary">#FF0091EA</color>
-
-    <color name="sesl_thumb_control_color_activated">@color/primary_color</color>
-
-    <color name="red">#ffD50000</color>
-    <color name="yellow">#ffFFD600</color>
-    <color name="green">#ff009808</color>
-    <color name="blue">#ff304FFE</color>
-    <color name="orange">#ffFF6D00</color>
-    <color name="cyan">#ff00BFA5</color>
-    <color name="magenta">#ffC51162</color>
-    <color name="white">#ffffffff</color>
-    <color name="black">#000000</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="light_blue_50">#FFE1F5FE</color>
+    <color name="light_blue_200">#FF81D4FA</color>
     <color name="light_blue_600">#FF039BE5</color>
     <color name="light_blue_900">#FF01579B</color>
-    <color name="light_blue_A200">#FF40C4FF</color>
-    <color name="light_blue_A400">#FF00B0FF</color>
-    <color name="black_overlay">#66000000</color>
-
-    <color name="transparent_window_bg_color">#3B000000</color>
-
 </resources>

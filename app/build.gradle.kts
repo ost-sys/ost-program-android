@@ -1,9 +1,18 @@
+import java.util.Properties
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
-    id("org.jetbrains.kotlin.plugin.compose")
+    kotlin("plugin.serialization") version "2.0.21"
 }
 
 android {
@@ -12,27 +21,21 @@ android {
 
     defaultConfig {
         applicationId = "com.ost.application"
-        minSdk = 26
+        minSdk = 28
         targetSdk = 35
-        versionCode = 242
-        versionName = "2.4.2"
-
+        versionCode = 300
+        versionName = "3.0.0"
         vectorDrawables.useSupportLibrary = true
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        multiDexEnabled = true
-
-//        ndk {
-//            //noinspection ChromeOsAbiSupport
-//            abiFilters += "arm64-v8a"; "armeabi-v7a"
-//        }
-
+        buildConfigField("String", "GITHUB_API_KEY", "\"${localProperties.getProperty("github.token") ?: ""}\"")
     }
+
     buildTypes {
         release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            isMinifyEnabled = true
+            isShrinkResources = true
             signingConfig = signingConfigs.getByName("debug")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
     compileOptions {
@@ -40,100 +43,93 @@ android {
         targetCompatibility = JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = "21"
+        jvmTarget = JavaVersion.VERSION_21.majorVersion
+        freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
     }
     buildFeatures {
         compose = true
         buildConfig = true
         viewBinding = true
-        dataBinding = true
     }
     dependenciesInfo {
         includeInApk = true
         includeInBundle = true
     }
-    buildToolsVersion = "35.0.0"
+    buildToolsVersion = "35.0.1"
 
-    packagingOptions {
-        resources.excludes.add("META-INF/*")
+    packaging  {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15"
-    }
-}
-
-configurations.implementation {
-    exclude ("androidx.core",  "core")
-    exclude ("androidx.core",  "core-ktx")
-    exclude ("androidx.customview",  "customview")
-    exclude ("androidx.coordinatorlayout",  "coordinatorlayout")
-    exclude ("androidx.drawerlayout",  "drawerlayout")
-    exclude ("androidx.viewpager2",  "viewpager2")
-    exclude ("androidx.viewpager",  "viewpager")
-    exclude ("androidx.appcompat", "appcompat")
-    exclude ("androidx.fragment", "fragment")
-    exclude ("androidx.preference",  "preference")
-    exclude ("androidx.recyclerview", "recyclerview")
-    exclude ("androidx.slidingpanelayout",  "slidingpanelayout")
-    exclude ("androidx.swiperefreshlayout",  "swiperefreshlayout")
-    exclude ("com.google.android.material", "material")
 }
 
 dependencies {
+    val nav_version = "2.8.9"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation("androidx.navigation:navigation-fragment:$nav_version")
+    implementation("androidx.navigation:navigation-ui:$nav_version")
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
+    androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    implementation("androidx.compose.material3:material3-window-size-class:1.4.0-alpha12")
+    implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.4.0-alpha12")
 
-    implementation("sesl.androidx.core:core:1.15.0+1.0.11-sesl6+rev0")
-    implementation("sesl.androidx.core:core-ktx:1.15.0+1.0.0-sesl6+rev0")
-    implementation("sesl.androidx.fragment:fragment:1.8.4+1.0.0-sesl6+rev1")
-    implementation("sesl.androidx.appcompat:appcompat:1.7.0+1.0.34-sesl6+rev7")
-    implementation("sesl.androidx.picker:picker-basic:1.0.17+1.0.17-sesl6+rev2")
-    implementation("sesl.androidx.picker:picker-color:1.0.6+1.0.6-sesl6+rev3")
-    implementation("sesl.androidx.preference:preference:1.2.1+1.0.4-sesl6+rev3")
-    implementation("sesl.androidx.recyclerview:recyclerview:1.4.0-rc01+1.0.21-sesl6+rev0")
-    implementation("sesl.androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01+1.0.0-sesl6+rev0")
-    implementation("sesl.androidx.apppickerview:apppickerview:1.0.1+1.0.1-sesl6+rev3")
-    implementation("sesl.androidx.indexscroll:indexscroll:1.0.3+1.0.3-sesl6+rev3")
-    implementation("sesl.androidx.viewpager2:viewpager2:1.1.0+1.0.0-sesl6+rev0")
-    implementation("sesl.com.google.android.material:material:1.12.0+1.0.23-sesl6+rev2")
-    implementation("sesl.androidx.slidingpanelayout:slidingpanelayout:1.2.0+1.0.2-sesl6+rev4")
-    implementation("io.github.tribalfs:oneui-design:0.3.6+oneui6")
-    implementation("io.github.oneuiproject:icons:1.1.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.2.0")
-    implementation("com.airbnb.android:lottie:6.6.0")
-    implementation("androidx.webkit:webkit:1.12.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.2.0")
-    implementation("androidx.asynclayoutinflater:asynclayoutinflater:1.0.0")
-    implementation("com.google.code.gson:gson:2.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    implementation("com.jaredrummler:android-device-names:2.1.1")
+    implementation("androidx.fragment:fragment-ktx:1.8.6")
     implementation("com.github.topjohnwu.libsu:core:6.0.0")
     implementation("com.github.topjohnwu.libsu:service:6.0.0")
     implementation("com.github.topjohnwu.libsu:nio:6.0.0")
-    implementation("com.jaredrummler:android-device-names:2.1.1")
-    implementation("com.google.android.play:integrity:1.4.0")
+    implementation("com.google.code.gson:gson:2.12.1")
+    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("com.airbnb.android:lottie-compose:6.6.4")
+    implementation("androidx.compose.runtime:runtime-livedata:1.7.8")
+    implementation("androidx.compose.foundation:foundation:1.7.8")
+    implementation("com.android.volley:volley:1.2.1")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.github.oshi:oshi-core:6.6.5") {
         exclude("net.java.dev.jna", "jna")
     }
     implementation("net.java.dev.jna:jna:5.15.0@aar")
-    implementation("androidx.datastore:datastore-preferences-android:1.1.1")
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-    implementation("com.github.bumptech.glide:glide:4.16.0")
-    implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.squareup.moshi:moshi:1.15.1")
     implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
+    implementation("com.google.code.gson:gson:2.10.1")
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     ksp("androidx.room:room-compiler:2.6.1")
-    implementation("androidx.compose.runtime:runtime:1.7.6")
-    implementation("androidx.compose.runtime:runtime-livedata:1.7.6")
-    implementation("androidx.compose.runtime:runtime-rxjava2:1.7.6")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.simonsickle:composed-barcodes:1.3.0")
+    implementation("dev.shreyaspatil:capturable:3.0.1")
     implementation("com.google.zxing:core:3.5.3")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.8.5")
-    implementation("androidx.navigation:navigation-ui-ktx:2.8.5")
-    implementation("com.android.volley:volley:1.2.1")
+    implementation("androidx.compose.animation:animation:1.7.8")
+    implementation("androidx.compose.ui:ui:1.7.8")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    implementation(libs.play.services.wearable)
+    implementation(libs.appcompat)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.biometric)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.activity.compose)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+    implementation(libs.material)
+    implementation(libs.activity)
+    implementation(libs.core.splashscreen)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")

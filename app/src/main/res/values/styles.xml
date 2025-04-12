@@ -1,36 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="DatePickerTheme" parent="@style/Widget.AppCompat.Light.DatePicker" />
-
-    <style name="BottomNavViewTextMode" parent="Widget.Design.Light.BottomNavigationView.Text" />
-
-    <style name="DrawerDividerStyle">
-        <item name="android:layout_marginTop">6dp</item>
-        <item name="android:layout_marginBottom">6dp</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">3dp</item>
-        <item name="android:layout_marginStart">24dp</item>
-        <item name="android:layout_marginEnd">24dp</item>
-        <item name="android:foreground">@drawable/drawer_item_separator_bg</item>
+    <style name="Widget.OSTTools.AppWidget.Container" parent="android:Widget">
+        <item name="android:id">@android:id/background</item>
+        <item name="android:background">?android:attr/colorBackground</item>
     </style>
 
-    <style name="MenuPopupAnimStyle" parent="@android:style/Animation">
-        <item name="android:windowEnterAnimation">@anim/sesl_menu_popup_enter</item>
-        <item name="android:windowExitAnimation">@anim/sesl_menu_popup_exit</item>
+    <style name="Widget.OSTTools.AppWidget.InnerView" parent="android:Widget">
+        <item name="android:background">?android:attr/colorBackground</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
-
-    <style name="color">
-        <item name="color">@color/white</item>
-    </style>
-
-    <style name="Widget.OneUITheme.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
-    </style>
-
-    <style name="Widget.OneUITheme.ButtonBar.Fullscreen" parent="">
-        <item name="android:background">@color/black_overlay</item>
-        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
-    </style>
-
 </resources>

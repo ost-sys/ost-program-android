@@ -1,16 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <declare-styleable name="CardView">
-        <attr name="IconDrawable" format="reference" />
-        <attr name="IconColor" format="color" />
-        <attr name="TitleText" format="string" />
-        <attr name="SummaryText" format="string" />
-        <attr name="isDividerViewVisible" format="boolean" />
+    <declare-styleable name="AppWidgetAttrs">
+        <attr name="appWidgetPadding" format="dimension" />
+        <attr name="appWidgetInnerRadius" format="dimension" />
+        <attr name="appWidgetRadius" format="dimension" />
     </declare-styleable>
-    <declare-styleable name="FullscreenAttrs">
-        <attr name="fullscreenBackgroundColor" format="color" />
-        <attr name="fullscreenTextColor" format="color" />
-    </declare-styleable>
-
 </resources>
