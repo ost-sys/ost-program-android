@@ -1,7 +1,7 @@
 <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" height="100"/>
 
 # OST Tools
-This project is based on the Jetpack Compose, with Material Design 3.
+This project is based on the Jetpack Compose Material Design 3.
 Functions:
 - Some information about the phone
 - Reboot to different modes (Recovery, Fastboot, Download Mode)
@@ -89,8 +89,8 @@ val result = service.getStargazers("your_username", repoName).map { stargazer ->
 
 
 ## Translators
-- [Radomyr](https://github.com/BRamil0), [Anton](https://github.com/Anton-Aboba1234), [Bohdan](https://github.com/bohdan157) - For translate to Ukrainian.
-- [Luminous418](https://github.com/Luminous418) - For translate to Spanish
+- [Radomyr](https://github.com/BRamil0), [Anton](https://github.com/Anton-Aboba1234), [Bohdan](https://github.com/bohdan157) - For translating to Ukrainian.
+- [Luminous418](https://github.com/Luminous418) - For translating to Spanish
 
 ## Credits
 - [zhh4eny](https://t.me/zh4eny) - Created a MD file.
