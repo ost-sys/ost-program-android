@@ -87,10 +87,10 @@ appops set com.ost.application REQUEST_INSTALL_PACKAGES allow
 ```
 
 ## Translators
-- [Radomyr](https://github.com/BRamil0), [Anton](https://github.com/Anton-Aboba1234), [Bohdan](https://github.com/bohdan157) - For translate to Ukrainian.
-- [Weever](https://github.com/Weever1337) - For a new API for currency converter
-- [Luminous418](https://github.com/Luminous418) - For translate to Spanish
+- [Radomyr](https://github.com/BRamil0), [Anton](https://github.com/Anton-Aboba1234), [Bohdan](https://github.com/bohdan157) for the translation into Ukrainian.
+- [Luminous418](https://github.com/Luminous418) for the translation into Spanish
 
 ## Credits
 - [zhh4eny](https://t.me/zh4eny) - Created a MD file.
+- [Weever](https://github.com/Weever1337) - For a new API for currency converter
 - [Google](https://developer.android.com/jetpack) for their Jetpack and Material Components libraries.
