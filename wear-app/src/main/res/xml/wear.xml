@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="android_wear_capabilities">
+        <item>ost_wear_app_companion</item>
+    </string-array>
+</resources>

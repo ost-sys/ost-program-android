@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <color name="primary">@color/material_dynamic_primary20</color>
-    <color name="tertiary">@color/material_dynamic_tertiary20</color>
-
-</resources>

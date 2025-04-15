@@ -1,9 +1,75 @@
 [versions]
+agp = "8.9.1"
+kotlin = "2.0.21"
+coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+activityCompose = "1.10.1"
+composeBom = "2025.04.00"
+biometric = "1.4.0-alpha03"
+androidx-lifecycle = "2.8.7"
+appcompat = "1.7.0"
+material = "1.12.0"
+coreSplashscreen = "1.0.1"
+playServicesWearable = "19.0.0"
+composeMaterial = "1.4.1"
+composeFoundation = "1.5.0-alpha13"
+wearToolingPreview = "1.0.0"
+animationGraphicsAndroid = "1.7.8"
+horologist = "0.7.12-alpha"
+compose-ui-tooling = "1.4.1"
+org-jetbrains-kotlinx = "1.10.1"
 
 [libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
+activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+activity = { group = "androidx.activity", name = "activity", version.ref = "activityCompose" }
+core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
+play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
+ui = { group = "androidx.compose.ui", name = "ui" }
+ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "composeMaterial" }
+compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "composeFoundation" }
+wear-tooling-preview = { group = "androidx.wear", name = "wear-tooling-preview", version.ref = "wearToolingPreview" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+animation-graphics-android = { group = "androidx.compose.animation", name = "animation-graphics-android", version.ref = "animationGraphicsAndroid" }
+horologist-compose-layout = { module = "com.google.android.horologist:horologist-compose-layout", version.ref = "horologist" }
+horologist-compose-material = { module = "com.google.android.horologist:horologist-compose-material", version.ref = "horologist" }
+horologist-media = { module = "com.google.android.horologist:horologist-media", version.ref = "horologist"}
+horologist-media-ui = { module = "com.google.android.horologist:horologist-media-ui", version.ref = "horologist" }
+horologist-audio = { module = "com.google.android.horologist:horologist-audio", version.ref = "horologist" }
+horologist-audio-ui = { module = "com.google.android.horologist:horologist-audio-ui", version.ref = "horologist" }
+horologist-composables = { module = "com.google.android.horologist:horologist-composables", version.ref = "horologist" }
+horologist-roboscreenshots = { module = "com.google.android.horologist:horologist-roboscreenshots", version.ref = "horologist" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+wear-compose-ui-tooling = { module = "androidx.wear.compose:compose-ui-tooling", version.ref = "compose-ui-tooling" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "org-jetbrains-kotlinx" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "org-jetbrains-kotlinx" }
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "org-jetbrains-kotlinx" }
+
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

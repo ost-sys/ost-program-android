@@ -16,33 +16,12 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url = uri("https://maven.pkg.github.com/tribalfs/sesl-androidx")
-            credentials {
-                username = "ost-sys"
-                password = ""
-            }
-        }
-        maven {
-            url = uri("https://maven.pkg.github.com/tribalfs/sesl-material-components-android")
-            credentials {
-                username = "ost-sys"
-                password = ""
-            }
-        }
-        maven {
-            url = uri("https://maven.pkg.github.com/tribalfs/oneui-design")
-            credentials {
-                username = "ost-sys"
-                password = ""
-            }
-        }
         maven { url = uri("https://jitpack.io")}
+        maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
     }
 }
 
-include(":lib")
-
-rootProject.name = "My Application"
+rootProject.name = "OST Tools"
 include(":app")
+include(":wear-app")
  
