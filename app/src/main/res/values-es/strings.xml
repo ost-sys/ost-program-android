@@ -155,7 +155,6 @@
     <string name="check_permission">Comprobar permiso</string>
     <string name="fingers_registered">Huellas registradas</string>
     <string name="fingers_not_registered">Huellas no registradas</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="multiple_rear_cameras_detected">Múltiples cámaras traseras detectadas</string>
     <string name="single_rear_camera">Cámara trasera única</string>
     <string name="unknown">Desconocido</string>
@@ -179,7 +178,7 @@
     <string name="front_camera">Cámara frontal</string>
     <string name="check_for_dead_pixels">Comprobar píxeles muertos</string>
     <string name="fix_dead_pixels">Reparar píxeles muertos</string>
-    <string name="fix_dead_pixels_w">No esperes un 100% de éxito</string>
+    <string name="fix_dead_pixels_w" formatted="false">No esperes un 100% de éxito</string>
     <string name="access_request_sent">Solicitud de acceso enviada</string>
     <string name="total_recovery_time">Tiempo total de recuperación</string>
     <string name="recovery_time">Tiempo de recuperación (minutos)</string>
