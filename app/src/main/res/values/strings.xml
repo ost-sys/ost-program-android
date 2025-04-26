@@ -184,7 +184,7 @@
     <string name="front_camera">Front camera</string>
     <string name="check_for_dead_pixels">Check for dead pixels</string>
     <string name="fix_dead_pixels">Fix dead pixels</string>
-    <string name="fix_dead_pixels_w">Don\'t count on 100% success</string>
+    <string name="fix_dead_pixels_w" formatted="false">Don\'t count on 100% success</string>
     <string name="access_request_sent">Access request sent</string>
     <string name="total_recovery_time">Total recovery time</string>
     <string name="recovery_time">Recovery time (minutes)</string>
