@@ -178,7 +178,7 @@
     <string name="front_camera">Фронтальная камера</string>
     <string name="check_for_dead_pixels">Проверить наличие битых пикселей</string>
     <string name="fix_dead_pixels">Исправить битые пиксели</string>
-    <string name="fix_dead_pixels_w">Не рассчитывайте на 100% успех</string>
+    <string name="fix_dead_pixels_w" formatted="false">Не рассчитывайте на 100% успех</string>
     <string name="access_request_sent">Запрос на доступ отправлен</string>
     <string name="total_recovery_time">Общее время восстановления</string>
     <string name="recovery_time">Время восстановления (минуты)</string>
