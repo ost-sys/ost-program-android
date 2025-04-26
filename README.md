@@ -94,3 +94,6 @@ appops set com.ost.application REQUEST_INSTALL_PACKAGES allow
 - [zhh4eny](https://t.me/zh4eny) - Created a MD file.
 - [Weever](https://github.com/Weever1337) - For a new API for currency converter
 - [Google](https://developer.android.com/jetpack) for their Jetpack and Material Components libraries.
+
+## License
+This project is licensed under the **[GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0)**. See the [LICENSE](LICENSE) file for more details.
