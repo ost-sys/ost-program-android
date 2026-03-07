@@ -1,38 +1,38 @@
 package com.ost.application.util
 
+import androidx.compose.foundation.layout.size// Убедитесь, что импорты ведут на material3
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.wear.compose.material.Icon
-import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.dialog.Confirmation
-import androidx.wear.compose.material.dialog.Dialog
+import androidx.compose.ui.unit.dp
+import androidx.wear.compose.material3.ConfirmationDialog
+import androidx.wear.compose.material3.Icon
+import androidx.wear.compose.material3.Text
 
 @Composable
-fun ConfimationDialog(message: String, iconResId: Int, onDismiss: () -> Unit) {
-    var showDialog by remember { mutableStateOf(true) } // Initially show the dialog
-
-    if (showDialog) {
-        Dialog(showDialog = true, onDismissRequest = {
-            showDialog = false
-            onDismiss()
-        }) {
-            Confirmation(
-                onTimeout = {
-                    showDialog = false
-                    onDismiss()
-                },
-                icon = {
-                    Icon(painter = painterResource(iconResId), contentDescription = message)
-                },
-                durationMillis = 3000,
-            ) {
-                Text(text = message, textAlign = TextAlign.Center)
-            }
-        }
-    }
+fun ConfirmationDialog(
+    showDialog: Boolean,
+    message: String,
+    iconResId: Int,
+    onDismiss: () -> Unit
+) {
+    ConfirmationDialog(
+        visible = showDialog,
+        onDismissRequest = onDismiss,
+        durationMillis = 3000,
+        content = {
+            Icon(
+                painter = painterResource(id = iconResId),
+                contentDescription = message,
+                modifier = Modifier.size(36.dp)
+            )
+        },
+        text = {
+            Text(
+                text = message,
+                textAlign = TextAlign.Center,
+            )
+        },
+    )
 }

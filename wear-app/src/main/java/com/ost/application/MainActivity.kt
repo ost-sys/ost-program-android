@@ -3,15 +3,13 @@ package com.ost.application
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -20,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -32,15 +29,15 @@ import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.ScalingLazyListAnchorType
 import androidx.wear.compose.foundation.lazy.ScalingLazyListState
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
-import androidx.wear.compose.material.Button
-import androidx.wear.compose.material.ButtonDefaults
-import androidx.wear.compose.material.CircularProgressIndicator
-import androidx.wear.compose.material.Icon
-import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.PositionIndicator
-import androidx.wear.compose.material.Scaffold
-import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.TimeText
+import androidx.wear.compose.material3.AppScaffold
+import androidx.wear.compose.material3.ButtonDefaults
+import androidx.wear.compose.material3.CircularProgressIndicator
+import androidx.wear.compose.material3.EdgeButton
+import androidx.wear.compose.material3.Icon
+import androidx.wear.compose.material3.MaterialTheme
+import androidx.wear.compose.material3.ScreenScaffold
+import androidx.wear.compose.material3.Text
+import androidx.wear.compose.material3.TimeText
 import androidx.wear.tooling.preview.devices.WearDevices
 import com.ost.application.explorer.FileExplorerActivity
 import com.ost.application.presentation.BatteryActivity
@@ -49,7 +46,7 @@ import com.ost.application.presentation.DefaultActivity
 import com.ost.application.presentation.DisplayActivity
 import com.ost.application.share.ShareActivity
 import com.ost.application.util.CardListItem
-import com.ost.application.util.ConfimationDialog
+import com.ost.application.util.ConfirmationDialog
 import com.ost.application.util.ListItem
 import com.ost.application.util.ListItems
 import com.ost.application.util.RetrofitClient
@@ -69,8 +66,8 @@ sealed class UpdateCheckResult {
     data class Error(val message: String) : UpdateCheckResult()
 }
 
-class MainActivity : ComponentActivity() {
 
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -89,7 +86,6 @@ class MainActivity : ComponentActivity() {
 fun MainApp(
     checkUpdates: suspend (Context) -> UpdateCheckResult
 ) {
-    val listState = rememberScalingLazyListState()
     var dialogInfo by remember { mutableStateOf<DialogInfo?>(null) }
     var isLoadingUpdate by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -97,43 +93,64 @@ fun MainApp(
 
     val mainListItems = rememberMainListItems(context)
 
-    Scaffold(
+    val onCheckUpdatesClick: () -> Unit = {
+        coroutineScope.launch {
+            isLoadingUpdate = true
+            val result = checkUpdates(context)
+            dialogInfo = when (result) {
+                is UpdateCheckResult.UpdateAvailable -> DialogInfo(
+                    context.getString(R.string.update_available_check_phone),
+                    R.drawable.ic_update_good_24dp
+                )
+                is UpdateCheckResult.LatestVersion -> DialogInfo(
+                    context.getString(R.string.you_are_updated),
+                    R.drawable.ic_update_good_24dp
+                )
+                is UpdateCheckResult.Error -> DialogInfo(
+                    result.message,
+                    R.drawable.ic_error_24dp
+                )
+            }
+            isLoadingUpdate = false
+        }
+    }
+
+    AppScaffold(
         timeText = { TimeText() },
-        positionIndicator = { PositionIndicator(scalingLazyListState = listState) },
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background),
     ) {
-        MainList(
-            listState = listState,
-            items = mainListItems,
-            isLoadingUpdate = isLoadingUpdate,
-            onCheckUpdatesClick = {
-                coroutineScope.launch {
-                    isLoadingUpdate = true
-                    val result = checkUpdates(context)
-                    dialogInfo = when (result) {
-                        is UpdateCheckResult.UpdateAvailable -> DialogInfo(
-                            context.getString(R.string.update_available_check_phone),
-                            R.drawable.ic_update_good_24dp
+        val listState = rememberScalingLazyListState()
+        ScreenScaffold(
+            scrollState = listState,
+            edgeButton = {
+                EdgeButton(
+                    onClick = onCheckUpdatesClick,
+                    enabled = !isLoadingUpdate,
+                ) {
+                    if (isLoadingUpdate) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp
                         )
-                        is UpdateCheckResult.LatestVersion -> DialogInfo(
-                            context.getString(R.string.you_are_updated),
-                            R.drawable.ic_update_good_24dp
-                        )
-                        is UpdateCheckResult.Error -> DialogInfo(
-                            result.message,
-                            R.drawable.ic_error_24dp
+                    } else {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_update_24dp),
+                            contentDescription = "Check updates",
+                            modifier = Modifier.size(ButtonDefaults.SmallIconSize)
                         )
                     }
-                    isLoadingUpdate = false
                 }
             }
-        )
+        ) {
+            MainList(
+                listState = listState,
+                items = mainListItems,
+            )
+        }
     }
 
     dialogInfo?.let { info ->
-        ConfimationDialog(
+        ConfirmationDialog(
+            showDialog = true,
             message = info.message,
             iconResId = info.iconResId,
             onDismiss = { dialogInfo = null }
@@ -163,6 +180,9 @@ fun rememberMainListItems(context: Context): List<ListItem> {
             ListItem(context.getString(R.string.share), null, R.drawable.ic_share_24dp, true) {
                 startActivity(context, ShareActivity::class.java)
             },
+            ListItem("Apps", null, R.drawable.ic_apps_24dp, true) {
+                Toast.makeText(context, "In progress", Toast.LENGTH_SHORT).show()
+            },
         )
     }
 }
@@ -172,8 +192,6 @@ fun rememberMainListItems(context: Context): List<ListItem> {
 fun MainList(
     listState: ScalingLazyListState,
     items: List<ListItem>,
-    isLoadingUpdate: Boolean,
-    onCheckUpdatesClick: () -> Unit,
     contentPadding: PaddingValues = PaddingValues(horizontal = 8.dp)
 ) {
     ScalingLazyColumn(
@@ -199,43 +217,10 @@ fun MainList(
             )
         }
         item {
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.size(8.dp))
         }
         item {
-            UpdateSection(isLoadingUpdate = isLoadingUpdate, onCheckUpdatesClick = onCheckUpdatesClick)
-        }
-    }
-}
-
-@Composable
-fun UpdateSection(isLoadingUpdate: Boolean, onCheckUpdatesClick: () -> Unit) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-    ) {
-        VersionInfo(version = "${stringResource(R.string.version)} ${BuildConfig.VERSION_NAME}")
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = onCheckUpdatesClick,
-            enabled = !isLoadingUpdate,
-            modifier = Modifier.size(ButtonDefaults.SmallButtonSize)
-        ) {
-            if (isLoadingUpdate) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    indicatorColor = MaterialTheme.colors.onPrimary,
-                    trackColor = MaterialTheme.colors.primary.copy(alpha = 0.5f),
-                    strokeWidth = 2.dp
-                )
-            } else {
-                Icon(
-                    painter = painterResource(R.drawable.ic_update_24dp),
-                    contentDescription = "Check updates",
-                    modifier = Modifier.size(ButtonDefaults.SmallIconSize)
-                )
-            }
+            VersionInfo(version = "${stringResource(R.string.version)} ${BuildConfig.VERSION_NAME}")
         }
     }
 }
@@ -244,12 +229,13 @@ fun UpdateSection(isLoadingUpdate: Boolean, onCheckUpdatesClick: () -> Unit) {
 fun VersionInfo(version: String) {
     Text(
         text = version,
-        style = MaterialTheme.typography.caption2,
+        style = MaterialTheme.typography.titleSmall,
         textAlign = TextAlign.Center,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
     )
 }
-
 suspend fun checkForUpdates(context: Context): UpdateCheckResult {
     return withContext(Dispatchers.IO) {
         try {

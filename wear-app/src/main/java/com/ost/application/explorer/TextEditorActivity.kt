@@ -45,7 +45,7 @@ import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.material.Vignette
 import androidx.wear.compose.material.VignettePosition
 import com.ost.application.R
-import com.ost.application.util.ConfimationDialog
+import com.ost.application.util.ConfirmationDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -239,10 +239,11 @@ class TextEditorActivity : ComponentActivity() {
 
             currentDialog?.let { state ->
                 val iconRes = if (state.isError) R.drawable.ic_error_24dp else R.drawable.ic_check_circle_24dp
-                ConfimationDialog(
+                ConfirmationDialog(
                     message = state.message,
                     iconResId = iconRes,
-                    onDismiss = { dialogState.value = null }
+                    onDismiss = { dialogState.value = null },
+                    showDialog = true
                 )
             }
         }

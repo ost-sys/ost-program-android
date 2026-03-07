@@ -1,19 +1,23 @@
-package com.ost.application.ui.screen.powermenu // Создай этот пакет, если его нет
+package com.ost.application.ui.screen.powermenu
 
 import android.os.SystemClock
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ost.application.R
-import com.ost.application.utils.getSystemProperty
+import com.ost.application.util.getSystemProperty
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+
+enum class HapticEvent {
+    CONFIRM,
+    REJECT
+}
 
 enum class PowerAction(val command: String, val messageResId: Int) {
     POWER_OFF("reboot -p", R.string.turn_off_q),
@@ -33,7 +37,6 @@ enum class RootAccessState {
 data class PowerMenuUiState(
     val rootState: RootAccessState = RootAccessState.CHECKING,
     val statusTextResId: Int = R.string.access_request_sent,
-    val statusColor: Color = Color.Unspecified,
     val isSamsungDevice: Boolean = false,
     val showDialogFor: PowerAction? = null,
     val lastClickTime: Long = 0L
@@ -49,7 +52,10 @@ data class PowerMenuUiState(
 class PowerMenuViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(PowerMenuUiState())
-    val uiState: StateFlow<PowerMenuUiState> = _uiState.asStateFlow()
+    val uiState = _uiState.asStateFlow()
+
+    private val _hapticEvent = MutableSharedFlow<HapticEvent>(replay = 1)
+    val hapticEvent = _hapticEvent.asSharedFlow()
 
     init {
         checkDeviceType()
@@ -67,16 +73,14 @@ class PowerMenuViewModel : ViewModel() {
         _uiState.update { it.copy(rootState = RootAccessState.CHECKING, statusTextResId = R.string.access_request_sent) }
         viewModelScope.launch(Dispatchers.IO) {
             val result = Shell.cmd("su -c echo success").exec()
-            val newState = if (result.isSuccess) {
-                RootAccessState.GRANTED
-            } else {
-                RootAccessState.DENIED
-            }
-            val newTextResId = if (newState == RootAccessState.GRANTED) R.string.access_granted else R.string.access_denied
 
-            withContext(Dispatchers.Main) {
-                _uiState.update { it.copy(rootState = newState, statusTextResId = newTextResId) }
-            }
+            val newState = if (result.isSuccess) RootAccessState.GRANTED else RootAccessState.DENIED
+            val newTextResId = if (newState == RootAccessState.GRANTED) R.string.access_granted else R.string.access_denied
+            val hapticToSend = if (newState == RootAccessState.GRANTED) HapticEvent.CONFIRM else HapticEvent.REJECT
+
+            _hapticEvent.emit(hapticToSend)
+
+            _uiState.update { it.copy(rootState = newState, statusTextResId = newTextResId) }
         }
     }
 

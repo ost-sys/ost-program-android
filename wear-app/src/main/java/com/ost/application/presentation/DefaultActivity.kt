@@ -12,10 +12,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
-import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
-import androidx.wear.compose.material.TimeText
+import androidx.wear.compose.material3.MaterialTheme
+import androidx.wear.compose.material3.TimeText
 import com.ost.application.R
 import com.ost.application.util.InfoListScreenContent
 import com.ost.application.util.ListItem
@@ -37,7 +37,7 @@ fun DefaultScreen() {
     val context = LocalContext.current
 
     val items = remember {
-        listOfNotNull( // Используем listOfNotNull на случай если какая-то информация отсутствует
+        listOfNotNull(
             ListItem(context.getString(R.string.system_version), Build.VERSION.RELEASE ?: "N/A", null, true, null),
             ListItem(context.getString(R.string.brand), Build.BRAND ?: "N/A", null, true, null),
             ListItem(context.getString(R.string.board), Build.BOARD ?: "N/A", null, true, null),
@@ -54,7 +54,7 @@ fun DefaultScreen() {
         positionIndicator = { PositionIndicator(scalingLazyListState = listState) },
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background),
+            .background(MaterialTheme.colorScheme.background),
     ) {
         InfoListScreenContent(
             listState = listState,

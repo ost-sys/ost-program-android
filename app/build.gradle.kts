@@ -1,33 +1,32 @@
-import java.util.Properties
-
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file("local.properties")
-if (localPropertiesFile.exists()) {
-    localProperties.load(localPropertiesFile.inputStream())
-}
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
-    kotlin("plugin.serialization") version "2.0.21"
+    id("org.jetbrains.kotlin.kapt")
+    kotlin("plugin.serialization") version "2.1.21"
 }
 
 android {
     namespace = "com.ost.application"
-    compileSdk = 36
+    compileSdk {
+        version = release(36) {
+            minorApiLevel = 1
+        }
+    }
 
     defaultConfig {
         applicationId = "com.ost.application"
-        minSdk = 28
+        minSdk = 26
         targetSdk = 36
-        versionCode = 301
-        versionName = "3.0.1"
+        versionCode = 400
+        versionName = "4.0.0-beta"
+        ndk {
+            abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
+        }
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "GITHUB_API_KEY", "\"${localProperties.getProperty("github.token") ?: ""}\"")
     }
 
     buildTypes {
@@ -39,23 +38,20 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-        freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     buildFeatures {
         compose = true
         buildConfig = true
         viewBinding = true
+        aidl = true
     }
     dependenciesInfo {
         includeInApk = true
         includeInBundle = true
     }
-    buildToolsVersion = "35.0.1"
+    buildToolsVersion = "36.1.0"
 
     packaging  {
         resources {
@@ -65,48 +61,71 @@ android {
 }
 
 dependencies {
-    val nav_version = "2.8.9"
-    implementation("androidx.navigation:navigation-compose:$nav_version")
-    implementation("androidx.navigation:navigation-fragment:$nav_version")
-    implementation("androidx.navigation:navigation-ui:$nav_version")
-    implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
-    androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
+    implementation(libs.androidx.graphics.shapes)
 
-    implementation("androidx.compose.material3:material3-window-size-class:1.4.0-alpha12")
-    implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.4.0-alpha12")
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.accompanist.permissions)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
-    implementation("com.jaredrummler:android-device-names:2.1.1")
-    implementation("androidx.fragment:fragment-ktx:1.8.6")
-    implementation("com.github.topjohnwu.libsu:core:6.0.0")
-    implementation("com.github.topjohnwu.libsu:service:6.0.0")
-    implementation("com.github.topjohnwu.libsu:nio:6.0.0")
-    implementation("com.google.code.gson:gson:2.12.1")
-    implementation("io.coil-kt:coil-compose:2.7.0")
-    implementation("com.airbnb.android:lottie-compose:6.6.4")
-    implementation("androidx.compose.runtime:runtime-livedata:1.7.8")
-    implementation("androidx.compose.foundation:foundation:1.7.8")
-    implementation("com.android.volley:volley:1.2.1")
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.zoomable.image.coil)
+
+    implementation(libs.androidx.palette.ktx)
+
+    implementation(libs.kotlinx.collections.immutable)
+
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.android.device.names)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.core)
+    implementation(libs.service)
+    implementation(libs.nio)
+    implementation(libs.gson)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.video)
+    implementation(libs.coil3.coil.compose)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.lottie.compose)
+    implementation(libs.volley)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.okhttp)
     implementation("com.github.oshi:oshi-core:6.6.5") {
         exclude("net.java.dev.jna", "jna")
     }
-    implementation("net.java.dev.jna:jna:5.15.0@aar")
-    implementation("com.squareup.moshi:moshi:1.15.1")
-    implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    ksp("androidx.room:room-compiler:2.6.1")
-    implementation("com.github.bumptech.glide:glide:4.16.0")
-    implementation("com.simonsickle:composed-barcodes:1.3.0")
-    implementation("dev.shreyaspatil:capturable:3.0.1")
-    implementation("com.google.zxing:core:3.5.3")
-    implementation("androidx.compose.animation:animation:1.7.8")
-    implementation("androidx.compose.ui:ui:1.7.8")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    implementation(libs.jna)
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
+    implementation(libs.gson)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.compose.animation.core)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.glide)
+    implementation(libs.composed.barcodes)
+    implementation(libs.capturable)
+    implementation(libs.zxing.core)
+
+    implementation(libs.androidx.animation)
+    implementation(libs.androidx.compose.ui.ui)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.foundation.android)
+    implementation(libs.androidx.media3.session)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.exoplayer.dash)
+    implementation(libs.androidx.media3.ui)
+    implementation(libs.androidx.media)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
+    implementation(libs.androidx.navigation.dynamic.features.fragment)
+    implementation(libs.androidx.material3.window.size.class1)
+    implementation(libs.androidx.material3.adaptive.navigation.suite)
+    implementation(libs.androidx.compose.adaptive)
+    implementation(libs.androidx.compose.adaptive.layout)
+    implementation(libs.androidx.compose.adaptive.navigation)
+    implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.play.services.wearable)
     implementation(libs.appcompat)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -128,8 +147,10 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.navigation.testing)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    ksp(libs.compiler)
 }
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")

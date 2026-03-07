@@ -254,7 +254,7 @@ class BurnInRecoveryActivity : ComponentActivity() {
             val width = getWidth()
             val height = getHeight()
 
-            if (bitmap == null || bitmap!!.getWidth() != width || bitmap!!.getHeight() != height) {
+            if (bitmap == null || bitmap!!.width != width || bitmap!!.height != height) {
                 bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
             }
 
@@ -330,7 +330,7 @@ class BurnInRecoveryActivity : ComponentActivity() {
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
         val intent = Intent(this, MainActivity::class.java)
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         val pendingIntent = PendingIntent.getActivity(
             this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )

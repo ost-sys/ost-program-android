@@ -2,108 +2,88 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission
-        android:name="android.permission.WRITE_SETTINGS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.BATTERY_STATS"
-        tools:ignore="CoarseFineLocation,ProtectedPermissions" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
-    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES"/>
-    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
-    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_SUPERUSER"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE"
+        tools:ignore="SelectedPhotoAccess" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32"
-        tools:ignore="ScopedStorage" />
+        android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature android:name="android.hardware.type.watch" />
 
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
     <application
-        android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.DeviceDefault">
+        android:theme="@style/Theme.OSTTools">
         <activity
-            android:name=".presentation.tools.PixelTestActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:excludeFromRecents="false"
-            android:exported="false"
-            android:noHistory="true"
-            android:resizeableActivity="true" />
-        <activity android:name=".explorer.ImageActivity"
-            android:excludeFromRecents="false"
-            android:exported="false"
-            android:noHistory="false" />
-        <activity android:name=".explorer.TextEditorActivity"
-            android:excludeFromRecents="false"
-            android:exported="false"
-            android:noHistory="false" />
-        <activity android:name=".explorer.VideoActivity"
-            android:excludeFromRecents="false"
-            android:exported="false"
-            android:noHistory="false" />
-        <activity android:name=".explorer.music.MusicActivity"
-            android:excludeFromRecents="false"
-            android:exported="false"
-            android:noHistory="false" />
-        <activity
-            android:name=".presentation.BatteryActivity"
-            android:excludeFromRecents="false"
-            android:exported="false"
-            android:noHistory="false" />
-        <activity
-            android:name=".presentation.CPUActivity"
-            android:excludeFromRecents="false"
-            android:exported="false"
-            android:noHistory="false" />
-        <activity
-            android:name=".presentation.DisplayActivity"
-            android:excludeFromRecents="false"
-            android:exported="false"
-            android:noHistory="false" />
-        <activity
-            android:name=".presentation.DefaultActivity"
-            android:excludeFromRecents="false"
-            android:exported="false"
-            android:noHistory="false" />
-        <activity
-            android:name=".explorer.FileExplorerActivity"
-            android:excludeFromRecents="false"
-            android:exported="false"
-            android:noHistory="false" />
-        <activity
-            android:name=".explorer.RenameActivity"
-            android:excludeFromRecents="false"
-            android:exported="false"
-            android:noHistory="false" />
+            android:name=".MainActivity"
+            android:exported="true"
+            android:taskAffinity=""
+            android:theme="@style/MainActivityTheme.Starting">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".share.ShareActivity"
-            android:excludeFromRecents="false"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="false">
+            <intent-filter>
+                <action android:name="com.ost.application.action.SEND_FILES" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".share.WearShareService"
+            android:enabled="true"
             android:exported="false"
-            android:noHistory="false" />
+            android:foregroundServiceType="connectedDevice">
+        </service>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -114,27 +94,84 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <activity android:name=".explorer.ImageActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="false"/>
+        <activity android:name=".explorer.TextEditorActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="false"/>
+        <activity android:name=".explorer.VideoActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="false"/>
+        <activity android:name=".explorer.music.MusicActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="false"/>
+        <activity android:name=".explorer.music.VolumeActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="false"/>
+        <activity android:name=".explorer.FileExplorerActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="false"/>
+        <activity
+            android:name=".explorer.RenameActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="false"/>
+
+        <activity
+            android:name=".presentation.tools.PixelTestActivity"
+            android:excludeFromRecents="true"
+            android:exported="false" android:noHistory="true"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:resizeableActivity="true"/>
+        <activity android:name=".presentation.BatteryActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="false"/>
+        <activity android:name=".presentation.CPUActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="false"/>
+        <activity android:name=".presentation.DisplayActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="false"/>
+        <activity android:name=".presentation.DefaultActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="false"/>
+        <activity android:name=".appmanager.AppManagerActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="false"/>
+
+        <receiver
+            android:name=".appmanager.UninstallBroadcastReceiver"
+            android:exported="true"
+            android:permission="android.permission.DELETE_PACKAGES"
+            tools:ignore="ProtectedPermissions" />
+
         <uses-library
             android:name="com.google.android.wearable"
             android:required="true" />
+
         <uses-library android:name="org.apache.http.legacy"
             android:required="false"/>
 
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
+        <meta-data
+            android:name="com.google.android.wearable.capabilities"
+            android:resource="@xml/wear"
+            android:value="ost_wear_app_companion" />
 
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:taskAffinity=""
-            android:theme="@style/MainActivityTheme.Starting">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <service
             android:name=".DataLayerListenerService"
             android:exported="true">
@@ -143,9 +180,5 @@
                 <data android:scheme="wear" android:host="*" android:path="/request_wear_version"/>
             </intent-filter>
         </service>
-        <meta-data
-            android:name="com.google.android.wearable.capabilities"
-            android:resource="@xml/wear" />
     </application>
-
 </manifest>

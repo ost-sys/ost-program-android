@@ -2,9 +2,11 @@ package com.ost.application.explorer
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -77,31 +79,29 @@ import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.ScalingLazyListAnchorType
 import androidx.wear.compose.foundation.lazy.ScalingLazyListState
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
-import androidx.wear.compose.foundation.rememberRevealState
-import androidx.wear.compose.material.AppCard
-import androidx.wear.compose.material.Button
-import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Chip
 import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material.ExperimentalWearMaterialApi
-import androidx.wear.compose.material.Icon
-import androidx.wear.compose.material.ListHeader
-import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.PositionIndicator
-import androidx.wear.compose.material.Scaffold
-import androidx.wear.compose.material.SwipeToRevealCard
-import androidx.wear.compose.material.SwipeToRevealPrimaryAction
-import androidx.wear.compose.material.SwipeToRevealSecondaryAction
-import androidx.wear.compose.material.Switch
-import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.TimeText
-import androidx.wear.compose.material.ToggleChip
+import androidx.wear.compose.material3.AppCard
+import androidx.wear.compose.material3.AppScaffold
+import androidx.wear.compose.material3.Button
+import androidx.wear.compose.material3.ButtonDefaults
+import androidx.wear.compose.material3.EdgeButton
+import androidx.wear.compose.material3.Icon
+import androidx.wear.compose.material3.ListHeader
+import androidx.wear.compose.material3.MaterialTheme
+import androidx.wear.compose.material3.ScreenScaffold
+import androidx.wear.compose.material3.SwipeToReveal
+import androidx.wear.compose.material3.SwitchButton
+import androidx.wear.compose.material3.Text
+import androidx.wear.compose.material3.TimeText
+import androidx.wear.compose.material3.rememberRevealState
 import androidx.wear.tooling.preview.devices.WearDevices
 import com.ost.application.R
 import com.ost.application.explorer.music.MusicActivity
 import com.ost.application.share.Constants
 import com.ost.application.share.ShareActivity
-import com.ost.application.util.ConfimationDialog
+import com.ost.application.util.ConfirmationDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -256,7 +256,7 @@ class FileExplorerActivity : ComponentActivity() {
             return
         }
 
-        var fileUri: android.net.Uri? = null
+        var fileUri: Uri? = null
         var errorOccurred = false
         try {
             fileUri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
@@ -269,7 +269,7 @@ class FileExplorerActivity : ComponentActivity() {
         }
 
         if (fileUri != null) {
-            val uris = ArrayList<android.net.Uri>().apply { add(fileUri) }
+            val uris = ArrayList<Uri>().apply { add(fileUri) }
             val intent = Intent(context, ShareActivity::class.java).apply {
                 action = "com.ost.application.action.SEND_FILES"
                 putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
@@ -427,76 +427,77 @@ class FileExplorerActivity : ComponentActivity() {
         val actionsDialogListState = rememberScalingLazyListState()
 
         MaterialTheme {
-            Scaffold(
-                timeText = { TimeText() },
-                positionIndicator = { PositionIndicator(scalingLazyListState = listState) }
+            AppScaffold(
+                timeText = { TimeText() }
             ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    FileList(
-                        modifier = Modifier.fillMaxSize(),
-                        path = currentPath.value,
-                        files = files,
-                        listState = listState,
-                        showDialog = ::showDialog,
-                        onPathChange = { newPath ->
-                            currentPath.value = newPath
-                            loadFiles(newPath)
-                        },
-                        onCreate = { name, isDirectory ->
-                            lifecycleScope.launch {
-                                val (created, message) = createNewFileOrDir(currentPath.value, name, isDirectory)
-                                showDialog(message, isError = !created)
-                                if (created) {
-                                    loadFiles(currentPath.value)
+                ScreenScaffold(
+                    scrollState = listState,
+                    contentPadding = PaddingValues(10.dp))
+                {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        FileList(
+                            modifier = Modifier.fillMaxSize(),
+                            path = currentPath.value,
+                            files = files,
+                            listState = listState,
+                            showDialog = ::showDialog,
+                            onPathChange = { newPath ->
+                                currentPath.value = newPath
+                                loadFiles(newPath)
+                            },
+                            onCreate = { name, isDirectory ->
+                                lifecycleScope.launch {
+                                    val (created, message) = createNewFileOrDir(currentPath.value, name, isDirectory)
+                                    showDialog(message, isError = !created)
+                                    if (created) {
+                                        loadFiles(currentPath.value)
+                                    }
+                                }
+                            },
+                            onShowActionsRequest = ::showActionsForFile,
+                            onDeleteSwipe = { fileToDelete ->
+                                lifecycleScope.launch {
+                                    val (deleted, message) = deleteFileOrDirInternal(fileToDelete)
+                                    showDialog(message, isError = !deleted)
+                                    if (deleted) {
+                                        loadFiles(currentPath.value)
+                                    }
+                                }
+                            },
+                            isActionDialogVisible = currentActionsDialogFile != null,
+                            onNavigateBack = {
+                                val currentFile = File(currentPath.value)
+                                val parentFile = currentFile.parentFile
+                                if (parentFile != null && currentPath.value != rootPath && parentFile.canRead()) {
+                                    currentPath.value = parentFile.absolutePath
+                                    loadFiles(parentFile.absolutePath)
+                                    true
+                                } else {
+                                    false
                                 }
                             }
-                        },
-                        onShowActionsRequest = ::showActionsForFile,
-                        onDeleteSwipe = { fileToDelete ->
-                            lifecycleScope.launch {
-                                val (deleted, message) = deleteFileOrDirInternal(fileToDelete)
-                                showDialog(message, isError = !deleted)
-                                if (deleted) {
-                                    loadFiles(currentPath.value)
-                                }
-                            }
-                        },
-                        isActionDialogVisible = currentActionsDialogFile != null,
-                        onNavigateBack = {
-                            val currentFile = File(currentPath.value)
-                            val parentFile = currentFile.parentFile
-                            if (parentFile != null && currentPath.value != rootPath && parentFile.canRead()) {
-                                currentPath.value = parentFile.absolutePath
-                                loadFiles(parentFile.absolutePath)
-                                true
-                            } else {
-                                false
-                            }
-                        }
-                    )
+                        )
 
-                    AnimatedVisibility(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = 10.dp),
-                        visible = showPasteButton,
-                        enter = slideInVertically { it / 2 } + fadeIn(),
-                        exit = slideOutVertically { it / 2 } + fadeOut()
-                    ) {
-                        Button(
-                            onClick = { pasteFiles() },
-                            modifier = Modifier.size(ButtonDefaults.SmallButtonSize),
-                            shape = RoundedCornerShape(50),
-                            colors = ButtonDefaults.primaryButtonColors()
+                        AnimatedVisibility(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 10.dp),
+                            visible = showPasteButton,
+                            enter = slideInVertically { it / 2 } + fadeIn(),
+                            exit = slideOutVertically { it / 2 } + fadeOut()
                         ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_paste_24dp),
-                                contentDescription = "Paste",
-                                modifier = Modifier.size(ButtonDefaults.SmallIconSize)
-                            )
+                            Button(
+                                onClick = { pasteFiles() },
+                                shape = RoundedCornerShape(50),
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_paste_24dp),
+                                    contentDescription = "Paste",
+                                    modifier = Modifier.size(ButtonDefaults.SmallIconSize)
+                                )
+                            }
                         }
                     }
-
                 }
             }
 
@@ -515,10 +516,11 @@ class FileExplorerActivity : ComponentActivity() {
 
             currentDialogInfo?.let { info ->
                 val iconRes = if (info.isError) R.drawable.ic_error_24dp else R.drawable.ic_check_circle_24dp
-                ConfimationDialog(
+                ConfirmationDialog(
                     message = info.message,
                     iconResId = iconRes,
-                    onDismiss = { dialogInfo.value = null }
+                    onDismiss = { dialogInfo.value = null },
+                    showDialog = true
                 )
             }
 
@@ -596,8 +598,7 @@ class FileExplorerActivity : ComponentActivity() {
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Button(
-                            modifier = Modifier.size(ButtonDefaults.SmallButtonSize),
-                            colors = ButtonDefaults.secondaryButtonColors(),
+                            colors = ButtonDefaults.filledTonalButtonColors(),
                             enabled = currentDisplayPath != rootPath && !isActionDialogVisible,
                             onClick = {
                                 if (!onNavigateBack()) {
@@ -613,7 +614,6 @@ class FileExplorerActivity : ComponentActivity() {
                         }
                         Spacer(modifier = Modifier.width(8.dp))
                         Button(
-                            modifier = Modifier.size(ButtonDefaults.SmallButtonSize),
                             enabled = !isActionDialogVisible,
                             onClick = { showNewFileDialog.value = true }
                         ) {
@@ -634,7 +634,7 @@ class FileExplorerActivity : ComponentActivity() {
                                 .fillMaxWidth()
                                 .padding(vertical = 32.dp),
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.caption1
+                            style = MaterialTheme.typography.titleSmall
                         )
                     }
                 } else {
@@ -666,7 +666,6 @@ class FileExplorerActivity : ComponentActivity() {
                         }
 
                         CardItem(
-                            file = file,
                             title = file.name,
                             summary = summaryState.value,
                             itemType = itemType,
@@ -714,7 +713,8 @@ class FileExplorerActivity : ComponentActivity() {
                     file.name.endsWith(".jpeg", true) ||
                     file.name.endsWith(".gif", true) ||
                     file.name.endsWith(".bmp", true) ||
-                    file.name.endsWith(".webp", true)
+                    file.name.endsWith(".webp", true) ||
+                    file.name.endsWith(".heic", true)
                 -> getString(R.string.image) to R.drawable.ic_image_24dp
             file.name.endsWith(".mp4", true) ||
                     file.name.endsWith(".avi", true) ||
@@ -762,7 +762,7 @@ class FileExplorerActivity : ComponentActivity() {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colors.background)
+                    .background(MaterialTheme.colorScheme.background)
                     .padding(horizontal = 18.dp)
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -773,7 +773,7 @@ class FileExplorerActivity : ComponentActivity() {
                 BasicTextField(
                     value = name,
                     onValueChange = { name = it.filter { char -> char != '/' && char != '\\' } },
-                    textStyle = TextStyle(color = MaterialTheme.colors.onSurface, fontSize = 15.sp),
+                    textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface, fontSize = 15.sp),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Done,
@@ -788,8 +788,8 @@ class FileExplorerActivity : ComponentActivity() {
                     ),
                     singleLine = true,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .border(1.dp, MaterialTheme.colors.primary, RoundedCornerShape(4.dp))
+                        .fillMaxWidth(0.9f)
+                        .border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(4.dp))
                         .padding(horizontal = 12.dp, vertical = 8.dp)
                         .focusRequester(focusRequester),
                 )
@@ -801,32 +801,28 @@ class FileExplorerActivity : ComponentActivity() {
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
-                ToggleChip(
-                    modifier = Modifier.fillMaxWidth(),
+                SwitchButton(
+                    modifier = Modifier.fillMaxWidth(0.9f),
                     checked = isDirectory,
                     onCheckedChange = { isDirectory = it },
                     label = { Text(stringResource(R.string.folder)) },
-                    toggleControl = { Switch(checked = isDirectory) },
-                    appIcon = { Icon(painter = painterResource(R.drawable.ic_folder_24dp), contentDescription = null)}
                 )
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Button(
-                        onClick = { onCreate(name, isDirectory) },
-                        modifier = Modifier.size(ButtonDefaults.DefaultButtonSize)
-                    ) {
-                        Icon(painter = painterResource(R.drawable.ic_add_24dp), contentDescription = "Create")
-                    }
-                    Spacer(modifier = Modifier.size(8.dp))
-                    Button(
                         onClick = onDismissRequest,
-                        colors = ButtonDefaults.secondaryButtonColors(),
-                        modifier = Modifier.size(ButtonDefaults.DefaultButtonSize)
+                        colors = ButtonDefaults.filledTonalButtonColors(),
                     ) {
                         Icon(painter = painterResource(R.drawable.ic_cancel_24dp), contentDescription = "Cancel")
+                    }
+                    Spacer(modifier = Modifier.size(6.dp))
+                    Button(
+                        onClick = { onCreate(name, isDirectory) },
+                    ) {
+                        Icon(painter = painterResource(R.drawable.ic_add_24dp), contentDescription = "Create")
                     }
                 }
             }
@@ -1102,7 +1098,7 @@ class FileExplorerActivity : ComponentActivity() {
                 Log.d(Constants.TAG, "Attempting to start activity for: ${file.name} with intent: $it")
                 context.startActivity(it)
             }
-        } catch (e: android.content.ActivityNotFoundException) {
+        } catch (e: ActivityNotFoundException) {
             Log.e(Constants.TAG, "ActivityNotFoundException for opening file: ${file.name}", e)
             showDialog(getString(R.string.no_app_installed_to_open_this_file_type), true)
         }
@@ -1142,10 +1138,9 @@ class FileExplorerActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalWearMaterialApi::class, ExperimentalWearFoundationApi::class)
+@OptIn(ExperimentalWearMaterialApi::class)
 @Composable
 fun CardItem(
-    file: File,
     title: String,
     summary: String?,
     itemType: String,
@@ -1157,26 +1152,27 @@ fun CardItem(
 ) {
     val revealState = rememberRevealState()
 
-    SwipeToRevealCard(
+    SwipeToReveal(
         modifier = Modifier.fillMaxWidth(),
         revealState = revealState,
         primaryAction = {
-            SwipeToRevealPrimaryAction(
-                revealState = revealState,
+            PrimaryActionButton(
                 icon = { Icon(painter = painterResource(R.drawable.ic_delete_24dp), "Delete") },
-                label = { Text(stringResource(R.string.delete)) },
+                text = { Text(stringResource(R.string.delete)) },
                 onClick = { onDeleteSwipe() }
             )
         },
         secondaryAction = {
-            SwipeToRevealSecondaryAction(
-                revealState = revealState,
-                onClick = onShowActionsRequest
-            ) {
-                Icon(painter = painterResource(R.drawable.ic_more_vert_24dp), contentDescription = "Actions")
-            }
+            SecondaryActionButton(
+                onClick = onShowActionsRequest,
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_more_vert_24dp),
+                        contentDescription = "Actions"
+                    )
+                }
+            )
         },
-        onFullSwipe = { onDeleteSwipe() },
         content = {
             AppCard(
                 onClick = onOpenFile,
@@ -1192,9 +1188,10 @@ fun CardItem(
                 title = { Text(title, maxLines = 2) },
                 time = { Text(time) }
             ) {
-                summary?.let { Text(it, style = MaterialTheme.typography.body2, maxLines = 1) }
+                summary?.let { Text(it, style = MaterialTheme.typography.bodyMedium, maxLines = 1) }
             }
-        }
+        },
+        onSwipePrimaryAction = { onDeleteSwipe() }
     )
 }
 
@@ -1223,47 +1220,57 @@ fun FileActionsDialog(
                 Log.w("DialogFocus", "RequestFocus failed: $e")
             }
         }
-        ScalingLazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(focusRequester)
-                .background(MaterialTheme.colors.background)
-                .onRotaryScrollEvent {
-                    coroutineScope.launch {
-                        listState.scrollBy(it.verticalScrollPixels)
+        AppScaffold {
+            val listState = rememberScalingLazyListState()
+            ScreenScaffold(
+                scrollState = listState,
+                contentPadding = PaddingValues(10.dp),
+                edgeButton = {
+                    EdgeButton(
+                        onClick = onDismissRequest
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_cancel_24dp),
+                            contentDescription = null
+                        )
                     }
-                    true
                 }
-                .focusable(),
-            state = listState,
-            anchorType = ScalingLazyListAnchorType.ItemCenter,
-        ) {
-            item {
-                ListHeader {
-                    Text(
-                        text = file.name,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-                }
-            }
-            item { ActionChip(iconResId = R.drawable.ic_copy_24dp, label = stringResource(R.string.copy), onClick = onCopy) }
-            item { ActionChip(iconResId = R.drawable.ic_cut_24dp, label = stringResource(R.string.cut), onClick = onCut) }
-            item { ActionChip(iconResId = R.drawable.ic_edit_24dp, label = stringResource(R.string.rename), onClick = onRename) }
-            if (!file.isDirectory) {
-                item { ActionChip(iconResId = R.drawable.ic_share_24dp, label = stringResource(R.string.share), onClick = onShare) }
-            }
-            item { ActionChip(iconResId = R.drawable.ic_delete_24dp, label = stringResource(R.string.delete), onClick = onDelete, isDestructive = true) }
-
-            item { Spacer(Modifier.height(8.dp)) }
-            item {
-                Button(
-                    onClick = onDismissRequest,
-                    colors = ButtonDefaults.secondaryButtonColors()
+            ) {
+                ScalingLazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester)
+                        .background(MaterialTheme.colorScheme.background)
+                        .onRotaryScrollEvent {
+                            coroutineScope.launch {
+                                listState.scrollBy(it.verticalScrollPixels)
+                            }
+                            true
+                        }
+                        .focusable(),
+                    state = listState,
+                    anchorType = ScalingLazyListAnchorType.ItemCenter,
                 ) {
-                    Icon(painter = painterResource(R.drawable.ic_cancel_24dp), contentDescription = "Cancel")
+                    item {
+                        ListHeader {
+                            Text(
+                                text = file.name,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(horizontal = 16.dp)
+                            )
+                        }
+                    }
+                    item { ActionChip(iconResId = R.drawable.ic_copy_24dp, label = stringResource(R.string.copy), onClick = onCopy) }
+                    item { ActionChip(iconResId = R.drawable.ic_cut_24dp, label = stringResource(R.string.cut), onClick = onCut) }
+                    item { ActionChip(iconResId = R.drawable.ic_edit_24dp, label = stringResource(R.string.rename), onClick = onRename) }
+                    if (!file.isDirectory) {
+                        item { ActionChip(iconResId = R.drawable.ic_share_24dp, label = stringResource(R.string.share), onClick = onShare) }
+                    }
+                    item { ActionChip(iconResId = R.drawable.ic_delete_24dp, label = stringResource(R.string.delete), onClick = onDelete, isDestructive = true) }
+
+                    item { Spacer(Modifier.height(8.dp)) }
                 }
             }
         }
@@ -1284,8 +1291,8 @@ private fun ActionChip(
         label = { Text(label) },
         onClick = onClick,
         colors = if (isDestructive) ChipDefaults.primaryChipColors(
-            backgroundColor = MaterialTheme.colors.error,
-            contentColor = MaterialTheme.colors.onError
+            backgroundColor = MaterialTheme.colorScheme.errorContainer,
+            contentColor = MaterialTheme.colorScheme.onErrorContainer
         ) else ChipDefaults.secondaryChipColors()
     )
 }

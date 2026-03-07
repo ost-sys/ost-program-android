@@ -1,8 +1,8 @@
 package com.ost.application.ui.screen.converters.currency
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.Stable
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.volley.Request
@@ -17,19 +17,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONException
+import org.json.JSONObject
 import java.util.Locale
-
-@Stable
-data class CurrencyConverterUiState(
-    val currencyCodes: List<String> = emptyList(),
-    val fromCurrency: String = "USD",
-    val toCurrency: String = "EUR",
-    val amountInput: String = "1",
-    val resultText: String? = null,
-    val isLoading: Boolean = true,
-    val error: String? = null
-)
 
 class CurrencyConverterViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -39,101 +28,199 @@ class CurrencyConverterViewModel(application: Application) : AndroidViewModel(ap
     private val requestQueue: RequestQueue = Volley.newRequestQueue(application)
     private var currencyRates: Map<String, Double> = emptyMap()
 
+    private val sharedPreferences = application.getSharedPreferences("currency_cache", Context.MODE_PRIVATE)
+
     init {
         fetchCurrencyData()
     }
 
-    fun setFromCurrency(currency: String) {
-        _uiState.update { it.copy(fromCurrency = currency) }
+    fun refreshData() {
+        fetchCurrencyData()
     }
 
-    fun setToCurrency(currency: String) {
-        _uiState.update { it.copy(toCurrency = currency) }
+    private fun fetchCurrencyData() {
+        _uiState.update { it.copy(networkStatus = NetworkStatus.LOADING) }
+        val url = "https://currency-rate-exchange-api.onrender.com/all"
+
+        val request = JsonObjectRequest(Request.Method.GET, url, null,
+            { response ->
+                viewModelScope.launch(Dispatchers.IO) {
+                    val ratesJsonString = response.getJSONObject("rates").getJSONObject("all").toString()
+                    saveRatesToCache(ratesJsonString)
+                    processRates(ratesJsonString)
+                    withContext(Dispatchers.Main) {
+                        _uiState.update { it.copy(networkStatus = NetworkStatus.CONNECTED) }
+                    }
+                }
+            },
+            { error ->
+                Log.e("CurrencyConverterVM", "Volley error: ${error.message}")
+                loadRatesFromCache()
+            })
+        requestQueue.add(request)
+    }
+
+    private fun processRates(ratesJsonString: String) {
+        try {
+            val ratesObject = JSONObject(ratesJsonString)
+            val ratesMap = mutableMapOf<String, Double>()
+            val codesList = mutableListOf<String>()
+            val keys = ratesObject.keys()
+
+            while (keys.hasNext()) {
+                val code = keys.next()
+                ratesMap[code.lowercase(Locale.getDefault())] = ratesObject.getDouble(code)
+                codesList.add(code.uppercase(Locale.getDefault()))
+            }
+            codesList.sort()
+            currencyRates = ratesMap
+
+            val currentBase = _uiState.value.baseCurrency
+            val defaultBase = if (codesList.contains(currentBase)) currentBase else "USD"
+
+            _uiState.update { currentState ->
+                currentState.copy(
+                    allCurrencyCodes = codesList,
+                    baseCurrency = defaultBase,
+                    availableTargetCodes = codesList.filter { code ->
+                        code != currentState.baseCurrency && currentState.targetCurrencies.none { it.code == code }
+                    }
+                )
+            }
+        } catch (e: Exception) {
+            Log.e("CurrencyConverterVM", "Error parsing rates", e)
+            _uiState.update { it.copy(networkStatus = NetworkStatus.ERROR, errorMessage = getString(R.string.data_analysis_error)) }
+        }
+    }
+
+    private fun saveRatesToCache(ratesJsonString: String) {
+        sharedPreferences.edit().putString("rates_json", ratesJsonString).apply()
+    }
+
+    private fun loadRatesFromCache() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val cachedRates = sharedPreferences.getString("rates_json", null)
+            if (cachedRates != null) {
+                processRates(cachedRates)
+                withContext(Dispatchers.Main) {
+                    _uiState.update { it.copy(networkStatus = NetworkStatus.OFFLINE) }
+                }
+            } else {
+                withContext(Dispatchers.Main) {
+                    _uiState.update {
+                        it.copy(
+                            networkStatus = NetworkStatus.ERROR,
+                            errorMessage = getString(R.string.connection_error_occurred)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun convertCurrency() {
+        val state = _uiState.value
+        if (state.networkStatus == NetworkStatus.LOADING || state.networkStatus == NetworkStatus.ERROR) return
+
+        val baseCode = state.baseCurrency.lowercase(Locale.getDefault())
+        val amount = state.amountInput.toDoubleOrNull() ?: return
+
+        val baseRate = currencyRates[baseCode]
+        if (baseRate == null || baseRate == 0.0) {
+            _uiState.update { it.copy(errorMessage = getString(R.string.conversion_rate_error)) }
+            return
+        }
+
+        val updatedTargets = state.targetCurrencies.map { target ->
+            val targetRate = currencyRates[target.code.lowercase(Locale.getDefault())]
+            if (targetRate != null) {
+                val convertedAmount = amount * targetRate / baseRate
+                val result = String.format(Locale.getDefault(), "%.4f", convertedAmount)
+                target.copy(result = result)
+            } else {
+                target.copy(result = "N/A")
+            }
+        }
+        _uiState.update { it.copy(targetCurrencies = updatedTargets) }
     }
 
     fun setAmount(amount: String) {
         _uiState.update { it.copy(amountInput = amount) }
     }
 
-    private fun fetchCurrencyData() {
-        _uiState.update { it.copy(isLoading = true, error = null) }
-        val url = "https://currency-rate-exchange-api.onrender.com/all"
-
-        val request = JsonObjectRequest(Request.Method.GET, url, null,
-            { response ->
-                viewModelScope.launch(Dispatchers.Default) {
-                    try {
-                        val ratesObject = response.getJSONObject("rates").getJSONObject("all")
-                        val ratesMap = mutableMapOf<String, Double>()
-                        val codesList = mutableListOf<String>()
-                        val keys = ratesObject.keys()
-
-                        while (keys.hasNext()) {
-                            val code = keys.next()
-                            val rate = ratesObject.getDouble(code)
-                            ratesMap[code.lowercase(Locale.getDefault())] = rate
-                            codesList.add(code.uppercase(Locale.getDefault()))
-                        }
-                        codesList.sort()
-                        currencyRates = ratesMap
-
-                        val defaultFrom = codesList.firstOrNull { it == _uiState.value.fromCurrency } ?: codesList.firstOrNull() ?: ""
-                        val defaultTo = codesList.firstOrNull { it == _uiState.value.toCurrency } ?: codesList.getOrNull(1) ?: ""
-
-                        withContext(Dispatchers.Main) {
-                            _uiState.update {
-                                it.copy(
-                                    currencyCodes = codesList,
-                                    fromCurrency = defaultFrom,
-                                    toCurrency = defaultTo,
-                                    isLoading = false,
-                                    error = null
-                                )
-                            }
-                        }
-                    } catch (e: JSONException) {
-                        Log.e("CurrencyConverterVM", "Error parsing JSON", e)
-                        withContext(Dispatchers.Main) {
-                            _uiState.update { it.copy(isLoading = false, error = getString(R.string.data_analysis_error)) }
-                        }
-                    }
-                }
-            },
-            { error ->
-                Log.e("CurrencyConverterVM", "Volley error", error)
-                _uiState.update { it.copy(isLoading = false, error = getString(R.string.connection_error_occurred)) }
-            })
-
-        requestQueue.add(request)
+    fun setBaseCurrency(currency: String) {
+        _uiState.update { currentState ->
+            val newAvailable = currentState.allCurrencyCodes.filter { code ->
+                code != currency && currentState.targetCurrencies.none { it.code == code }
+            }
+            currentState.copy(
+                baseCurrency = currency,
+                availableTargetCodes = newAvailable,
+                showBaseCurrencyWarning = currentState.targetCurrencies.any { it.code == currency }
+            )
+        }
     }
 
-    fun convertCurrency() {
-        val state = _uiState.value
-        if (state.isLoading || state.error != null) return
+    fun dismissWarning() {
+        _uiState.update { it.copy(showBaseCurrencyWarning = false) }
+    }
 
-        val fromCode = state.fromCurrency.lowercase(Locale.getDefault())
-        val toCode = state.toCurrency.lowercase(Locale.getDefault())
-        val amountString = state.amountInput
+    fun onAddCurrencyClicked() {
+        _uiState.update { it.copy(isAddingCurrency = true, editingCurrencyCode = null) }
+    }
 
-        val amount = amountString.toDoubleOrNull() ?: 1.0
+    fun onCancelAddCurrency() {
+        _uiState.update { it.copy(isAddingCurrency = false) }
+    }
 
-        val fromRate = currencyRates[fromCode]
-        val toRate = currencyRates[toCode]
-
-        if (fromRate == null || toRate == null || fromRate == 0.0) {
-            _uiState.update { it.copy(resultText = getString(R.string.conversion_rate_error)) }
-            return
+    fun onConfirmAddCurrency(code: String) {
+        _uiState.update { currentState ->
+            val newTarget = TargetCurrencyInfo(code = code)
+            val updatedTargets = currentState.targetCurrencies + newTarget
+            val newAvailable = currentState.availableTargetCodes.filter { it != code }
+            currentState.copy(
+                targetCurrencies = updatedTargets,
+                isAddingCurrency = false,
+                availableTargetCodes = newAvailable
+            )
         }
+    }
 
-        val convertedAmount = amount * toRate / fromRate
+    fun onEditCurrencyClicked(code: String) {
+        _uiState.update { it.copy(editingCurrencyCode = code, isAddingCurrency = false) }
+    }
 
-        val result = String.format(
-            Locale.getDefault(),
-            "%.2f %s = %.4f %s",
-            amount, state.fromCurrency,
-            convertedAmount, state.toCurrency
-        )
-        _uiState.update { it.copy(resultText = result) }
+    fun onCancelEditCurrency() {
+        _uiState.update { it.copy(editingCurrencyCode = null) }
+    }
+
+    fun onSaveEditCurrency(oldCode: String, newCode: String) {
+        _uiState.update { currentState ->
+            val updatedTargets = currentState.targetCurrencies.map {
+                if (it.code == oldCode) it.copy(code = newCode) else it
+            }
+            val newAvailable = currentState.allCurrencyCodes.filter { code ->
+                code != currentState.baseCurrency && updatedTargets.none { it.code == code }
+            }
+            currentState.copy(
+                targetCurrencies = updatedTargets,
+                editingCurrencyCode = null,
+                availableTargetCodes = newAvailable,
+                showBaseCurrencyWarning = newCode == currentState.baseCurrency
+            )
+        }
+    }
+
+    fun onDeleteCurrency(code: String) {
+        _uiState.update { currentState ->
+            val updatedTargets = currentState.targetCurrencies.filter { it.code != code }
+            val newAvailable = (currentState.availableTargetCodes + code).sorted()
+            currentState.copy(
+                targetCurrencies = updatedTargets,
+                editingCurrencyCode = null,
+                availableTargetCodes = newAvailable
+            )
+        }
     }
 
     private fun getString(resId: Int): String {

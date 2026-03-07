@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
+
 package com.ost.application.ui.screen.applist
 
 import android.annotation.SuppressLint
@@ -29,10 +31,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -76,20 +79,23 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.Coil
 import coil.compose.rememberAsyncImagePainter
+import com.ost.application.LocalBottomSpacing
 import com.ost.application.R
+import com.ost.application.ui.state.FabSize
+import com.ost.application.ui.state.LocalFabController
+import com.ost.application.util.CardPosition
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@ExperimentalMaterial3ExpressiveApi
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppListScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    LocalView.current
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
+    val bottomSpacing = LocalBottomSpacing.current
 
     var appList by remember { mutableStateOf<List<AppInfo>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
@@ -99,9 +105,6 @@ fun AppListScreen(modifier: Modifier = Modifier) {
 
     val isRootAvailable by produceState(initialValue = false) {
         value = RootUtils.isRootAvailable
-    }
-    LaunchedEffect(isRootAvailable) {
-        Log.i("AppListScreen", "Root available check completed: $isRootAvailable")
     }
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -116,12 +119,21 @@ fun AppListScreen(modifier: Modifier = Modifier) {
             val freshList = getInstalledApps(context)
             appList = freshList
         } catch (e: Exception) {
-            Log.e("AppListScreen", "Error refreshing apps", e)
             errorLoading = context.getString(R.string.error_loading_app_list, e.localizedMessage ?: "Unknown")
             appList = emptyList()
         } finally {
             if (showLoadingIndicator) isLoading = false
         }
+    }
+
+    val fabController = LocalFabController.current
+    LaunchedEffect(Unit) {
+        fabController.setFab(
+            icon = R.drawable.ic_refresh_24dp,
+            description = "Refresh",
+            fabSize = FabSize.Small,
+            action = { coroutineScope.launch { refreshAppList(true) } }
+        )
     }
 
     LaunchedEffect(Unit) {
@@ -144,26 +156,32 @@ fun AppListScreen(modifier: Modifier = Modifier) {
         }
     }
 
-    val searchBarHeight = 64.dp
+    val searchBarHeight = 72.dp
 
     Box(modifier = modifier.fillMaxSize()) {
-
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(
-                top = searchBarHeight + 8.dp,
-                bottom = 120.dp,
-                start = 8.dp,
-                end = 8.dp
-            )
+                top = searchBarHeight + 16.dp,
+                bottom = bottomSpacing + 88.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(0.dp)
         ) {
             itemsIndexed(
                 items = filteredAppList,
                 key = { _, appInfo -> appInfo.packageName }
-            ) { _, appInfo ->
+            ) { index, appInfo ->
+                val position = when {
+                    filteredAppList.size == 1 -> CardPosition.SINGLE
+                    index == 0 -> CardPosition.TOP
+                    index == filteredAppList.lastIndex -> CardPosition.BOTTOM
+                    else -> CardPosition.MIDDLE
+                }
+
                 AppListItem(
                     appInfo = appInfo,
                     isRootAvailable = isRootAvailable,
+                    position = position,
                     coroutineScope = coroutineScope,
                     showSnackbar = { msg, dur ->
                         coroutineScope.launch { showSnackbar(msg, dur) }
@@ -179,56 +197,23 @@ fun AppListScreen(modifier: Modifier = Modifier) {
             }
         }
 
-        Surface(
+        TopSearchBar(
+            searchQuery = searchQuery,
+            onQueryChange = { searchQuery = it },
             modifier = Modifier
-                .fillMaxWidth()
                 .align(Alignment.TopCenter)
-                .height(searchBarHeight)
-                .padding(horizontal = 8.dp, vertical = 4.dp),
-            shape = RoundedCornerShape(32.dp),
-            color = MaterialTheme.colorScheme.surfaceContainer,
-            tonalElevation = 6.dp,
-        ) {
-            TextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 4.dp),
-                placeholder = { Text(stringResource(R.string.search)) },
-                leadingIcon = { Icon(painterResource(R.drawable.ic_search_24dp), contentDescription = stringResource(R.string.search)) },
-                trailingIcon = {
-                    if (searchQuery.isNotEmpty()) {
-                        IconButton(onClick = { searchQuery = "" }) {
-                            Icon(painterResource(R.drawable.ic_cancel_24dp), contentDescription = stringResource(R.string.clear_close))
-                        }
-                    }
-                },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(onSearch = {
-                    keyboardController?.hide()
-                    focusManager.clearFocus()
-                }),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
-                )
-            )
-        }
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                .height(56.dp)
+        )
 
         Column(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(16.dp),
+                .padding(bottom = bottomSpacing + 16.dp, end = 16.dp),
             horizontalAlignment = Alignment.End,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            SmallFloatingActionButton(
+            FloatingActionButton(
                 onClick = { showSystemApps = !showSystemApps },
                 containerColor = if (showSystemApps) MaterialTheme.colorScheme.secondaryContainer
                 else MaterialTheme.colorScheme.surfaceVariant,
@@ -240,25 +225,18 @@ fun AppListScreen(modifier: Modifier = Modifier) {
                     contentDescription = stringResource(if (showSystemApps) R.string.hide_system_apps else R.string.show_system_apps)
                 )
             }
-            FloatingActionButton(
-                onClick = {
-                    coroutineScope.launch { refreshAppList(true) }
-                }
-            ) {
-                Icon(painterResource(R.drawable.ic_refresh_24dp), contentDescription = stringResource(R.string.refresh_app_list))
-            }
         }
 
         SnackbarHost(
             hostState = snackbarHostState,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 80.dp)
+                .padding(bottom = bottomSpacing)
                 .imePadding()
         )
 
         if (isLoading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            CircularWavyProgressIndicator(modifier = Modifier.align(Alignment.Center))
         } else if (errorLoading != null) {
             Column(
                 modifier = Modifier
@@ -287,6 +265,53 @@ fun AppListScreen(modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+fun TopSearchBar(
+    searchQuery: String,
+    onQueryChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(50),
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        tonalElevation = 4.dp,
+        shadowElevation = 2.dp
+    ) {
+        TextField(
+            value = searchQuery,
+            onValueChange = onQueryChange,
+            modifier = Modifier.fillMaxSize(),
+            placeholder = { Text(stringResource(R.string.search)) },
+            leadingIcon = { Icon(painterResource(R.drawable.ic_search_24dp), contentDescription = null) },
+            trailingIcon = {
+                if (searchQuery.isNotEmpty()) {
+                    IconButton(onClick = { onQueryChange("") }) {
+                        Icon(painterResource(R.drawable.ic_cancel_24dp), contentDescription = stringResource(R.string.clear_close))
+                    }
+                }
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = {
+                keyboardController?.hide()
+                focusManager.clearFocus()
+            }),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            )
+        )
+    }
+}
+
 private data class BackgroundIconInfo( val painter: Painter? = null, val imageVector: ImageVector? = null, val tint: Color, val alignment: Alignment, val contentDescription: String? )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -294,6 +319,7 @@ private data class BackgroundIconInfo( val painter: Painter? = null, val imageVe
 fun AppListItem(
     appInfo: AppInfo,
     isRootAvailable: Boolean,
+    position: CardPosition,
     coroutineScope: CoroutineScope,
     showSnackbar: suspend (String, SnackbarDuration) -> Unit,
     onActionTriggered: (packageName: String, isRootUninstall: Boolean) -> Unit
@@ -302,6 +328,21 @@ fun AppListItem(
     val packageManager = context.packageManager
     val view = LocalView.current
     val enableUninstallSwipe = isRootAvailable || !appInfo.isSystemApp
+
+    val largeRadius = 24.dp
+    val smallRadius = 4.dp
+    val shape = when (position) {
+        CardPosition.TOP -> RoundedCornerShape(topStart = largeRadius, topEnd = largeRadius, bottomStart = smallRadius, bottomEnd = smallRadius)
+        CardPosition.MIDDLE -> RoundedCornerShape(smallRadius)
+        CardPosition.BOTTOM -> RoundedCornerShape(topStart = smallRadius, topEnd = smallRadius, bottomStart = largeRadius, bottomEnd = largeRadius)
+        CardPosition.SINGLE -> RoundedCornerShape(largeRadius)
+    }
+
+    val verticalPadding = when (position) {
+        CardPosition.TOP, CardPosition.SINGLE -> PaddingValues(top = 4.dp, bottom = 1.dp)
+        CardPosition.MIDDLE -> PaddingValues(vertical = 1.dp)
+        CardPosition.BOTTOM -> PaddingValues(top = 1.dp, bottom = 4.dp)
+    }
 
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = { dismissValue ->
@@ -374,7 +415,9 @@ fun AppListItem(
         state = dismissState,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(horizontal = 16.dp)
+            .padding(verticalPadding)
+            .clip(shape),
         enableDismissFromStartToEnd = true,
         enableDismissFromEndToStart = enableUninstallSwipe,
         backgroundContent = {
@@ -424,7 +467,6 @@ fun AppListItem(
             Box(
                 Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(24.dp))
                     .background(backgroundColor)
                     .padding(horizontal = 20.dp),
                 contentAlignment = iconInfo.alignment
@@ -438,21 +480,20 @@ fun AppListItem(
             }
         }
     ) {
-        ElevatedCard(
+        Card(
             onClick = {
                 val launchIntent: Intent? = packageManager.getLaunchIntentForPackage(appInfo.packageName)
                 if (launchIntent != null) {
                     try { context.startActivity(launchIntent) }
-                    catch (e: ActivityNotFoundException) { coroutineScope.launch { showSnackbar( context.getString( R.string.could_not_find_activity_to_launch, appInfo.name ), SnackbarDuration.Short) } }
-                    catch (e: SecurityException) { coroutineScope.launch { showSnackbar( context.getString( R.string.no_permission_to_run, appInfo.name ), SnackbarDuration.Short) } }
                     catch (e: Exception) { coroutineScope.launch { showSnackbar( context.getString( R.string.failed_to_launch, appInfo.name ), SnackbarDuration.Short) } }
                 } else {
                     coroutineScope.launch { showSnackbar( context.getString( R.string.is_not_a_startup_application, appInfo.name ), SnackbarDuration.Short) }
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(24.dp),
-            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
+            shape = shape,
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
             Row(
                 modifier = Modifier

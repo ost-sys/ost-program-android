@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
+import android.os.PowerManager
 import android.util.Log
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.AndroidViewModel
@@ -28,6 +29,11 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 import kotlin.math.roundToInt
 
+enum class BatteryDisplayMode {
+    NORMAL,
+    CHARGING,
+    POWER_SAVE
+}
 @Stable
 data class BatteryInfoUiState(
     val levelText: String = "...",
@@ -38,7 +44,8 @@ data class BatteryInfoUiState(
     val voltage: String = "...",
     val technology: String = "...",
     val capacity: String = "...",
-    val isLoadingCapacity: Boolean = true
+    val isLoadingCapacity: Boolean = true,
+    val displayMode: BatteryDisplayMode = BatteryDisplayMode.NORMAL
 )
 
 @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -63,6 +70,8 @@ class BatteryInfoViewModel(application: Application) : AndroidViewModel(applicat
     private var batteryUpdateJob: Job? = null
     private var capacityJob: Job? = null
 
+    private val powerManager = application.getSystemService(Context.POWER_SERVICE) as PowerManager
+
     init {
         loadBatteryCapacity()
         startObservingBatteryUpdates()
@@ -71,19 +80,24 @@ class BatteryInfoViewModel(application: Application) : AndroidViewModel(applicat
     private fun startObservingBatteryUpdates() {
         batteryUpdateJob?.cancel()
         batteryUpdateJob = getApplication<Application>().batteryUpdatesFlow()
-            .onEach { intent -> processBatteryIntent(intent) }
+            .onEach { intent ->
+                val currentBatteryIntent = getApplication<Application>().registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+                currentBatteryIntent?.let {
+                    processBatteryIntent(it)
+                }
+            }
             .launchIn(viewModelScope)
     }
 
     private fun loadBatteryCapacity() {
         capacityJob?.cancel()
         capacityJob = viewModelScope.launch {
-            _uiState.update { it.copy(isLoadingCapacity = true) }
+            _uiState.update { it.copy() }
             val capacity = getBatteryCapacity(getApplication())
             _uiState.update {
                 it.copy(
                     capacity = if (capacity > 0) "${capacity.roundToInt()} ${getString(R.string.mah)}" else getString(R.string.unknown),
-                    isLoadingCapacity = false
+                    isLoadingCapacity = false,
                 )
             }
         }
@@ -95,15 +109,24 @@ class BatteryInfoViewModel(application: Application) : AndroidViewModel(applicat
         val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
         val batteryPct = if (level != -1 && scale != -1) (level * 100 / scale.toFloat()).roundToInt() else -1
 
+        val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryManager.BATTERY_STATUS_UNKNOWN)
+        val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
+        val isPowerSaveMode = powerManager.isPowerSaveMode
+
+        val displayMode = when {
+            isCharging -> BatteryDisplayMode.CHARGING
+            isPowerSaveMode -> BatteryDisplayMode.POWER_SAVE
+            else -> BatteryDisplayMode.NORMAL
+        }
+
         val temp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1) / 10f
         val health = intent.getIntExtra(BatteryManager.EXTRA_HEALTH, BatteryManager.BATTERY_HEALTH_UNKNOWN)
         val voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1) / 1000f
         val technology = intent.getStringExtra(BatteryManager.EXTRA_TECHNOLOGY) ?: getString(R.string.unknown)
         val plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
-        val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryManager.BATTERY_STATUS_UNKNOWN)
 
         val healthString = getHealthString(health)
-        val statusPair = getStatusStringAndIcon(status, plugged, batteryPct)
+        val statusPair = getStatusStringAndIcon(status, plugged, batteryPct, displayMode)
         val statusString = statusPair.first
         val iconRes = statusPair.second
         val levelString = getLevelString(status, plugged, batteryPct)
@@ -116,7 +139,8 @@ class BatteryInfoViewModel(application: Application) : AndroidViewModel(applicat
                 status = statusString,
                 temperature = if (temp >= 0) String.format(Locale.getDefault(), "%.1f°C", temp) else getString(R.string.unknown),
                 voltage = if (voltage >= 0) String.format(Locale.getDefault(), "%.2fV", voltage) else getString(R.string.unknown),
-                technology = technology
+                technology = technology,
+                displayMode = displayMode
             )
         }
     }
@@ -137,10 +161,10 @@ class BatteryInfoViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    private fun getStatusStringAndIcon(status: Int, plugged: Int, level: Int): Pair<String, Int> {
-        val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
+    private fun getStatusStringAndIcon(status: Int, plugged: Int, level: Int, displayMode: BatteryDisplayMode): Pair<String, Int> {
+        val isCharging = displayMode == BatteryDisplayMode.CHARGING
         val statusString: String
-        var iconRes = R.drawable.ic_battery_unknown_24dp
+        val iconRes: Int
 
         if (isCharging) {
             statusString = when (plugged) {
@@ -149,24 +173,17 @@ class BatteryInfoViewModel(application: Application) : AndroidViewModel(applicat
                 BatteryManager.BATTERY_PLUGGED_WIRELESS -> getString(R.string.wireless_charging)
                 else -> getString(R.string.charging)
             }
-            iconRes = when (plugged) {
-                BatteryManager.BATTERY_PLUGGED_AC -> R.drawable.ic_charger_24dp
-                BatteryManager.BATTERY_PLUGGED_USB -> R.drawable.ic_usb_24dp
-                BatteryManager.BATTERY_PLUGGED_WIRELESS -> R.drawable.ic_charging_station_24dp
-                else -> R.drawable.ic_charger_24dp
-            }
-            if (status == BatteryManager.BATTERY_STATUS_FULL) {
-            }
+            iconRes = R.drawable.ic_charger_24dp
         } else {
             statusString = getString(R.string.discharging)
             iconRes = when {
-                (level >= 90 && level <= 100) -> R.drawable.ic_battery_full_alt_24dp
-                (level >= 75 && level <= 89) -> R.drawable.ic_battery_horiz_075_24dp
-                (level >= 50 && level <= 74) -> R.drawable.ic_battery_horiz_050_24dp
-                (level >= 25 && level <= 49) -> R.drawable.ic_battery_low_24dp
-                (level >= 10 && level <= 24) -> R.drawable.ic_battery_very_low_24dp
-                (level >= 0 && level <= 9) -> R.drawable.ic_battery_horiz_000_24dp
-                else -> R.drawable.ic_battery_unknown_24dp
+                displayMode == BatteryDisplayMode.POWER_SAVE -> R.drawable.ic_energy_program_saving_24dp
+                (level >= 90) -> R.drawable.ic_battery_full_alt_24dp
+                (level >= 75) -> R.drawable.ic_battery_horiz_075_24dp
+                (level >= 50) -> R.drawable.ic_battery_horiz_050_24dp
+                (level >= 25) -> R.drawable.ic_battery_low_24dp
+                (level >= 10) -> R.drawable.ic_battery_very_low_24dp
+                else -> R.drawable.ic_battery_horiz_000_24dp
             }
         }
         return statusString to iconRes

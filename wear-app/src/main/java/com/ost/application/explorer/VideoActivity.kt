@@ -115,38 +115,38 @@ class VideoActivity : ComponentActivity() {
                 }
 
                 Box(
-                    modifier = Modifier.Companion
+                    modifier = Modifier
                         .fillMaxSize()
                         .clickable {
                             controlsVisible = true
                         },
-                    contentAlignment = Alignment.Companion.Center
+                    contentAlignment = Alignment.Center
                 ) {
                     AndroidView(
                         factory = { playerView },
-                        modifier = Modifier.Companion.fillMaxSize()
+                        modifier = Modifier.fillMaxSize()
                     )
 
                     CircularProgressIndicator(
                         progress = videoProgress,
-                        modifier = Modifier.Companion.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                     )
 
                     Column(
-                        modifier = Modifier.Companion
+                        modifier = Modifier
                             .fillMaxSize()
                             .padding(16.dp)
                             .alpha(alpha),
                         verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.Companion.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Row(
-                            verticalAlignment = Alignment.Companion.CenterVertically,
+                            verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceAround,
-                            modifier = Modifier.Companion.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             Button(
-                                modifier = Modifier.Companion.size(24.dp),
+                                modifier = Modifier.size(24.dp),
                                 colors = ButtonDefaults.secondaryButtonColors(),
                                 onClick = {
                                     currentVolume = (currentVolume - 1)
@@ -184,12 +184,12 @@ class VideoActivity : ComponentActivity() {
                                         id = if (exoPlayer.isPlaying) R.drawable.ic_pause_24dp else R.drawable.ic_play_24dp
                                     ),
                                     contentDescription = if (exoPlayer.isPlaying) "Pause" else "Play",
-                                    modifier = Modifier.Companion.size(48.dp)
+                                    modifier = Modifier.size(48.dp)
                                 )
                             }
 
                             Button(
-                                modifier = Modifier.Companion.size(24.dp),
+                                modifier = Modifier.size(24.dp),
                                 colors = ButtonDefaults.secondaryButtonColors(),
                                 onClick = {
                                     currentVolume = (currentVolume + 1)
@@ -204,7 +204,7 @@ class VideoActivity : ComponentActivity() {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_volume_up_24dp),
                                     contentDescription = "Volume Up",
-                                    modifier = Modifier.Companion.size(24.dp)
+                                    modifier = Modifier.size(24.dp)
                                 )
                             }
                         }

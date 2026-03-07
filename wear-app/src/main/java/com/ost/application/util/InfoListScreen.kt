@@ -1,4 +1,4 @@
-package com.ost.application.util // Или другое подходящее место
+package com.ost.application.util
 
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.scrollBy
@@ -19,7 +19,6 @@ import androidx.wear.compose.foundation.lazy.ScalingLazyListState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-// Общий модификатор для обработки скролла и фокуса
 fun Modifier.wearListInteraction(
     listState: ScalingLazyListState,
     focusRequester: FocusRequester,
@@ -32,17 +31,15 @@ fun Modifier.wearListInteraction(
         }
         true
     }
-    // Можно добавить .pointerInput здесь если нужен скролл пальцем как альтернатива
     .focusable()
 
-// Универсальный экран для отображения списка информации
 @Composable
 fun InfoListScreenContent(
     listState: ScalingLazyListState,
     screenTitle: String?,
     items: List<ListItem>,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(start = 8.dp, end = 8.dp) // Дефолтные паддинги
+    contentPadding: PaddingValues = PaddingValues(start = 8.dp, end = 8.dp)
 ) {
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
@@ -57,9 +54,8 @@ fun InfoListScreenContent(
             .wearListInteraction(listState, focusRequester, coroutineScope),
         state = listState,
         contentPadding = contentPadding,
-        anchorType = ScalingLazyListAnchorType.ItemCenter // Обычно лучше для списков информации
+        anchorType = ScalingLazyListAnchorType.ItemCenter
     ) {
-        // Отображаем заголовок, если он есть
         screenTitle?.let { title ->
             item {
                 ListItems(
@@ -68,15 +64,13 @@ fun InfoListScreenContent(
             }
         }
 
-        // Отображаем основной список элементов
-        items(items.size, key = { index -> items[index].title /* Можно улучшить ключ */ }) { index ->
+        items(items.size, key = { index -> items[index].title}) { index ->
             val item = items[index]
             CardListItem(
                 title = item.title,
                 summary = item.summary,
                 icon = item.icon,
                 status = item.status,
-                // Предоставляем пустую лямбду, если onClick не задан
                 onClick = item.onClick ?: {}
             )
         }

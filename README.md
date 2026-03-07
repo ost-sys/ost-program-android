@@ -1,14 +1,13 @@
 <img src="banner.png" width="100%"/>
 
 # <center> The project is based on the Jetpack Compose Material Design 3. </center>
-### Features:
+### Functions:
 - Some information about the phone
 - Reboot to different modes (Recovery, Fastboot, Download Mode)
 - Currency converters and time calculators
 - Restoring broken/burnt pixels and checking the display for their presence
 - "Stargazers" - those who put a star on one of my projects
-- List of applications, checking information and deleting them
-- Sharing files between Android and WearOS devices
+- List of applications, freezing and deleting them
 
 ## Android
 <p align="center">

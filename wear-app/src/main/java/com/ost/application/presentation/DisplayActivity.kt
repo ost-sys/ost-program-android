@@ -27,7 +27,7 @@ import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.TimeText
 import com.ost.application.R
 import com.ost.application.presentation.tools.PixelTestActivity
-import com.ost.application.util.ConfimationDialog
+import com.ost.application.util.ConfirmationDialog
 import com.ost.application.util.InfoListScreenContent
 import com.ost.application.util.ListItem
 
@@ -102,10 +102,11 @@ fun DisplayScreen() {
     }
 
     if (showPermissionDeniedDialog) {
-        ConfimationDialog(
+        ConfirmationDialog(
             message = "stringResource(R.string.write_settings_permission_required)",
             iconResId = R.drawable.ic_error_24dp,
-            onDismiss = { showPermissionDeniedDialog = false }
+            onDismiss = { showPermissionDeniedDialog = false },
+            showDialog = true
         )
     }
 }

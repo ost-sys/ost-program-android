@@ -6,14 +6,14 @@ plugins {
 
 android {
     namespace = "com.ost.application"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.ost.application"
-        minSdk = 31
-        targetSdk = 35
-        versionCode = 200
-        versionName = "2.0.0"
+        minSdk = 30
+        targetSdk = 36
+        versionCode = 202
+        versionName = "2.1.0-beta01"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -28,10 +28,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-        freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
     }
     buildFeatures {
         compose = true
@@ -51,21 +47,36 @@ android {
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+    }
+}
+
 dependencies {
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
-    implementation("io.coil-kt.coil3:coil-compose:3.1.0")
-    implementation("io.coil-kt.coil3:coil-network-okhttp:3.1.0")
-    implementation("androidx.media3:media3-exoplayer:1.6.0")
-    implementation("androidx.media3:media3-session:1.6.0")
-    implementation("androidx.media3:media3-ui:1.6.0")
+    val horologist = "0.8.3-alpha"
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.3.2")
+    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.3.0")
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.session)
+    implementation(libs.androidx.media3.ui)
     implementation("org.nanohttpd:nanohttpd:2.3.1")
     implementation("io.coil-kt:coil-compose:2.7.0")
-    implementation("com.google.android.horologist:horologist-media-ui-model:0.7.12-alpha")
-    implementation("com.google.android.horologist:horologist-audio-ui-model:0.7.12-alpha")
-    implementation("com.google.android.horologist:horologist-media-data:0.7.12-alpha")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    implementation("com.google.android.horologist:horologist-media-ui-model:$horologist")
+    implementation("com.google.android.horologist:horologist-audio-ui-model:$horologist")
+    implementation("com.google.android.horologist:horologist-audio-ui-material3:$horologist")
+    implementation("com.google.android.horologist:horologist-media3-backend:$horologist")
+    implementation("com.google.android.horologist:horologist-media3-logging:$horologist")
+    implementation("com.google.android.horologist:horologist-media-ui-material3:$horologist")
+    implementation("com.google.android.horologist:horologist-media3-outputswitcher:$horologist")
+    implementation("com.google.android.horologist:horologist-media-data:$horologist")
+    implementation("com.google.android.horologist:horologist-tiles:$horologist")
+    implementation("androidx.wear:wear-ongoing:1.1.0")
+    implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.horologist.compose.layout)

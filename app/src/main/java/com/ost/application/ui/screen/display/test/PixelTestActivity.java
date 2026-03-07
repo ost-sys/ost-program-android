@@ -104,7 +104,7 @@ public class PixelTestActivity extends ComponentActivity {
                     Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL
             );
         } catch (Exception e) {
-            Toast.makeText(this, "Permission request", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.brightness_permission_r), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -138,7 +138,7 @@ public class PixelTestActivity extends ComponentActivity {
                 saveCurrentBrightnessSettings();
                 setMaxBrightness();
             } else {
-                Toast.makeText(this, "Permission error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error), Toast.LENGTH_SHORT).show();
             }
         }
     }

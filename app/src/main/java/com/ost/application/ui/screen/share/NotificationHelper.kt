@@ -3,140 +3,131 @@ package com.ost.application.ui.screen.share
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
-import android.content.pm.PackageManager
+import android.content.Intent
 import android.os.Build
-import androidx.core.app.ActivityCompat
+import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.ost.application.R
-import java.util.Locale
 import kotlin.math.log10
 import kotlin.math.pow
 
 object NotificationHelper {
 
-    private const val CHANNEL_ID = "ost_file_transfer_channel"
-    private const val CHANNEL_NAME = "File transfers"
-    const val NOTIFICATION_ID_TRANSFER = 11223
+    fun createAppNotificationChannels(context: Context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
 
-    fun createNotificationChannel(context: Context) {
-        val channel = NotificationChannel(
-            CHANNEL_ID,
-            CHANNEL_NAME,
+        val transferChannel = NotificationChannel(
+            Constants.NOTIFICATION_CHANNEL_ID,
+            context.getString(R.string.notification_channel_name),
             NotificationManager.IMPORTANCE_LOW
         ).apply {
-            description =
-                context.getString(R.string.notifications_for_file_transfer_progress_and_status)
+            description = context.getString(R.string.notifications_for_file_transfer_progress_and_status)
             enableLights(false)
             enableVibration(false)
             setSound(null, null)
         }
-        NotificationManagerCompat.from(context).createNotificationChannel(channel)
-    }
 
-    fun showTransferNotification(
-        context: Context,
-        fileName: String,
-        progress: Int,
-        totalSize: Long,
-        isSending: Boolean,
-        isIndeterminate: Boolean = false
-    ) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                return
-            }
+        val completionChannel = NotificationChannel(
+            Constants.NOTIFICATION_CHANNEL_ID_COMPLETION,
+            context.getString(R.string.notification_channel_name_finished),
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            description = context.getString(R.string.notification_channel_description_finished)
         }
 
-        val title = if (isSending) context.getString(R.string.sending_notification, fileName) else context.getString(
-            R.string.receiving_notification, fileName
-        )
-        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(if (isSending) R.drawable.ic_upload_file_24dp else R.drawable.ic_download_24dp   )
-            .setContentTitle(title)
+        val incomingChannel = NotificationChannel(
+            Constants.NOTIFICATION_CHANNEL_ID_INCOMING,
+            context.getString(R.string.notification_channel_name_incoming_files),
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            description = context.getString(R.string.notification_channel_description_incoming_files)
+        }
+
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannels(listOf(transferChannel, completionChannel, incomingChannel))
+    }
+
+    fun buildForegroundServiceNotification(context: Context, contentText: String): NotificationCompat.Builder {
+        return NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
+            .setContentTitle(context.getString(R.string.app_name))
+            .setContentText(contentText)
+            .setSmallIcon(R.drawable.ic_share_24dp)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
-            .setOnlyAlertOnce(true)
-            .setProgress(100, progress.coerceIn(0, 100), isIndeterminate)
-
-        if (!isIndeterminate) {
-            val currentBytes = progress * totalSize / 100
-            val readableProgress = formatFileSize(context, currentBytes)
-            val readableTotal = formatFileSize(context, totalSize)
-            builder.setContentText("$readableProgress / $readableTotal (${progress}%)")
-        } else {
-            builder.setContentText(if (isSending) context.getString(R.string.connecting_notification) else context.getString(
-                R.string.waiting_for_sender
-            ))
-        }
-
-        NotificationManagerCompat.from(context).notify(NOTIFICATION_ID_TRANSFER, builder.build())
     }
 
-    fun showCompletionNotification(
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
+    fun showIncomingFileConfirmationNotification(
         context: Context,
-        fileName: String,
-        isSuccess: Boolean,
-        isSending: Boolean,
-        errorMessage: String? = null
+        requestId: String,
+        fileNames: List<String>,
+        totalSize: Long,
+        senderDeviceName: String
     ) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                return
-            }
-        }
+        val title = context.getString(R.string.notif_incoming_files_title)
+        val contentText = context.getString(
+            R.string.notif_incoming_files_details,
+            senderDeviceName,
+            fileNames.joinToString(", "),
+            totalSize.formatFileSize(context)
+        )
 
-        val title = when {
-            isSuccess && isSending -> context.getString(R.string.sent_file_notification, fileName)
-            isSuccess && !isSending -> context.getString(R.string.received_notification, fileName)
-            !isSuccess && isSending -> context.getString(
-                R.string.send_failed_notification,
-                fileName
-            )
-            else -> context.getString(R.string.receive_failed_notification, fileName)
+        val acceptIntent = Intent(context, ShareService::class.java).apply {
+            action = Constants.ACTION_ACCEPT_RECEIVE
+            putExtra(Constants.EXTRA_REQUEST_ID, requestId)
         }
-        val message = if (isSuccess) {
-            context.getString(R.string.transfer_complete)
-        } else {
-            errorMessage ?: context.getString(R.string.an_unknown_error_occurred)
-        }
+        val acceptPendingIntent = PendingIntent.getService(
+            context,
+            requestId.hashCode() + 1,
+            acceptIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
-        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(if (isSuccess) R.drawable.ic_check_circle_24dp else R.drawable.ic_error_24dp)
+        val rejectIntent = Intent(context, ShareService::class.java).apply {
+            action = Constants.ACTION_REJECT_RECEIVE
+            putExtra(Constants.EXTRA_REQUEST_ID, requestId)
+        }
+        val rejectPendingIntent = PendingIntent.getService(
+            context,
+            requestId.hashCode() + 2,
+            rejectIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val builder = NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID_INCOMING)
+            .setSmallIcon(R.drawable.ic_share_24dp)
             .setContentTitle(title)
-            .setContentText(message)
-            .setPriority(if (isSuccess) NotificationCompat.PRIORITY_LOW else NotificationCompat.PRIORITY_DEFAULT)
+            .setContentText(contentText)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .addAction(R.drawable.ic_check_circle_24dp, context.getString(R.string.accept), acceptPendingIntent)
+            .addAction(R.drawable.ic_cancel_24dp, context.getString(R.string.reject), rejectPendingIntent)
             .setAutoCancel(true)
-            .setProgress(0, 0, false)
-            .setOngoing(false)
 
-
-        NotificationManagerCompat.from(context).notify(NOTIFICATION_ID_TRANSFER, builder.build())
+        NotificationManagerCompat.from(context).notify(Constants.NOTIFICATION_ID_INCOMING_FILE, builder.build())
     }
 
-    fun cancelNotification(context: Context) {
-        NotificationManagerCompat.from(context).cancel(NOTIFICATION_ID_TRANSFER)
+    fun cancelNotification(context: Context, id: Int) {
+        NotificationManagerCompat.from(context).cancel(id)
     }
 
-    private fun formatFileSize(context: Context, size: Long): String {
-        if (size <= 0) return "0 ${context.getString(R.string.b)}"
+    fun Long.formatFileSize(context: Context): String {
+        if (this < 0) return "?? B"
+        if (this == 0L) return "0 ${context.getString(R.string.b)}"
         val units = arrayOf(
             context.getString(R.string.b),
             context.getString(R.string.kb),
             context.getString(R.string.mb),
             context.getString(R.string.gb),
-            context.getString(R.string.tb))
-        val digitGroups = if (size > 0) (log10(size.toDouble()) / log10(1024.0)).toInt() else 0
-        val safeDigitGroups = digitGroups.coerceIn(0, units.size - 1)
-
-        val sizeInUnit = size / 1024.0.pow(safeDigitGroups.toDouble())
-
-        val formattedSize = if (safeDigitGroups == 0) {
-            String.format(Locale.US, "%d", size.toInt())
-        } else {
-            String.format(Locale.US, "%.1f", sizeInUnit)
-        }
-        return "$formattedSize ${units[safeDigitGroups]}"
+            context.getString(R.string.tb)
+        )
+        val digitGroups = (log10(this.toDouble()) / log10(1024.0)).toInt()
+        val unitIndex = digitGroups.coerceAtMost(units.size - 1).coerceAtLeast(0)
+        val sizeInUnit = this / 1024.0.pow(unitIndex.toDouble())
+        return (if (unitIndex == 0) String.format(java.util.Locale.US, "%d", this.toInt())
+        else String.format(java.util.Locale.US, "%.1f", sizeInUnit)) + " " + units[unitIndex]
     }
 }

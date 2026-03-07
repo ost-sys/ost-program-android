@@ -87,6 +87,7 @@ class DeviceInfoViewModel(application: Application) : AndroidViewModel(applicati
             "tablet" -> context.getString(R.string.tablet)
             else -> context.getString(R.string.device) + " ($deviceChar)"
         }
+
         val deviceIcon = when (deviceChar) {
             "phone" -> R.drawable.ic_device_24dp
             "tablet" -> R.drawable.ic_tablet_24dp
@@ -186,20 +187,20 @@ class DeviceInfoViewModel(application: Application) : AndroidViewModel(applicati
         val biometricManager = BiometricManager.from(context)
         val canAuthenticate = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
 
-        var fingerprintString = context.getString(R.string.unsupport)
+        var fingerprintString: String
         var testable = false
 
         if (canAuthenticate == BiometricManager.BIOMETRIC_SUCCESS || canAuthenticate == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED) {
             fingerprintString = context.getString(R.string.support)
             if (canAuthenticate == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED) {
-                fingerprintString += "\n" + context.getString(R.string.fingers_not_registered)
+                fingerprintString += "\n" + context.getString(R.string.biometrics_not_registered)
                 testable = false
             } else {
-                fingerprintString += "\n" + context.getString(R.string.fingers_registered)
+                fingerprintString += "\n" + context.getString(R.string.biometrics_registered)
                 testable = true
             }
         } else if (canAuthenticate == BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE) {
-            fingerprintString = context.getString(R.string.unsupport)
+            fingerprintString = context.getString(R.string.unsupported)
             testable = false
         } else {
             fingerprintString = context.getString(R.string.unknown)
@@ -239,6 +240,14 @@ class DeviceInfoViewModel(application: Application) : AndroidViewModel(applicati
         return getSystemProperty(propName) ?: Build.ID
     }
 
+    fun getLatestCodename(): String {
+        val allCodenames = getSystemProperty("ro.build.version.known_codenames") ?: ""
+
+        if (allCodenames.isEmpty()) return "Unknown"
+
+        return allCodenames.substringAfterLast(",").trim()
+    }
+
     fun onAndroidVersionClicked() {
         val currentTime = SystemClock.uptimeMillis()
         easterEggHandlerJob?.cancel()
@@ -263,6 +272,7 @@ class DeviceInfoViewModel(application: Application) : AndroidViewModel(applicati
 
     private fun performEasterEggAction() {
         val componentName = when (Build.VERSION.SDK_INT) {
+            Build.VERSION_CODES.BAKLAVA -> ComponentName("com.android.egg", "com.android.egg.landroid.MainActivity")
             Build.VERSION_CODES.VANILLA_ICE_CREAM -> ComponentName("com.android.egg", "com.android.egg.landroid.MainActivity")
             Build.VERSION_CODES.UPSIDE_DOWN_CAKE -> ComponentName("com.android.egg", "com.android.egg.landroid.MainActivity")
             Build.VERSION_CODES.TIRAMISU -> ComponentName("com.android.egg", "com.android.egg.ComponentActivationActivity")

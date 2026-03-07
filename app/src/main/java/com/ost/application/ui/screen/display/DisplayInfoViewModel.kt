@@ -118,7 +118,7 @@ class DisplayInfoViewModel : ViewModel() {
         val stylusSupportStr = if (hasStylusSupport()) {
             context.getString(R.string.support)
         } else {
-            context.getString(R.string.unsupport)
+            context.getString(R.string.unsupported)
         }
 
         return DisplayInfoUiState(
