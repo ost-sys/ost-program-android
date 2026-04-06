@@ -23,9 +23,11 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -93,11 +95,13 @@ fun PowerMenuScreen(
             MaterialTheme.colorScheme.tertiaryContainer,
             ExpressiveShapeType.COOKIE_9
         )
+
         RootAccessState.GRANTED -> Triple(
             MaterialTheme.colorScheme.onPrimaryContainer,
             MaterialTheme.colorScheme.primaryContainer,
             ExpressiveShapeType.PILL
         )
+
         RootAccessState.DENIED -> Triple(
             MaterialTheme.colorScheme.onErrorContainer,
             MaterialTheme.colorScheme.errorContainer,
@@ -107,12 +111,42 @@ fun PowerMenuScreen(
 
     val items = remember(uiState) {
         listOf(
-            PowerMenuUiItem(R.drawable.ic_power_new_24dp, R.string.turn_off, uiState.isPowerOffEnabled, PowerAction.POWER_OFF),
-            PowerMenuUiItem(R.drawable.ic_restart_24dp, R.string.reboot, uiState.isRebootEnabled, PowerAction.REBOOT),
-            PowerMenuUiItem(R.drawable.ic_flash_on_24dp, R.string.reboot_recovery, uiState.isRecoveryEnabled, PowerAction.RECOVERY),
-            PowerMenuUiItem(R.drawable.ic_download_for_offline_24dp, R.string.reboot_download, uiState.isDownloadModeEnabled, PowerAction.DOWNLOAD),
-            PowerMenuUiItem(R.drawable.ic_offline_bolt_24dp, R.string.reboot_fastboot, uiState.isFastbootEnabled, PowerAction.FASTBOOT),
-            PowerMenuUiItem(R.drawable.ic_offline_bolt_24dp, R.string.reboot_fastbootd, uiState.isFastbootdEnabled, PowerAction.FASTBOOTD)
+            PowerMenuUiItem(
+                R.drawable.ic_power_new_24dp,
+                R.string.turn_off,
+                uiState.isPowerOffEnabled,
+                PowerAction.POWER_OFF
+            ),
+            PowerMenuUiItem(
+                R.drawable.ic_restart_24dp,
+                R.string.reboot,
+                uiState.isRebootEnabled,
+                PowerAction.REBOOT
+            ),
+            PowerMenuUiItem(
+                R.drawable.ic_flash_on_24dp,
+                R.string.reboot_recovery,
+                uiState.isRecoveryEnabled,
+                PowerAction.RECOVERY
+            ),
+            PowerMenuUiItem(
+                R.drawable.ic_download_for_offline_24dp,
+                R.string.reboot_download,
+                uiState.isDownloadModeEnabled,
+                PowerAction.DOWNLOAD
+            ),
+            PowerMenuUiItem(
+                R.drawable.ic_offline_bolt_24dp,
+                R.string.reboot_fastboot,
+                uiState.isFastbootEnabled,
+                PowerAction.FASTBOOT
+            ),
+            PowerMenuUiItem(
+                R.drawable.ic_offline_bolt_24dp,
+                R.string.reboot_fastbootd,
+                uiState.isFastbootdEnabled,
+                PowerAction.FASTBOOTD
+            )
         )
     }
 
@@ -210,10 +244,27 @@ fun PowerMenuScreen(
             val action = uiState.showDialogFor!!
             AlertDialog(
                 onDismissRequest = { viewModel.dismissDialog() },
+                icon = {
+                    Box(
+                        contentAlignment = Alignment.Center
+                    ) {
+                        ExpressiveShapeBackground(
+                            iconSize = 64.dp,
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            forcedShape = ExpressiveShapeType.SQUARE
+                        )
+                        Icon(
+                            painter = painterResource(R.drawable.ic_warning_24dp),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
+                },
                 title = { Text(stringResource(R.string.attention)) },
                 text = { Text(stringResource(id = action.messageResId)) },
                 confirmButton = {
-                    TextButton(
+                    Button(
                         onClick = {
                             viewModel.executeCommand(action)
                             viewModel.dismissDialog()
@@ -221,7 +272,7 @@ fun PowerMenuScreen(
                     ) { Text(stringResource(R.string.yes)) }
                 },
                 dismissButton = {
-                    TextButton(onClick = { viewModel.dismissDialog() }) { Text(stringResource(R.string.no)) }
+                    OutlinedButton(onClick = { viewModel.dismissDialog() }) { Text(stringResource(R.string.no)) }
                 }
             )
         }

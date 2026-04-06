@@ -15,16 +15,21 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -61,6 +66,8 @@ import com.ost.application.ui.state.FabSize
 import com.ost.application.ui.state.LocalFabController
 import com.ost.application.util.CardPosition
 import com.ost.application.util.CustomCardItem
+import com.ost.application.util.DefaultTip
+import com.ost.application.util.WarningTip
 
 @Composable
 fun StargazersScreen(
@@ -130,8 +137,7 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(32.dp),
-        verticalArrangement = Arrangement.Center,
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
@@ -153,7 +159,6 @@ fun LoginScreen(
         }
         Spacer(modifier = Modifier.height(16.dp))
 
-
         Text(
             text = stringResource(R.string.github_login),
             style = MaterialTheme.typography.headlineSmall,
@@ -163,54 +168,84 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(
-            text = stringResource(R.string.enter_your_personal_access_token_to_view_your_repositories),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-
-        OutlinedTextField(
-            value = text,
-            onValueChange = { text = it },
-            label = { Text(stringResource(R.string.token)) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+        DefaultTip(
+            stringResource(R.string.enter_your_personal_access_token_to_view_your_repositories),
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+
+        if (error != null) {
+            WarningTip(
+                title = stringResource(R.string.error),
+                summary = error
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
         if (isLoading) {
             @OptIn(ExperimentalMaterial3ExpressiveApi::class)
             CircularWavyProgressIndicator()
         } else {
-            Button(
-                onClick = { onLoginClick(text) },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = text.isNotBlank()
-            ) {
-                Text("Load Repositories")
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            FilledTonalButton(
-                onClick = {
-                    context.startActivity(Intent(Intent.ACTION_VIEW,
-                        "https://github.com/settings/tokens".toUri()))
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Get Token")
-            }
-        }
+            Column(Modifier.padding(horizontal = 16.dp)) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 2.dp),
+                    shape = RoundedCornerShape(
+                        topStart = 24.dp, topEnd = 24.dp,
+                        bottomStart = 4.dp, bottomEnd = 4.dp
+                    ),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                    )
+                ) {
+                    Column(Modifier.padding(16.dp)) {
+                        OutlinedTextField(
+                            value = text,
+                            onValueChange = { text = it },
+                            label = { Text(stringResource(R.string.personal_access_token)) },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
 
-        if (error != null) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = error,
-                color = MaterialTheme.colorScheme.error,
-                textAlign = TextAlign.Center
-            )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        onClick = { onLoginClick(text) },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(56.dp),
+                        shape = RoundedCornerShape(
+                            topStart = 4.dp, topEnd = 4.dp,
+                            bottomStart = 24.dp, bottomEnd = 4.dp
+                        )
+                    ) {
+                        Text(stringResource(R.string.load_repositories))
+                    }
+
+                    Spacer(modifier = Modifier.width(2.dp))
+
+                    FilledTonalButton(
+                        onClick = {
+                            context.startActivity(Intent(Intent.ACTION_VIEW,
+                                "https://github.com/settings/tokens".toUri()))
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(56.dp),
+                        shape = RoundedCornerShape(
+                            topStart = 4.dp, topEnd = 4.dp,
+                            bottomStart = 4.dp, bottomEnd = 24.dp
+                        )
+                    ) {
+                        Text(stringResource(R.string.get_token))
+                    }
+                }
+            }
         }
     }
 }
@@ -242,7 +277,7 @@ fun RepoListContent(
     ) {
         if (repos.isEmpty() && !isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("No repositories found.")
+                Text(stringResource(R.string.no_repositories_found))
             }
         } else {
             LazyColumn(

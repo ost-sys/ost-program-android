@@ -65,6 +65,9 @@ class WearShareViewModel(application: Application) : AndroidViewModel(applicatio
     private val _uiConfirmationState = MutableStateFlow<UiConfirmationState?>(null)
     val uiConfirmationState: StateFlow<UiConfirmationState?> = _uiConfirmationState.asStateFlow()
 
+    private val _transferTotalFiles = MutableStateFlow<Int?>(null)
+    val transferTotalFiles: StateFlow<Int?> = _transferTotalFiles.asStateFlow()
+
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as WearShareService.ServiceBinder
@@ -94,6 +97,9 @@ class WearShareViewModel(application: Application) : AndroidViewModel(applicatio
         wearShareService?.let { service ->
             viewModelScope.launch {
                 service.isServiceActive.collect { _isServiceActive.value = it }
+            }
+            viewModelScope.launch {
+                service.transferTotalFiles.collect { _transferTotalFiles.value = it }
             }
             viewModelScope.launch {
                 service.isDiscovering.collect { _isDiscovering.value = it }
@@ -149,6 +155,7 @@ class WearShareViewModel(application: Application) : AndroidViewModel(applicatio
         _lastReceivedFiles.value = emptyList()
         _incomingTransferRequest.value = null
         _uiConfirmationState.value = null
+        _transferTotalFiles.value = null
     }
 
     fun setServiceActive(isActive: Boolean) {

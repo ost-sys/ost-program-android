@@ -307,7 +307,7 @@
     <string name="error_nsd_unregister_failed">NSD unregistration failed: %d</string>
     <string name="error_discovery_stop_failed">Discovery stop failed: %d</string>
     <string name="tiktok" translatable="false">TikTok</string>
-    <string name="system_default">System Default (%1$s)</string>
+    <string name="system_default">System Default</string>
     <string name="category_general">General</string>
     <string name="category_timings">Timings</string>
     <string name="language">Language</string>
@@ -340,4 +340,30 @@
     <string name="the_application_is_ready_to_use">The application is ready to use!</string>
     <string name="start">Start</string>
     <string name="accelerometer">Accelerometer</string>
+    <string name="company">Company</string>
+    <string name="location">Location</string>
+    <string name="description">Description</string>
+    <string name="apps_list">Apps list</string>
+    <string name="other">Other</string>
+    <string name="other_features_of_this_app">Other features of this app</string>
+    <string name="notifications">Notifications</string>
+    <string name="notif_perm_info">To display file transfer progress and notifications</string>
+    <string name="nearby_devices">Nearby devices</string>
+    <string name="nd_perm_info">To search for nearby devices for file transfer</string>
+    <string name="phone_state">Phone state</string>
+    <string name="ps_perm_info">To display network info and SIM details</string>
+    <string name="media_audio"><![CDATA[Media & audio]]></string>
+    <string name="ma_perm_info"><![CDATA[For sharing media & audio]]></string>
+    <string name="storage_access">Storage access</string>
+    <string name="sdk30_sa_perm_info">Full access to save and read files</string>
+    <string name="sa_perm_info">Read and write files</string>
+    <string name="display_over_other_apps">Display over other apps</string>
+    <string name="dooa_perm_info">For background services while sharing</string>
+    <string name="modify_system_settings">Modify system settings</string>
+    <string name="mys_perm_info">To change display brightness</string>
+    <string name="install_unknown_apps">Install Unknown Apps</string>
+    <string name="iua_perm_info">To update itself or install shared APKs</string>
+    <string name="get_token">Get token</string>
+    <string name="load_repositories">Load repositories</string>
+    <string name="no_repositories_found">No repositories found</string>
 </resources>

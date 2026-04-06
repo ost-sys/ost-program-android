@@ -142,7 +142,7 @@ fun CurrencyConverterPage(
             onClick = viewModel::convertCurrency,
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         uiState.targetCurrencies.forEachIndexed { index, item ->
             val cardPosition = when {

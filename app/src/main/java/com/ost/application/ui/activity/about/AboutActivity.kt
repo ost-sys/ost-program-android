@@ -1,4 +1,5 @@
-@file:OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class,
+@file:OptIn(
+    ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class,
     ExperimentalMaterial3ExpressiveApi::class
 )
 
@@ -154,13 +155,48 @@ fun AboutScreen(
 
     val devicesList = remember(context) {
         listOf(
-            InfoCardData(R.drawable.ic_iphone_24dp, "iPhone 13 mini", "MLK13ZA/A", viewModel::onIphoneClick),
-            InfoCardData(R.drawable.ic_mobile_24dp, "Galaxy S10", "SM-G937F", viewModel::onAndroidPhoneClick),
-            InfoCardData(R.drawable.ic_desktop_windows_24dp, context.getString(R.string.computer), context.getString(R.string.information_pc), viewModel::onPcClick),
-            InfoCardData(R.drawable.ic_laptop_mac_24dp, "MacBook Air", "Apple M4, MC6T4PA/A, 16/256", viewModel::onLaptopClick),
-            InfoCardData(R.drawable.ic_watch_24dp, "Galaxy Watch 7", "SM-L300", viewModel::onWatchClick),
-            InfoCardData(R.drawable.ic_galaxy_buds_24dp, "Galaxy Buds 2", "SM-R177", viewModel::onGalaxyBudsClick),
-            InfoCardData(R.drawable.ic_airpods_pro_24dp, "AirPods Pro (2nd generation)", "A2698", viewModel::onAirPodsClick)
+            InfoCardData(
+                R.drawable.ic_iphone_24dp,
+                "iPhone 13 mini",
+                "MLK13ZA/A",
+                viewModel::onIphoneClick
+            ),
+            InfoCardData(
+                R.drawable.ic_mobile_24dp,
+                "Galaxy S10",
+                "SM-G937F",
+                viewModel::onAndroidPhoneClick
+            ),
+            InfoCardData(
+                R.drawable.ic_desktop_windows_24dp,
+                context.getString(R.string.computer),
+                context.getString(R.string.information_pc),
+                viewModel::onPcClick
+            ),
+            InfoCardData(
+                R.drawable.ic_laptop_mac_24dp,
+                "MacBook Air",
+                "Apple M4, MC6T4PA/A, 16/256",
+                viewModel::onLaptopClick
+            ),
+            InfoCardData(
+                R.drawable.ic_watch_24dp,
+                "Galaxy Watch 7",
+                "SM-L300",
+                viewModel::onWatchClick
+            ),
+            InfoCardData(
+                R.drawable.ic_galaxy_buds_24dp,
+                "Galaxy Buds 2",
+                "SM-R177",
+                viewModel::onGalaxyBudsClick
+            ),
+            InfoCardData(
+                R.drawable.ic_airpods_pro_24dp,
+                "AirPods Pro (2nd generation)",
+                "A2698",
+                viewModel::onAirPodsClick
+            )
         )
     }
 
@@ -185,21 +221,42 @@ fun AboutScreen(
         topBar = {
             LargeFlexibleTopAppBar(
                 expandedHeight = 152.dp,
-                title = { Text(stringResource(R.string.about_app), maxLines = 1, fontWeight = FontWeight.Bold) },
+                title = {
+                    Text(
+                        stringResource(R.string.about_app),
+                        maxLines = 1,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
                 navigationIcon = {
                     FilledTonalIconButton(onClick = onNavigateBack) {
-                        Icon(painter = painterResource(R.drawable.ic_arrow_back_24dp), contentDescription = stringResource(R.string.back))
+                        Icon(
+                            painter = painterResource(R.drawable.ic_arrow_back_24dp),
+                            contentDescription = stringResource(R.string.back)
+                        )
                     }
                 },
                 actions = {
-                    IconButton(onClick = viewModel::onChangelogClick, enabled = !state.changelog.isNullOrEmpty()) {
-                        Icon(painter = painterResource(R.drawable.ic_update_24dp), contentDescription = stringResource(R.string.changelog))
+                    IconButton(
+                        onClick = viewModel::onChangelogClick,
+                        enabled = !state.changelog.isNullOrEmpty()
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_update_24dp),
+                            contentDescription = stringResource(R.string.changelog)
+                        )
                     }
                     IconButton(onClick = { viewModel.checkUpdate(showToast = true) }) {
-                        Icon(painter = painterResource(id = R.drawable.ic_refresh_24dp), contentDescription = stringResource(R.string.check_for_updates))
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_refresh_24dp),
+                            contentDescription = stringResource(R.string.check_for_updates)
+                        )
                     }
                     FilledTonalIconButton(onClick = viewModel::onAppInfoClick) {
-                        Icon(painter = painterResource(R.drawable.ic_info_24dp), contentDescription = stringResource(R.string.about_app))
+                        Icon(
+                            painter = painterResource(R.drawable.ic_info_24dp),
+                            contentDescription = stringResource(R.string.about_app)
+                        )
                     }
                 },
                 scrollBehavior = scrollBehavior
@@ -328,7 +385,10 @@ fun AboutHeaderContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Row(horizontalArrangement = Arrangement.Center) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             VersionInfoBadge(
                 isWearBadge = false,
                 versionText = state.currentVersionName,
@@ -352,7 +412,10 @@ fun AboutHeaderContent(
                     state.wearUpdateCheckState == WearUpdateCheckState.ERROR -> stringResource(R.string.wear_version_not_found)
                     state.wearUpdateCheckState == WearUpdateCheckState.IDLE ||
                             state.wearUpdateCheckState == WearUpdateCheckState.CHECKING_GITHUB ||
-                            state.wearUpdateCheckState == WearUpdateCheckState.REQUESTING_INSTALLED -> stringResource(R.string.checking_for_updates)
+                            state.wearUpdateCheckState == WearUpdateCheckState.REQUESTING_INSTALLED -> stringResource(
+                        R.string.checking_for_updates
+                    )
+
                     else -> stringResource(R.string.wear_version_unknown)
                 }
 
@@ -383,8 +446,16 @@ fun AboutHeaderContent(
 fun PcInfoDialog(showDialog: Boolean, onDismiss: () -> Unit) {
     AnimatedVisibility(
         visible = showDialog,
-        enter = scaleIn(animationSpec = tween(durationMillis = 300)) + fadeIn(animationSpec = tween(durationMillis = 200)),
-        exit = scaleOut(animationSpec = tween(durationMillis = 300)) + fadeOut(animationSpec = tween(durationMillis = 200))
+        enter = scaleIn(animationSpec = tween(durationMillis = 300)) + fadeIn(
+            animationSpec = tween(
+                durationMillis = 200
+            )
+        ),
+        exit = scaleOut(animationSpec = tween(durationMillis = 300)) + fadeOut(
+            animationSpec = tween(
+                durationMillis = 200
+            )
+        )
     ) {
         AlertDialog(
             icon = {
@@ -455,11 +526,31 @@ fun UnifiedSocialLinks(onLinkClick: (String) -> Unit) {
 
     val socialLinks = remember {
         listOf(
-            SocialLinkData(R.drawable.about_page_github, R.string.github, "https://github.com/ost-sys/"),
-            SocialLinkData(R.drawable.about_page_telegram, R.string.telegram, "https://t.me/ost_news5566"),
-            SocialLinkData(R.drawable.about_page_youtube, R.string.youtube, "https://www.youtube.com/channel/UC6wNi6iQFVSnd-eJivuG3_Q"),
-            SocialLinkData(R.drawable.about_page_tt, R.string.tiktok, "https://www.tiktok.com/@your_profile"),
-            SocialLinkData(R.drawable.ic_internet_24dp, R.string.website, "https://ost-sys.github.io")
+            SocialLinkData(
+                R.drawable.about_page_github,
+                R.string.github,
+                "https://github.com/ost-sys/"
+            ),
+            SocialLinkData(
+                R.drawable.about_page_telegram,
+                R.string.telegram,
+                "https://t.me/ost_news5566"
+            ),
+            SocialLinkData(
+                R.drawable.about_page_youtube,
+                R.string.youtube,
+                "https://www.youtube.com/channel/UC6wNi6iQFVSnd-eJivuG3_Q"
+            ),
+            SocialLinkData(
+                R.drawable.about_page_tt,
+                R.string.tiktok,
+                "https://www.tiktok.com/@your_profile"
+            ),
+            SocialLinkData(
+                R.drawable.ic_internet_24dp,
+                R.string.website,
+                "https://ost-sys.github.io"
+            )
         )
     }
 
@@ -501,13 +592,13 @@ fun StyledSocialButton(
     val colorAnimationDuration = 100
 
     val containerColor by animateColorAsState(
-        targetValue = if (isPressed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+        targetValue = if (isPressed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer,
         animationSpec = tween(durationMillis = colorAnimationDuration),
         label = "ContainerColorAnimation"
     )
 
     val contentColor by animateColorAsState(
-        targetValue = if (isPressed) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+        targetValue = if (isPressed) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.secondary,
         animationSpec = tween(durationMillis = colorAnimationDuration),
         label = "ContentColorAnimation"
     )
@@ -515,10 +606,26 @@ fun StyledSocialButton(
     val buttonWidth = 64.dp
     val pressedRadius = buttonWidth / 2
 
-    val topStart by animateDpAsState(targetValue = if (isPressed) pressedRadius else defaultCorners[0], animationSpec = tween(shapeAnimationDuration), label = "TopStart")
-    val topEnd by animateDpAsState(targetValue = if (isPressed) pressedRadius else defaultCorners[1], animationSpec = tween(shapeAnimationDuration), label = "TopEnd")
-    val bottomEnd by animateDpAsState(targetValue = if (isPressed) pressedRadius else defaultCorners[2], animationSpec = tween(shapeAnimationDuration), label = "BottomEnd")
-    val bottomStart by animateDpAsState(targetValue = if (isPressed) pressedRadius else defaultCorners[3], animationSpec = tween(shapeAnimationDuration), label = "BottomStart")
+    val topStart by animateDpAsState(
+        targetValue = if (isPressed) pressedRadius else defaultCorners[0],
+        animationSpec = tween(shapeAnimationDuration),
+        label = "TopStart"
+    )
+    val topEnd by animateDpAsState(
+        targetValue = if (isPressed) pressedRadius else defaultCorners[1],
+        animationSpec = tween(shapeAnimationDuration),
+        label = "TopEnd"
+    )
+    val bottomEnd by animateDpAsState(
+        targetValue = if (isPressed) pressedRadius else defaultCorners[2],
+        animationSpec = tween(shapeAnimationDuration),
+        label = "BottomEnd"
+    )
+    val bottomStart by animateDpAsState(
+        targetValue = if (isPressed) pressedRadius else defaultCorners[3],
+        animationSpec = tween(shapeAnimationDuration),
+        label = "BottomStart"
+    )
 
     val finalShape = RoundedCornerShape(topStart, topEnd, bottomEnd, bottomStart)
 
@@ -531,7 +638,11 @@ fun StyledSocialButton(
         interactionSource = interactionSource,
     ) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Icon(painter = painterResource(id = iconRes), contentDescription = contentDesc, modifier = Modifier.size(28.dp))
+            Icon(
+                painter = painterResource(id = iconRes),
+                contentDescription = contentDesc,
+                modifier = Modifier.size(28.dp)
+            )
         }
     }
 }
@@ -572,7 +683,8 @@ fun VersionInfoBadge(
             .padding(horizontal = 12.dp, vertical = 6.dp)
             .heightIn(min = 32.dp)
     ) {
-        val iconRes = if (isWearBadge) R.drawable.ic_watch_24dp else R.drawable.ic_phone_android_24dp
+        val iconRes =
+            if (isWearBadge) R.drawable.ic_watch_24dp else R.drawable.ic_phone_android_24dp
         val iconDesc = if (isWearBadge) R.string.wear_os_app else R.string.android_version
         Icon(
             painter = painterResource(id = iconRes),
@@ -599,7 +711,10 @@ fun VersionInfoBadge(
             CircularWavyProgressIndicator(modifier = Modifier.size(18.dp), color = contentColor)
         } else {
             statusIconInfo?.let { (iconResId, descResId) ->
-                val clickModifier = if ((!isWearBadge && onPhoneUpdateClick != null) || (isWearBadge && onWearUpdateClick != null)) Modifier.clickable(onClick = if(!isWearBadge) onPhoneUpdateClick!! else onWearUpdateClick!!) else Modifier
+                val clickModifier =
+                    if ((!isWearBadge && onPhoneUpdateClick != null) || (isWearBadge && onWearUpdateClick != null)) Modifier.clickable(
+                        onClick = if (!isWearBadge) onPhoneUpdateClick!! else onWearUpdateClick!!
+                    ) else Modifier
                 Icon(
                     painter = painterResource(id = iconResId),
                     contentDescription = stringResource(id = descResId),
@@ -622,17 +737,29 @@ fun UpdateConfirmationDialog(
     if (show && latestVersion != null) {
         AlertDialog(
             onDismissRequest = onDismiss,
-            icon = { Icon(painterResource(R.drawable.ic_download_for_offline_24dp), contentDescription = null) },
+            icon = {
+                Icon(
+                    painterResource(R.drawable.ic_download_for_offline_24dp),
+                    contentDescription = null
+                )
+            },
             title = { Text(stringResource(R.string.update_available)) },
             text = {
-                Column(modifier = Modifier.heightIn(max= 400.dp)) {
+                Column(modifier = Modifier.heightIn(max = 400.dp)) {
                     Text(stringResource(R.string.install_update_q, latestVersion))
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text(stringResource(R.string.changelog).uppercase(), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                    Text(
+                        stringResource(R.string.changelog).uppercase(),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                     HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
                     LazyColumn {
                         item {
-                            Text(changelog ?: stringResource(R.string.no_changelog_available), style = MaterialTheme.typography.bodySmall)
+                            Text(
+                                changelog ?: stringResource(R.string.no_changelog_available),
+                                style = MaterialTheme.typography.bodySmall
+                            )
                         }
                     }
                 }
@@ -691,12 +818,22 @@ fun ChangelogDialog(
     if (show) {
         AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text("${stringResource(R.string.version, version)} ${BuildConfig.VERSION_NAME}") },
+            title = {
+                Text(
+                    "${
+                        stringResource(
+                            R.string.version,
+                            version
+                        )
+                    } ${BuildConfig.VERSION_NAME}"
+                )
+            },
             text = {
                 LazyColumn(modifier = Modifier.heightIn(max = 400.dp)) {
                     item {
                         Text(
-                            text = changelog?.takeIf { it.isNotBlank() } ?: stringResource(R.string.no_changelog_available),
+                            text = changelog?.takeIf { it.isNotBlank() }
+                                ?: stringResource(R.string.no_changelog_available),
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -728,7 +865,10 @@ fun WearUpdateInstructionsDialog(
                     Text(stringResource(R.string.wear_update_manual_instructions))
                     if (wearApkUrl != null) {
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(stringResource(R.string.wear_update_manual_download_apk), style = MaterialTheme.typography.labelSmall)
+                        Text(
+                            stringResource(R.string.wear_update_manual_download_apk),
+                            style = MaterialTheme.typography.labelSmall
+                        )
                     }
                 }
             },
@@ -824,15 +964,21 @@ fun handleAboutAction(
                 Log.w("AboutScreenAction", "No activity found for intent: ${action.intent}")
             } catch (e: SecurityException) {
                 context.toast(context.getString(R.string.permission_not_granted))
-                Log.e("AboutScreenAction", "SecurityException launching intent: ${action.intent}", e)
+                Log.e(
+                    "AboutScreenAction",
+                    "SecurityException launching intent: ${action.intent}",
+                    e
+                )
             } catch (e: Exception) {
                 context.toast(context.getString(R.string.error))
                 Log.e("AboutScreenAction", "Error launching intent: ${action.intent}", e)
             }
         }
+
         is AboutAction.RequestPermission -> {
             launchers.permissionLauncher.launch(action.permission)
         }
+
         AboutAction.RequestInstallPermission -> {
             val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
                 data = "package:${context.packageName}".toUri()
@@ -840,10 +986,14 @@ fun handleAboutAction(
             if (intent.resolveActivity(context.packageManager) != null) {
                 launchers.installPermissionLauncher.launch(intent)
             } else {
-                Log.e("AboutScreenAction", "Cannot resolve ACTION_MANAGE_UNKNOWN_APP_SOURCES intent")
+                Log.e(
+                    "AboutScreenAction",
+                    "Cannot resolve ACTION_MANAGE_UNKNOWN_APP_SOURCES intent"
+                )
                 context.toast(context.getString(R.string.error))
             }
         }
+
         AboutAction.RequestStoragePermissionLegacy -> {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 launchers.storagePermissionLauncher.launch(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE))

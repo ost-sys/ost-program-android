@@ -205,6 +205,7 @@
     <string name="transfer_cancelled_message">The transfer was cancelled by user.</string>
     <string name="open_activity_notification_button">Open</string>
     <string name="notif_progress_details">%1$s / %2$s (%3$d%%)</string>
+    <string name="write_settings_permission_required">Write settings permission required</string>
 
     <!-- New Strings for Undo Feature -->
 

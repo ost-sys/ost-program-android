@@ -75,7 +75,7 @@ import java.util.concurrent.Executor
 private data class DeviceInfoRow(
     val icon: Int,
     val titleRes: Int,
-    val summary: String,
+    val summary: String?,
     val onClick: (() -> Unit)? = null
 )
 
@@ -114,14 +114,16 @@ fun DeviceInfoScreen(
             DeviceInfoRow(uiState.deviceTypeIconRes, R.string.device_type, uiState.deviceType),
             DeviceInfoRow(R.drawable.ic_memory_alt_24dp, R.string.ram, uiState.ramInfo),
             DeviceInfoRow(R.drawable.ic_storage_24dp, R.string.rom, uiState.romInfo),
-            DeviceInfoRow(R.drawable.ic_3d_rotation_24dp, R.string.accelerometer, "Show accelerometer test", { showAccelerometerSheet = true}),
+            DeviceInfoRow(R.drawable.ic_3d_rotation_24dp, R.string.accelerometer, null, { showAccelerometerSheet = true}),
             DeviceInfoRow(R.drawable.ic_manufacturing_24dp, R.string.build_fingerprint, uiState.buildFingerprint),
             DeviceInfoRow(R.drawable.ic_fingerprint_24dp, R.string.biometrics_support, uiState.fingerprintStatus)
         )
     }
 
     if (showAccelerometerSheet) {
-        ModalBottomSheet(onDismissRequest = { showAccelerometerSheet = false }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
+        ModalBottomSheet(
+            onDismissRequest = { showAccelerometerSheet = false },
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
             val sensorData by ToolsManager.getAccelerometerData(context).collectAsState(initial = floatArrayOf(0f, 0f, 0f))
             val x = sensorData[0]
             val y = sensorData[1]
@@ -130,9 +132,14 @@ fun DeviceInfoScreen(
             Column(modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp, vertical = 16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "Accelerometer Test", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(bottom = 32.dp))
+                Text(
+                    text = stringResource(R.string.accelerometer),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(bottom = 32.dp))
                 Card(
                     modifier = Modifier
                         .size(160.dp)

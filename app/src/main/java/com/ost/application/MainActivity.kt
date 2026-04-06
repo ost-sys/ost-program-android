@@ -8,7 +8,6 @@ package com.ost.application
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -58,15 +57,16 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -84,6 +84,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberTopAppBarState
@@ -93,7 +94,6 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -109,16 +109,20 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ost.application.ui.screen.applist.AppListScreen
 import com.ost.application.ui.screen.batteryinfo.BatteryInfoScreen
 import com.ost.application.ui.screen.converters.ConvertersScreen
 import com.ost.application.ui.screen.deviceinfo.DeviceInfoScreen
@@ -160,6 +164,7 @@ private fun createMenuItems(): List<MenuItemData?> {
         MenuItemData("power_menu", R.string.power_menu, R.drawable.ic_power_new_24dp),
         MenuItemData("share_files", R.string.share, R.drawable.ic_share_24dp),
         MenuItemData("stargazers", R.string.stargazers, R.drawable.ic_star_24dp),
+        MenuItemData("app_list", R.string.apps_list, R.drawable.ic_apps_24dp),
         null,
         MenuItemData("about_device", R.string.about_device, R.drawable.ic_device_24dp),
         MenuItemData("battery", R.string.battery, R.drawable.ic_battery_full_24dp),
@@ -177,8 +182,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
-            navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+            statusBarStyle = SystemBarStyle.auto(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.TRANSPARENT
+            ),
+            navigationBarStyle = SystemBarStyle.auto(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.TRANSPARENT
+            )
         )
         installSplashScreen()
 
@@ -221,7 +232,8 @@ fun MainAppStructure(isExpandedScreen: Boolean = false) {
 
     val scaffoldState = rememberBottomSheetScaffoldState()
 
-    val settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModelFactory(context.applicationContext as Application))
+    val settingsViewModel: SettingsViewModel =
+        viewModel(factory = SettingsViewModelFactory(context.applicationContext as Application))
     val settingsState by settingsViewModel.uiState.collectAsStateWithLifecycle()
 
     val stargazersViewModel: StargazersViewModel = viewModel()
@@ -241,21 +253,28 @@ fun MainAppStructure(isExpandedScreen: Boolean = false) {
                         if (targetClassName != null && targetClassName != mainActivityClassName) {
                             context.startActivity(action.intent)
                         } else {
-                            Log.w("MainAppStructure", "Prevented launching MainActivity: ${action.intent}")
+                            Log.w(
+                                "MainAppStructure",
+                                "Prevented launching MainActivity: ${action.intent}"
+                            )
                         }
                     } else {
                         context.toast("Could not open the requested screen.")
                     }
                 }
+
                 is SettingsAction.ShowToast -> context.toast(context.getString(action.messageResId))
             }
         }.launchIn(this)
     }
 
     val currentSelectedItemData = allValidMenuItems.find { it.id == selectedScreenId }
-    val defaultTitle = currentSelectedItemData?.let { stringResource(it.titleResId) } ?: stringResource(id = R.string.app_name)
-    val displayTitle = if (selectedScreenId == "stargazers" && starSelectedRepo != null) starSelectedRepo!!.name else defaultTitle
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val defaultTitle = currentSelectedItemData?.let { stringResource(it.titleResId) }
+        ?: stringResource(id = R.string.app_name)
+    val displayTitle =
+        if (selectedScreenId == "stargazers" && starSelectedRepo != null) starSelectedRepo!!.name else defaultTitle
+    val scrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     val navBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val bottomSpacing = if (isExpandedScreen) navBarPadding else (88.dp + 16.dp + navBarPadding)
@@ -265,21 +284,37 @@ fun MainAppStructure(isExpandedScreen: Boolean = false) {
         LocalFabController provides fabController
     ) {
         SharedTransitionLayout {
-            Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
-
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
                 if (isExpandedScreen) {
                     Row(modifier = Modifier.fillMaxSize()) {
                         PermanentNavigationDrawer(
                             drawerContent = {
                                 PermanentDrawerSheet(
-                                    modifier = Modifier.width(280.dp),
-                                    drawerContainerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                                    modifier = Modifier.width(300.dp),
+                                    drawerContainerColor = MaterialTheme.colorScheme.surfaceContainer
                                 ) {
-                                    Spacer(Modifier.height(32.dp))
                                     Row(
-                                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-                                        horizontalArrangement = Arrangement.End
+                                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).size(64.dp),
+                                        Arrangement.SpaceBetween,
+                                        Alignment.CenterVertically
                                     ) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(
+                                                modifier = Modifier.size(32.dp),
+                                                painter = painterResource(R.drawable.ic_launcher_foreground_app),
+                                                contentDescription = "Logo"
+                                            )
+                                            Text(
+                                                stringResource(R.string.app_name),
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 24.sp,
+                                                fontFamily = FontFamily(Font(R.font.google_sans_bold))
+                                            )
+                                        }
                                         AnimatedVisibility(visible = !showSettingsSheet, enter = fadeIn(), exit = fadeOut()) {
                                             val animatedVisibilityScope = this
                                             FilledTonalIconButton(
@@ -294,19 +329,29 @@ fun MainAppStructure(isExpandedScreen: Boolean = false) {
                                             }
                                         }
                                     }
+
                                     Spacer(Modifier.height(16.dp))
-                                    allValidMenuItems.forEach { item ->
-                                        NavigationDrawerItem(
-                                            selected = selectedScreenId == item.id,
-                                            onClick = { selectedScreenId = item.id },
-                                            icon = { Icon(painterResource(item.iconResId), contentDescription = stringResource(item.titleResId)) },
-                                            label = { Text(stringResource(item.titleResId)) },
-                                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                                            colors = NavigationDrawerItemDefaults.colors(
-                                                selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                                selectedTextColor = MaterialTheme.colorScheme.onSecondaryContainer
+
+                                    Column(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .verticalScroll(rememberScrollState())
+                                    ) {
+                                        allValidMenuItems.forEach { item ->
+                                            NavigationDrawerItem(
+                                                selected = selectedScreenId == item.id,
+                                                onClick = { selectedScreenId = item.id },
+                                                icon = { Icon(painterResource(item.iconResId), contentDescription = stringResource(item.titleResId)) },
+                                                label = { Text(stringResource(item.titleResId)) },
+                                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                                                colors = NavigationDrawerItemDefaults.colors(
+                                                    selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                                    selectedTextColor = MaterialTheme.colorScheme.onSecondaryContainer
+                                                )
                                             )
-                                        )
+                                        }
+
+                                        Spacer(Modifier.height(16.dp).windowInsetsPadding(WindowInsets.navigationBars))
                                     }
                                 }
                             }
@@ -314,9 +359,13 @@ fun MainAppStructure(isExpandedScreen: Boolean = false) {
                             Scaffold(
                                 modifier = Modifier.fillMaxSize(),
                                 topBar = {
-                                    LargeFlexibleTopAppBar(
-                                        title = { Text(displayTitle, fontWeight = FontWeight.Bold) },
-                                        expandedHeight = 152.dp,
+                                    TopAppBar(
+                                        title = {
+                                            Text(
+                                                displayTitle,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        },
                                         scrollBehavior = scrollBehavior
                                     )
                                 },
@@ -324,12 +373,33 @@ fun MainAppStructure(isExpandedScreen: Boolean = false) {
                             ) { paddingValues ->
                                 AnimatedContent(
                                     targetState = selectedScreenId, label = "ScreenTransition",
-                                    modifier = Modifier.padding(paddingValues).fillMaxSize(),
-                                    transitionSpec = { (fadeIn(tween(300)) + scaleIn(initialScale = 0.95f, animationSpec = tween(300))).togetherWith(fadeOut(tween(300)) + scaleOut(targetScale = 1.05f, animationSpec = tween(300))) }
+                                    modifier = Modifier
+                                        .padding(paddingValues)
+                                        .fillMaxSize(),
+                                    transitionSpec = {
+                                        (fadeIn(tween(300)) + scaleIn(
+                                            initialScale = 0.95f,
+                                            animationSpec = tween(300)
+                                        )).togetherWith(
+                                            fadeOut(tween(300)) + scaleOut(
+                                                targetScale = 1.05f,
+                                                animationSpec = tween(300)
+                                            )
+                                        )
+                                    }
                                 ) { targetId ->
                                     LaunchedEffect(targetId) { fabController.hideFab() }
-                                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-                                        ContentArea(selectedItemId = targetId, stargazersViewModel = stargazersViewModel, modifier = Modifier.fillMaxSize().widthIn(max = 840.dp))
+                                    Box(
+                                        modifier = Modifier.fillMaxSize(),
+                                        contentAlignment = Alignment.TopCenter
+                                    ) {
+                                        ContentArea(
+                                            selectedItemId = targetId,
+                                            stargazersViewModel = stargazersViewModel,
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .widthIn(max = 840.dp)
+                                        )
                                     }
                                 }
                             }
@@ -345,9 +415,18 @@ fun MainAppStructure(isExpandedScreen: Boolean = false) {
                         sheetShadowElevation = 0.dp,
                         sheetDragHandle = null,
                         sheetContent = {
-                            val isSheetExpanded = scaffoldState.bottomSheetState.targetValue == SheetValue.Expanded || scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded
-                            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-                                Box(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp).windowInsetsPadding(WindowInsets.navigationBars)) {
+                            val isSheetExpanded =
+                                scaffoldState.bottomSheetState.targetValue == SheetValue.Expanded || scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 16.dp)
+                                        .windowInsetsPadding(WindowInsets.navigationBars)
+                                ) {
                                     AppBottomNavigation(
                                         directItems = bottomNavDirectItems,
                                         selectedItemId = if (bottomNavDirectItems.any { it.id == selectedScreenId }) selectedScreenId else MORE_ITEM_ID,
@@ -364,33 +443,68 @@ fun MainAppStructure(isExpandedScreen: Boolean = false) {
                                     this@Column.AnimatedVisibility(
                                         visible = fabController.isVisible && !isSheetExpanded,
                                         enter = scaleIn() + fadeIn(), exit = scaleOut() + fadeOut(),
-                                        modifier = Modifier.align(Alignment.CenterEnd).padding(end = 16.dp)
+                                        modifier = Modifier
+                                            .align(Alignment.CenterEnd)
+                                            .padding(end = 16.dp)
                                     ) {
                                         if (fabController.size == FabSize.Small) {
-                                            SmallFloatingActionButton(onClick = fabController.onClick, containerColor = MaterialTheme.colorScheme.tertiaryContainer, contentColor = MaterialTheme.colorScheme.onTertiaryContainer) {
-                                                if (fabController.iconRes != null) Icon(painter = painterResource(id = fabController.iconRes!!), contentDescription = fabController.contentDescription)
+                                            SmallFloatingActionButton(
+                                                onClick = fabController.onClick,
+                                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                                            ) {
+                                                if (fabController.iconRes != null) Icon(
+                                                    painter = painterResource(
+                                                        id = fabController.iconRes!!
+                                                    ),
+                                                    contentDescription = fabController.contentDescription
+                                                )
                                             }
                                         } else {
-                                            FloatingActionButton(onClick = fabController.onClick, containerColor = MaterialTheme.colorScheme.tertiaryContainer, contentColor = MaterialTheme.colorScheme.onTertiaryContainer) {
-                                                if (fabController.iconRes != null) Icon(painter = painterResource(id = fabController.iconRes!!), contentDescription = fabController.contentDescription)
+                                            FloatingActionButton(
+                                                onClick = fabController.onClick,
+                                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                                            ) {
+                                                if (fabController.iconRes != null) Icon(
+                                                    painter = painterResource(
+                                                        id = fabController.iconRes!!
+                                                    ),
+                                                    contentDescription = fabController.contentDescription
+                                                )
                                             }
                                         }
                                     }
                                 }
-                                Surface(modifier = Modifier.fillMaxWidth().heightIn(min = 200.dp), shape = RoundedCornerShape(40.dp, 40.dp, 0.dp, 0.dp), color = MaterialTheme.colorScheme.surfaceContainer, tonalElevation = 2.dp) {
-                                    Column {
-                                        MoreBottomSheetContent(menuItems = moreMenuItems, currentSelectedScreenId = selectedScreenId, onItemClick = { itemId ->
-                                            scope.launch { scaffoldState.bottomSheetState.partialExpand() }
-                                            selectedScreenId = itemId
-                                        })
+                                Surface(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .heightIn(min = 200.dp),
+                                    shape = RoundedCornerShape(40.dp, 40.dp, 0.dp, 0.dp),
+                                    color = MaterialTheme.colorScheme.surfaceContainer,
+                                    tonalElevation = 2.dp
+                                ) {
+                                    Column(Modifier.padding(0.dp, 16.dp, 0.dp, 0.dp)) {
+                                        MoreBottomSheetContent(
+                                            menuItems = moreMenuItems,
+                                            currentSelectedScreenId = selectedScreenId,
+                                            onItemClick = { itemId ->
+                                                scope.launch { scaffoldState.bottomSheetState.partialExpand() }
+                                                selectedScreenId = itemId
+                                            })
                                         Spacer(modifier = Modifier.height(24.dp))
                                     }
                                 }
                             }
                         }
                     ) { _ ->
-                        val isSheetExpanded = scaffoldState.bottomSheetState.targetValue == SheetValue.Expanded || scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded
-                        val scrimAlpha by animateFloatAsState(targetValue = if (isSheetExpanded) 0.32f else 0f, label = "scrim", animationSpec = tween(300))
+                        val isSheetExpanded =
+                            scaffoldState.bottomSheetState.targetValue == SheetValue.Expanded || scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded
+                        val scrimAlpha by animateFloatAsState(
+                            targetValue = if (isSheetExpanded) 0.32f else 0f,
+                            label = "scrim",
+                            animationSpec = tween(300)
+                        )
 
                         Box(modifier = Modifier.fillMaxSize()) {
                             Scaffold(
@@ -398,20 +512,34 @@ fun MainAppStructure(isExpandedScreen: Boolean = false) {
                                 contentWindowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
                                 topBar = {
                                     LargeFlexibleTopAppBar(
-                                        title = { Text(displayTitle, fontWeight = FontWeight.Bold) },
+                                        title = {
+                                            Text(
+                                                displayTitle,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        },
                                         expandedHeight = 152.dp,
                                         actions = {
-                                            AnimatedVisibility(visible = !showSettingsSheet, enter = fadeIn(), exit = fadeOut()) {
+                                            AnimatedVisibility(
+                                                visible = !showSettingsSheet,
+                                                enter = fadeIn(),
+                                                exit = fadeOut()
+                                            ) {
                                                 val animatedVisibilityScope = this
                                                 FilledTonalIconButton(
                                                     onClick = { showSettingsSheet = true },
                                                     modifier = Modifier.sharedBounds(
-                                                        sharedContentState = rememberSharedContentState(key = "settings_morph"),
+                                                        sharedContentState = rememberSharedContentState(
+                                                            key = "settings_morph"
+                                                        ),
                                                         animatedVisibilityScope = animatedVisibilityScope,
                                                         resizeMode = SharedTransitionScope.ResizeMode.scaleToBounds()
                                                     )
                                                 ) {
-                                                    Icon(painterResource(R.drawable.ic_settings_24dp), contentDescription = stringResource(R.string.settings))
+                                                    Icon(
+                                                        painterResource(R.drawable.ic_settings_24dp),
+                                                        contentDescription = stringResource(R.string.settings)
+                                                    )
                                                 }
                                             }
                                         },
@@ -422,16 +550,39 @@ fun MainAppStructure(isExpandedScreen: Boolean = false) {
                             ) { scaffoldPadding ->
                                 AnimatedContent(
                                     targetState = selectedScreenId, label = "ScreenTransition",
-                                    modifier = Modifier.padding(scaffoldPadding).fillMaxSize(),
-                                    transitionSpec = { (fadeIn(tween(300)) + scaleIn(initialScale = 0.95f, animationSpec = tween(300))).togetherWith(fadeOut(tween(300)) + scaleOut(targetScale = 1.05f, animationSpec = tween(300))) }
+                                    modifier = Modifier
+                                        .padding(scaffoldPadding)
+                                        .fillMaxSize(),
+                                    transitionSpec = {
+                                        (fadeIn(tween(300)) + scaleIn(
+                                            initialScale = 0.95f,
+                                            animationSpec = tween(300)
+                                        )).togetherWith(
+                                            fadeOut(tween(300)) + scaleOut(
+                                                targetScale = 1.05f,
+                                                animationSpec = tween(300)
+                                            )
+                                        )
+                                    }
                                 ) { targetId ->
                                     LaunchedEffect(targetId) { fabController.hideFab() }
-                                    ContentArea(selectedItemId = targetId, stargazersViewModel = stargazersViewModel, modifier = Modifier.fillMaxSize())
+                                    ContentArea(
+                                        selectedItemId = targetId,
+                                        stargazersViewModel = stargazersViewModel,
+                                        modifier = Modifier.fillMaxSize()
+                                    )
                                 }
                             }
 
                             if (scrimAlpha > 0f) {
-                                Box(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = scrimAlpha)).clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) { scope.launch { scaffoldState.bottomSheetState.partialExpand() } })
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(Color.Black.copy(alpha = scrimAlpha))
+                                        .clickable(
+                                            interactionSource = remember { MutableInteractionSource() },
+                                            indication = null
+                                        ) { scope.launch { scaffoldState.bottomSheetState.partialExpand() } })
                             }
                         }
                     }
@@ -459,8 +610,18 @@ fun MainAppStructure(isExpandedScreen: Boolean = false) {
                         Surface(
                             modifier = Modifier
                                 .then(
-                                    if (isExpandedScreen) Modifier.width(420.dp).fillMaxHeight(0.85f)
-                                    else Modifier.fillMaxSize().padding(top = WindowInsets.systemBars.asPaddingValues().calculateTopPadding() + 8.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
+                                    if (isExpandedScreen) Modifier
+                                        .width(420.dp)
+                                        .fillMaxHeight(0.85f)
+                                    else Modifier
+                                        .fillMaxSize()
+                                        .padding(
+                                            top = WindowInsets.systemBars.asPaddingValues()
+                                                .calculateTopPadding() + 8.dp,
+                                            bottom = 32.dp,
+                                            start = 16.dp,
+                                            end = 16.dp
+                                        )
                                 )
                                 .sharedBounds(
                                     sharedContentState = rememberSharedContentState(key = "settings_morph"),
@@ -473,24 +634,58 @@ fun MainAppStructure(isExpandedScreen: Boolean = false) {
                                     onClick = {}
                                 ),
                             shape = RoundedCornerShape(28.dp),
-                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            color = MaterialTheme.colorScheme.surfaceContainer,
                             tonalElevation = 6.dp,
                             shadowElevation = 8.dp
                         ) {
                             SettingsSheetContent(
                                 state = settingsState,
-                                onTotalDurationChange = { floatValue -> settingsViewModel.updateTotalDuration(floatValue.roundToInt()) },
-                                onNoiseDurationChange = { floatValue -> settingsViewModel.updateNoiseDuration(floatValue.roundToInt()) },
-                                onBWNoiseDurationChange = { floatValue -> settingsViewModel.updateBlackWhiteNoiseDuration(floatValue.roundToInt()) },
-                                onHorizontalDurationChange = { floatValue -> settingsViewModel.updateHorizontalDuration(floatValue.roundToInt()) },
-                                onVerticalDurationChange = { floatValue -> settingsViewModel.updateVerticalDuration(floatValue.roundToInt()) },
-                                onGithubTokenChange = { token -> settingsViewModel.updateGithubToken(token) },
-                                onSaveGithubToken = { settingsViewModel.saveGithubToken(); stargazersViewModel.login(settingsState.githubToken) },
+                                onTotalDurationChange = { floatValue ->
+                                    settingsViewModel.updateTotalDuration(
+                                        floatValue.roundToInt()
+                                    )
+                                },
+                                onNoiseDurationChange = { floatValue ->
+                                    settingsViewModel.updateNoiseDuration(
+                                        floatValue.roundToInt()
+                                    )
+                                },
+                                onBWNoiseDurationChange = { floatValue ->
+                                    settingsViewModel.updateBlackWhiteNoiseDuration(
+                                        floatValue.roundToInt()
+                                    )
+                                },
+                                onHorizontalDurationChange = { floatValue ->
+                                    settingsViewModel.updateHorizontalDuration(
+                                        floatValue.roundToInt()
+                                    )
+                                },
+                                onVerticalDurationChange = { floatValue ->
+                                    settingsViewModel.updateVerticalDuration(
+                                        floatValue.roundToInt()
+                                    )
+                                },
+                                onGithubTokenChange = { token ->
+                                    settingsViewModel.updateGithubToken(
+                                        token
+                                    )
+                                },
+                                onSaveGithubToken = {
+                                    settingsViewModel.saveGithubToken(); stargazersViewModel.login(
+                                    settingsState.githubToken
+                                )
+                                },
                                 onClearGithubToken = { settingsViewModel.clearGithubToken(); stargazersViewModel.logout() },
-                                onAboutClick = { showSettingsSheet = false; settingsViewModel.onAboutAppClicked() },
+                                onAboutClick = {
+                                    showSettingsSheet = false; settingsViewModel.onAboutAppClicked()
+                                },
                                 onCloseClick = { showSettingsSheet = false },
                                 onLanguagePreferenceClick = { settingsViewModel.onLanguagePreferenceClick() },
-                                onLanguageSelected = { locale -> settingsViewModel.onLanguageSelectedInDialog(locale) },
+                                onLanguageSelected = { locale ->
+                                    settingsViewModel.onLanguageSelectedInDialog(
+                                        locale
+                                    )
+                                },
                                 onLanguageConfirm = { settingsViewModel.onLanguageDialogConfirm() },
                                 onLanguageDismiss = { settingsViewModel.onLanguageDialogDismiss() }
                             )
@@ -521,16 +716,32 @@ fun SettingsSheetContent(
     onLanguageDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.padding(bottom = 16.dp)) {
+    Column() {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = stringResource(R.string.settings), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
+            Text(
+                text = stringResource(R.string.settings),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold
+            )
             Row {
-                IconButton(onClick = onAboutClick) { Icon(painterResource(R.drawable.ic_info_24dp), contentDescription = stringResource(R.string.about_app)) }
-                IconButton(onClick = onCloseClick) { Icon(painterResource(R.drawable.ic_close_24dp), contentDescription = "Close") }
+                IconButton(onClick = onAboutClick) {
+                    Icon(
+                        painterResource(R.drawable.ic_info_24dp),
+                        contentDescription = stringResource(R.string.about_app)
+                    )
+                }
+                IconButton(onClick = onCloseClick) {
+                    Icon(
+                        painterResource(R.drawable.ic_close_24dp),
+                        contentDescription = "Close"
+                    )
+                }
             }
         }
         SettingsScreen(
@@ -621,7 +832,12 @@ fun AppBottomNavigation(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MoreBottomSheetContent(menuItems: List<MenuItemData?>, currentSelectedScreenId: String?, onItemClick: (String) -> Unit, modifier: Modifier = Modifier) {
+fun MoreBottomSheetContent(
+    menuItems: List<MenuItemData?>,
+    currentSelectedScreenId: String?,
+    onItemClick: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(modifier = modifier.padding(vertical = 8.dp)) {
         menuItems.forEachIndexed { index, item ->
             val position = when {
@@ -630,14 +846,17 @@ fun MoreBottomSheetContent(menuItems: List<MenuItemData?>, currentSelectedScreen
                 index == menuItems.lastIndex -> CardPosition.BOTTOM
                 else -> CardPosition.MIDDLE
             }
+            val selectedCardCorners = CardPosition.SINGLE
             if (item != null) {
                 val isSelected = item.id == currentSelectedScreenId
                 CustomCardItem(
-                    position = position,
+                    position = if (isSelected) selectedCardCorners else position,
                     title = stringResource(item.titleResId),
                     icon = item.iconResId,
                     colors = if (isSelected)
-                        CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.surfaceContainerHighest)
+                        CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer
+                        )
                     else
                         CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
                     onClick = { onItemClick(item.id) }
@@ -657,14 +876,21 @@ fun ContentArea(
     when (selectedItemId) {
         "tools" -> ConvertersScreen(modifier = modifier)
         "power_menu" -> PowerMenuScreen(modifier = modifier)
+        "share_files" -> ShareScreen(modifier = modifier)
+        "app_list" -> AppListScreen()
         "stargazers" -> StargazersScreen(viewModel = stargazersViewModel)
         "about_device" -> DeviceInfoScreen(modifier = modifier)
         "battery" -> BatteryInfoScreen(modifier = modifier)
         "display" -> DisplayInfoScreen(modifier = modifier)
         "network" -> NetworkInfoScreen(modifier = modifier)
-        "share_files" -> ShareScreen(modifier = modifier)
         else -> {
-            Column(modifier = modifier.padding(16.dp).fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = modifier
+                    .padding(16.dp)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text("Select an option from the bottom bar.")
             }
         }
@@ -674,10 +900,25 @@ fun ContentArea(
 @Composable
 fun CordItem(label: String, value: Float) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Surface(color = MaterialTheme.colorScheme.surfaceContainerHigh, shape = CircleShape, modifier = Modifier.padding(bottom = 8.dp)) {
-            Text(text = label, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp))
+        Surface(
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+            shape = CircleShape,
+            modifier = Modifier.padding(bottom = 8.dp)
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+            )
         }
-        Text(text = value.toString(), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onSurface)
+        Text(
+            text = value.toString(),
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
     }
 }
 

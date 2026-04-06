@@ -82,6 +82,8 @@ class WearShareService : Service() {
 
     private val _transferProgress = MutableStateFlow<Int?>(null)
     val transferProgress: StateFlow<Int?> = _transferProgress.asStateFlow()
+    private val _transferTotalFiles = MutableStateFlow<Int?>(null)
+    val transferTotalFiles: StateFlow<Int?> = _transferTotalFiles.asStateFlow()
 
     private val _transferFileStatus = MutableStateFlow<String?>(null)
     val transferFileStatus: StateFlow<String?> = _transferFileStatus.asStateFlow()
@@ -433,6 +435,7 @@ class WearShareService : Service() {
                         if (!_isServiceActive.value) throw CancellationException("Service stopped before receiving multi meta")
                         _statusText.value = getString(R.string.incoming_multi_from_device, numberOfFilesExpected, totalExpectedSize.formatFileSize(this@WearShareService), senderDeviceName)
                         _transferProgress.value = 0
+                        _transferTotalFiles.value = numberOfFilesExpected // ДОБАВИТЬ
                         _transferFileStatus.value = null
                         _lastReceivedFiles.value = emptyList()
                     }
@@ -1125,6 +1128,7 @@ class WearShareService : Service() {
             withContext(Dispatchers.Main.immediate) {
                 _statusText.value = getString(R.string.connecting_to, targetDevice.name)
                 _transferProgress.value = 0
+                _transferTotalFiles.value = numberOfFiles // ДОБАВИТЬ
                 stopDiscoveryInternal()
             }
             updateOngoingActivity()

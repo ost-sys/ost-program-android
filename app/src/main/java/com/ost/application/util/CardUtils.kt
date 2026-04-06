@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ost.application.R
 import com.ost.application.ui.component.ExpressiveShapeBackground
+import com.ost.application.ui.component.ExpressiveShapeType
 
 enum class CardPosition {
     TOP,
@@ -50,7 +51,7 @@ fun CustomCardItem(
     iconPainter: Painter? = null,
     summary: String? = null,
     position: CardPosition = CardPosition.SINGLE,
-    colors: CardColors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+    colors: CardColors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
     onClick: (() -> Unit)? = null
 ) {
     val largeCornerRadius = 24.dp
@@ -85,7 +86,8 @@ fun CustomCardItem(
                 if (icon != null) {
                     ExpressiveShapeBackground(
                         iconSize = 48.dp,
-                        color = MaterialTheme.colorScheme.primaryContainer
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        forcedShape = ExpressiveShapeType.CLOVER_8
                     )
                     Icon(
                         painter = painterResource(icon),
@@ -97,7 +99,8 @@ fun CustomCardItem(
                 } else if (iconPainter != null) {
                     ExpressiveShapeBackground(
                         iconSize = 48.dp,
-                        color = MaterialTheme.colorScheme.primaryContainer
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        forcedShape = ExpressiveShapeType.CLOVER_8
                     )
                     Image(
                         painter = iconPainter,
@@ -164,23 +167,38 @@ fun AdaptiveSquareCard(
             horizontalAlignment = Alignment.Start
         ) {
             Column(horizontalAlignment = Alignment.Start) {
-                if (icon != null) {
-                    Icon(
-                        painter = painterResource(icon),
-                        contentDescription = null,
-                        tint = if (enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-                        modifier = Modifier.size(32.dp)
-                    )
-                } else if (iconPainter != null) {
-                    Image(
-                        painter = iconPainter,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(32.dp)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop,
-                        alpha = if (enabled) 1f else 0.6f
-                    )
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (icon != null) {
+                        ExpressiveShapeBackground(
+                            iconSize = 48.dp,
+                            color = if (enabled) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.errorContainer,
+                            forcedShape = ExpressiveShapeType.CLOVER_8
+                        )
+                        Icon(
+                            painter = painterResource(icon),
+                            contentDescription = null,
+                            tint = if (enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(Modifier.size(16.dp))
+                    } else if (iconPainter != null) {
+                        ExpressiveShapeBackground(
+                            iconSize = 48.dp,
+                            color = if (enabled) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.errorContainer,
+                            forcedShape = ExpressiveShapeType.CLOVER_8
+                        )
+                        Image(
+                            painter = iconPainter,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
+                        Spacer(Modifier.size(16.dp))
+                    }
                 }
 
                 if (!summary.isNullOrEmpty()) {
@@ -189,7 +207,6 @@ fun AdaptiveSquareCard(
                         text = summary,
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
@@ -199,7 +216,6 @@ fun AdaptiveSquareCard(
                 text = title,
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium),
                 color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-                maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
         }

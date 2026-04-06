@@ -8,10 +8,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material3.ConfirmationDialog
 import androidx.wear.compose.material3.Icon
+import androidx.wear.compose.material3.SuccessConfirmationDialog
 import androidx.wear.compose.material3.Text
+import androidx.wear.compose.material3.curvedText
 
 @Composable
-fun ConfirmationDialog(
+fun FailDialog(
     showDialog: Boolean,
     message: String,
     iconResId: Int,
@@ -32,6 +34,32 @@ fun ConfirmationDialog(
             Text(
                 text = message,
                 textAlign = TextAlign.Center,
+            )
+        },
+    )
+}
+
+@Composable
+fun SuccessDialog(
+    showDialog: Boolean,
+    message: String,
+    iconResId: Int,
+    onDismiss: () -> Unit
+) {
+    SuccessConfirmationDialog(
+        visible = showDialog,
+        onDismissRequest = onDismiss,
+        durationMillis = 3000,
+        content = {
+            Icon(
+                painter = painterResource(id = iconResId),
+                contentDescription = message,
+                modifier = Modifier.size(48.dp)
+            )
+        },
+        curvedText = {
+            curvedText(
+                text = message,
             )
         },
     )

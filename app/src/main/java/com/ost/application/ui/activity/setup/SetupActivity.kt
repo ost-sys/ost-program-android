@@ -116,6 +116,7 @@ class SetupViewModelFactory(private val application: Application) : ViewModelPro
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
+
 data class PermissionItemData(
     val id: String,
     val title: String,
@@ -148,7 +149,8 @@ class SetupActivity : AppCompatActivity() {
 fun SetupNavHost(onFinishAndNavigate: () -> Unit) {
     val navController = rememberNavController()
     val context = LocalContext.current
-    val setupViewModel: SetupViewModel = viewModel(factory = SetupViewModelFactory(context.applicationContext as Application))
+    val setupViewModel: SetupViewModel =
+        viewModel(factory = SetupViewModelFactory(context.applicationContext as Application))
     val settingsState by setupViewModel.uiState.collectAsStateWithLifecycle()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -214,10 +216,12 @@ fun SetupNavHost(onFinishAndNavigate: () -> Unit) {
                                     showPermissionDialog = true
                                 }
                             }
+
                             "timings" -> {
                                 setupViewModel.saveAllSettings()
                                 navController.navigate("other")
                             }
+
                             "other" -> {
                                 setupViewModel.saveAllSettings()
                                 navController.navigate("finish")
@@ -304,22 +308,34 @@ fun PermissionsSetupScreen(onEssentialGrantedChange: (Boolean) -> Unit) {
 
     fun checkPermissions() {
         notifGranted = if (Build.VERSION.SDK_INT >= 33) {
-            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
         } else {
             true
         }
 
         bluetoothGranted = if (Build.VERSION.SDK_INT >= 31) {
-            ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) == PackageManager.PERMISSION_GRANTED
         } else {
             true
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            mediaStateGranted = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_MEDIA_AUDIO) == PackageManager.PERMISSION_GRANTED
+            mediaStateGranted = ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.READ_MEDIA_AUDIO
+            ) == PackageManager.PERMISSION_GRANTED
         }
 
-        phoneStateGranted = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
+        phoneStateGranted = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.READ_PHONE_STATE
+        ) == PackageManager.PERMISSION_GRANTED
 
         overlayGranted = Settings.canDrawOverlays(context)
         installGranted = context.packageManager.canRequestPackageInstalls()
@@ -329,7 +345,10 @@ fun PermissionsSetupScreen(onEssentialGrantedChange: (Boolean) -> Unit) {
         storageGranted = if (Build.VERSION.SDK_INT >= 30) {
             Environment.isExternalStorageManager()
         } else {
-            ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
         }
     }
 
@@ -344,18 +363,28 @@ fun PermissionsSetupScreen(onEssentialGrantedChange: (Boolean) -> Unit) {
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
-    val multiplePermLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { checkPermissions() }
-    val manageStorageLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { checkPermissions() }
-    val systemSettingsLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { checkPermissions() }
+    val multiplePermLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { checkPermissions() }
+    val manageStorageLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { checkPermissions() }
+    val systemSettingsLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { checkPermissions() }
 
-    val essentialList = remember(notifGranted, bluetoothGranted, phoneStateGranted, mediaStateGranted, storageGranted) {
+    val essentialList = remember(
+        notifGranted,
+        bluetoothGranted,
+        phoneStateGranted,
+        mediaStateGranted,
+        storageGranted
+    ) {
         val list = mutableListOf<PermissionItemData>()
 
         if (Build.VERSION.SDK_INT >= 33) {
-            list.add(PermissionItemData(
+            list.add(
+                PermissionItemData(
                 id = "notif",
-                title = "Notifications",
-                summary = "For share progress and alerts",
+                title = context.getString(R.string.notifications),
+                summary = context.getString(R.string.notif_perm_info),
                 icon = R.drawable.ic_notifications_24dp,
                 isGranted = notifGranted,
                 onClick = { multiplePermLauncher.launch(arrayOf(Manifest.permission.POST_NOTIFICATIONS)) }
@@ -363,55 +392,76 @@ fun PermissionsSetupScreen(onEssentialGrantedChange: (Boolean) -> Unit) {
         }
 
         if (Build.VERSION.SDK_INT >= 31) {
-            list.add(PermissionItemData(
+            list.add(
+                PermissionItemData(
                 id = "bt",
-                title = "Nearby devices",
-                summary = "For finding devices to share files",
+                title = context.getString(R.string.nearby_devices),
+                summary = context.getString(R.string.nd_perm_info),
                 icon = R.drawable.ic_wifi_24dp,
                 isGranted = bluetoothGranted,
-                onClick = { multiplePermLauncher.launch(arrayOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN)) }
+                onClick = {
+                    multiplePermLauncher.launch(
+                        arrayOf(
+                            Manifest.permission.BLUETOOTH_CONNECT,
+                            Manifest.permission.BLUETOOTH_SCAN
+                        )
+                    )
+                }
             ))
         }
 
-        list.add(PermissionItemData(
+        list.add(
+            PermissionItemData(
             id = "phone",
-            title = "Phone state",
-            summary = "To display network info and SIM details",
+            title = context.getString(R.string.phone_state),
+            summary = context.getString(R.string.ps_perm_info),
             icon = R.drawable.ic_phone_android_24dp,
             isGranted = phoneStateGranted,
             onClick = { multiplePermLauncher.launch(arrayOf(Manifest.permission.READ_PHONE_STATE)) }
         ))
 
         if (Build.VERSION.SDK_INT >= 33) {
-            list.add(PermissionItemData(
+            list.add(
+                PermissionItemData(
                 id = "media",
-                title = "Media & audio",
-                summary = "For sharing media & audio",
+                title = context.getString(R.string.media_audio),
+                summary = context.getString(R.string.ma_perm_info),
                 icon = R.drawable.ic_music_note_24dp,
                 isGranted = mediaStateGranted,
                 onClick = { multiplePermLauncher.launch(arrayOf(Manifest.permission.READ_MEDIA_AUDIO)) }
             ))
         }
 
-        list.add(PermissionItemData(
+        list.add(
+            PermissionItemData(
             id = "storage",
-            title = "Storage access",
-            summary = if (Build.VERSION.SDK_INT >= 30) "Full access to save and read files" else "Read and write files",
+            title = context.getString(R.string.storage_access),
+            summary =
+                if (Build.VERSION.SDK_INT >= 30)
+                    context.getString(R.string.sdk30_sa_perm_info)
+                else
+                    context.getString(R.string.sa_perm_info),
             icon = R.drawable.ic_folder_24dp,
             isGranted = storageGranted,
             onClick = {
                 if (Build.VERSION.SDK_INT >= 30) {
                     try {
-                        val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
-                            data = "package:${context.packageName}".toUri()
-                        }
+                        val intent =
+                            Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+                                data = "package:${context.packageName}".toUri()
+                            }
                         manageStorageLauncher.launch(intent)
                     } catch (e: Exception) {
                         val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
                         manageStorageLauncher.launch(intent)
                     }
                 } else {
-                    multiplePermLauncher.launch(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE))
+                    multiplePermLauncher.launch(
+                        arrayOf(
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                        )
+                    )
                 }
             }
         ))
@@ -427,8 +477,8 @@ fun PermissionsSetupScreen(onEssentialGrantedChange: (Boolean) -> Unit) {
         listOf(
             PermissionItemData(
                 id = "overlay",
-                title = "Display over other apps",
-                summary = "For background services while sharing",
+                title = context.getString(R.string.display_over_other_apps),
+                summary = context.getString(R.string.dooa_perm_info),
                 icon = R.drawable.ic_layers_24dp,
                 isGranted = overlayGranted,
                 onClick = {
@@ -440,8 +490,8 @@ fun PermissionsSetupScreen(onEssentialGrantedChange: (Boolean) -> Unit) {
             ),
             PermissionItemData(
                 id = "settings",
-                title = "Modify system settings",
-                summary = "To change display brightness",
+                title = context.getString(R.string.modify_system_settings),
+                summary = context.getString(R.string.mys_perm_info),
                 icon = R.drawable.ic_settings_24dp,
                 isGranted = writeSettingsGranted,
                 onClick = {
@@ -453,8 +503,8 @@ fun PermissionsSetupScreen(onEssentialGrantedChange: (Boolean) -> Unit) {
             ),
             PermissionItemData(
                 id = "install",
-                title = "Install Unknown Apps",
-                summary = "To update itself or install shared APKs",
+                title = context.getString(R.string.install_unknown_apps),
+                summary = context.getString(R.string.iua_perm_info),
                 icon = R.drawable.ic_download_for_offline_24dp,
                 isGranted = installGranted,
                 onClick = {
@@ -591,8 +641,8 @@ fun TimingsSetupScreen(
 fun OthersSetupScreen(
     state: SettingsUiState,
     onGithubTokenChange: (String) -> Unit,
-    onSaveGithubToken: () -> Unit)
-{
+    onSaveGithubToken: () -> Unit
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(bottom = 100.dp)
@@ -600,8 +650,8 @@ fun OthersSetupScreen(
         item {
             Column(modifier = Modifier.padding(16.dp)) {
                 ScreenHeader(
-                    title = "Other",
-                    description = "Other features of this app",
+                    title = stringResource(R.string.other),
+                    description = stringResource(R.string.other_features_of_this_app),
                     shapeType = ExpressiveShapeType.COOKIE_4,
                     icon = R.drawable.ic_more_horiz_24dp
                 )
@@ -658,8 +708,10 @@ fun OthersSetupScreen(
 fun FinishSetupScreen(onFinishAndNavigate: () -> Unit) {
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
     val scale by infiniteTransition.animateFloat(
-        initialValue = 1f, targetValue = 1.05f,
-        animationSpec = infiniteRepeatable(tween(1500, easing = EaseInOut), RepeatMode.Reverse), label = "scale"
+        initialValue = 1f,
+        targetValue = 1.05f,
+        animationSpec = infiniteRepeatable(tween(1500, easing = EaseInOut), RepeatMode.Reverse),
+        label = "scale"
     )
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -725,9 +777,11 @@ fun FinishSetupScreen(onFinishAndNavigate: () -> Unit) {
 
 @Composable
 fun ScreenHeader(title: String, description: String, shapeType: ExpressiveShapeType, icon: Int) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(bottom = 24.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 24.dp)
+    ) {
         Box(
             modifier = Modifier.size(64.dp),
             contentAlignment = Alignment.Center
@@ -746,9 +800,17 @@ fun ScreenHeader(title: String, description: String, shapeType: ExpressiveShapeT
             )
         }
         Spacer(Modifier.height(16.dp))
-        Text(text = title, style = MaterialTheme.typography.displaySmall, fontWeight = FontWeight.Bold)
+        Text(
+            text = title,
+            style = MaterialTheme.typography.displaySmall,
+            fontWeight = FontWeight.Bold
+        )
         Spacer(Modifier.height(8.dp))
-        Text(text = description, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(
+            text = description,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
@@ -791,7 +853,11 @@ fun SetupBottomBar(onNext: () -> Unit, onBack: () -> Unit, showBack: Boolean) {
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(Modifier.width(8.dp))
-                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(18.dp))
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
             }
         }
     }
@@ -809,12 +875,27 @@ fun SetupGroupCard(content: @Composable () -> Unit) {
 }
 
 @Composable
-fun SeekBarPreference(title: String, value: Int, range: ClosedFloatingPointRange<Float>, steps: Int, onValueChange: (Float) -> Unit) {
+fun SeekBarPreference(
+    title: String,
+    value: Int,
+    range: ClosedFloatingPointRange<Float>,
+    steps: Int,
+    onValueChange: (Float) -> Unit
+) {
     val haptic = LocalHapticFeedback.current
     Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Text(text = title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
-            Text(text = value.toString(), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = value.toString(),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
+            )
         }
         Slider(
             value = value.toFloat(),

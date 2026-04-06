@@ -37,6 +37,7 @@ fun Modifier.wearListInteraction(
 fun InfoListScreenContent(
     listState: ScalingLazyListState,
     screenTitle: String?,
+    icon: Int?,
     items: List<ListItem>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(start = 8.dp, end = 8.dp)
@@ -60,6 +61,7 @@ fun InfoListScreenContent(
             item {
                 ListItems(
                     text = title,
+                    icon = icon,
                 )
             }
         }
@@ -71,6 +73,7 @@ fun InfoListScreenContent(
                 summary = item.summary,
                 icon = item.icon,
                 status = item.status,
+                position = item.position,
                 onClick = item.onClick ?: {}
             )
         }

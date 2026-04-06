@@ -27,11 +27,11 @@ import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.wear.compose.material3.MaterialTheme
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.audio.SystemAudioRepository
 import com.google.android.horologist.audio.ui.VolumeViewModel
 import com.google.android.horologist.media.data.repository.PlayerRepositoryImpl
+import com.ost.application.theme.OSTToolsTheme
 
 internal const val MUSIC_ACTIVITY_TAG = "MusicActivityLog"
 private const val SEEK_INCREMENT_MS = 10000L
@@ -156,7 +156,7 @@ class MusicActivity : ComponentActivity() {
             }
 
         setContent {
-            MaterialTheme {
+            OSTToolsTheme {
                 MainPlayerScreen(
                     launchMode = launchMode,
                     singleTrackUri = musicUri,

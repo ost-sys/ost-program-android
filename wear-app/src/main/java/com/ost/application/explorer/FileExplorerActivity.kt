@@ -86,6 +86,8 @@ import androidx.wear.compose.material3.AppCard
 import androidx.wear.compose.material3.AppScaffold
 import androidx.wear.compose.material3.Button
 import androidx.wear.compose.material3.ButtonDefaults
+import androidx.wear.compose.material3.CardColors
+import androidx.wear.compose.material3.CardDefaults
 import androidx.wear.compose.material3.EdgeButton
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.ListHeader
@@ -101,7 +103,10 @@ import com.ost.application.R
 import com.ost.application.explorer.music.MusicActivity
 import com.ost.application.share.Constants
 import com.ost.application.share.ShareActivity
-import com.ost.application.util.ConfirmationDialog
+import com.ost.application.theme.OSTToolsTheme
+import com.ost.application.util.CardPosition
+import com.ost.application.util.FailDialog
+import com.ost.application.util.SuccessDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -426,14 +431,21 @@ class FileExplorerActivity : ComponentActivity() {
         val currentActionsDialogFile by _showActionsDialogForFile
         val actionsDialogListState = rememberScalingLazyListState()
 
-        MaterialTheme {
+        OSTToolsTheme {
             AppScaffold(
                 timeText = { TimeText() }
             ) {
                 ScreenScaffold(
                     scrollState = listState,
-                    contentPadding = PaddingValues(10.dp))
-                {
+                    contentPadding = PaddingValues(10.dp),
+                    edgeButton = {
+                        EdgeButton(
+                            onClick = {  }
+                        ) {
+                            Icon(painterResource(R.drawable.ic_settings_24dp), "Settings")
+                        }
+                    }
+                ) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         FileList(
                             modifier = Modifier.fillMaxSize(),
@@ -480,15 +492,13 @@ class FileExplorerActivity : ComponentActivity() {
 
                         AnimatedVisibility(
                             modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .padding(bottom = 10.dp),
+                                .align(Alignment.BottomCenter),
                             visible = showPasteButton,
                             enter = slideInVertically { it / 2 } + fadeIn(),
                             exit = slideOutVertically { it / 2 } + fadeOut()
                         ) {
-                            Button(
+                            EdgeButton(
                                 onClick = { pasteFiles() },
-                                shape = RoundedCornerShape(50),
                             ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_paste_24dp),
@@ -516,12 +526,21 @@ class FileExplorerActivity : ComponentActivity() {
 
             currentDialogInfo?.let { info ->
                 val iconRes = if (info.isError) R.drawable.ic_error_24dp else R.drawable.ic_check_circle_24dp
-                ConfirmationDialog(
-                    message = info.message,
-                    iconResId = iconRes,
-                    onDismiss = { dialogInfo.value = null },
-                    showDialog = true
-                )
+                if (info.isError) {
+                    FailDialog(
+                        message = info.message,
+                        iconResId = iconRes,
+                        onDismiss = { dialogInfo.value = null },
+                        showDialog = true
+                    )
+                } else {
+                    SuccessDialog(
+                        message = info.message,
+                        iconResId = iconRes,
+                        onDismiss = { dialogInfo.value = null },
+                        showDialog = true
+                    )
+                }
             }
 
             BackHandler(enabled = true) {
@@ -615,7 +634,8 @@ class FileExplorerActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.width(8.dp))
                         Button(
                             enabled = !isActionDialogVisible,
-                            onClick = { showNewFileDialog.value = true }
+                            onClick = { showNewFileDialog.value = true },
+                            shape = RoundedCornerShape(16.dp)
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_add_24dp),
@@ -640,6 +660,13 @@ class FileExplorerActivity : ComponentActivity() {
                 } else {
                     items(files.size, key = { index -> files[index].absolutePath }) { index ->
                         val file = files[index]
+
+                        val position = when {
+                            files.size == 1 -> CardPosition.SINGLE
+                            index == 0 -> CardPosition.TOP
+                            index == files.lastIndex -> CardPosition.BOTTOM
+                            else -> CardPosition.MIDDLE
+                        }
 
                         val (itemType, itemIcon) = remember(file.isDirectory, file.extension) {
                             getItemTypeAndIcon(file)
@@ -668,6 +695,7 @@ class FileExplorerActivity : ComponentActivity() {
                         CardItem(
                             title = file.name,
                             summary = summaryState.value,
+                            position = position,
                             itemType = itemType,
                             itemIcon = itemIcon,
                             time = lastModifiedText,
@@ -763,7 +791,7 @@ class FileExplorerActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(horizontal = 18.dp)
+                    .padding(horizontal = 12.dp)
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -790,8 +818,7 @@ class FileExplorerActivity : ComponentActivity() {
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
                         .border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(4.dp))
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
-                        .focusRequester(focusRequester),
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
                 )
 
                 LaunchedEffect(Unit) {
@@ -806,6 +833,7 @@ class FileExplorerActivity : ComponentActivity() {
                     checked = isDirectory,
                     onCheckedChange = { isDirectory = it },
                     label = { Text(stringResource(R.string.folder)) },
+                    icon = { Icon(painterResource(R.drawable.ic_folder_24dp), "folder") }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
@@ -821,6 +849,7 @@ class FileExplorerActivity : ComponentActivity() {
                     Spacer(modifier = Modifier.size(6.dp))
                     Button(
                         onClick = { onCreate(name, isDirectory) },
+                        shape = RoundedCornerShape(16.dp)
                     ) {
                         Icon(painter = painterResource(R.drawable.ic_add_24dp), contentDescription = "Create")
                     }
@@ -1146,11 +1175,22 @@ fun CardItem(
     itemType: String,
     itemIcon: Int,
     time: String,
+    position: CardPosition,
     onOpenFile: () -> Unit,
     onDeleteSwipe: () -> Unit,
     onShowActionsRequest: () -> Unit
 ) {
     val revealState = rememberRevealState()
+
+    val largeCornerRadius = 24.dp
+    val smallCornerRadius = 4.dp
+
+    val shape = when (position) {
+        CardPosition.TOP -> RoundedCornerShape(topStart = largeCornerRadius, topEnd = largeCornerRadius, bottomStart = smallCornerRadius, bottomEnd = smallCornerRadius)
+        CardPosition.MIDDLE -> RoundedCornerShape(smallCornerRadius)
+        CardPosition.BOTTOM -> RoundedCornerShape(topStart = smallCornerRadius, topEnd = smallCornerRadius, bottomStart = largeCornerRadius, bottomEnd = largeCornerRadius)
+        CardPosition.SINGLE -> RoundedCornerShape(largeCornerRadius)
+    }
 
     SwipeToReveal(
         modifier = Modifier.fillMaxWidth(),
@@ -1177,12 +1217,14 @@ fun CardItem(
             AppCard(
                 onClick = onOpenFile,
                 modifier = Modifier.fillMaxWidth(),
+                shape = shape,
                 appName = { Text(itemType, maxLines = 1) },
                 appImage = {
                     Icon(
                         painter = painterResource(id = itemIcon),
                         contentDescription = itemType,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(20.dp),
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 },
                 title = { Text(title, maxLines = 2) },
@@ -1262,13 +1304,13 @@ fun FileActionsDialog(
                             )
                         }
                     }
-                    item { ActionChip(iconResId = R.drawable.ic_copy_24dp, label = stringResource(R.string.copy), onClick = onCopy) }
-                    item { ActionChip(iconResId = R.drawable.ic_cut_24dp, label = stringResource(R.string.cut), onClick = onCut) }
-                    item { ActionChip(iconResId = R.drawable.ic_edit_24dp, label = stringResource(R.string.rename), onClick = onRename) }
+                    item { ActionChip(iconResId = R.drawable.ic_copy_24dp, label = stringResource(R.string.copy), position = CardPosition.TOP, onClick = onCopy) }
+                    item { ActionChip(iconResId = R.drawable.ic_cut_24dp, label = stringResource(R.string.cut), position = CardPosition.MIDDLE, onClick = onCut) }
+                    item { ActionChip(iconResId = R.drawable.ic_edit_24dp, label = stringResource(R.string.rename), position = CardPosition.MIDDLE, onClick = onRename) }
                     if (!file.isDirectory) {
-                        item { ActionChip(iconResId = R.drawable.ic_share_24dp, label = stringResource(R.string.share), onClick = onShare) }
+                        item { ActionChip(iconResId = R.drawable.ic_share_24dp, label = stringResource(R.string.share), position = CardPosition.MIDDLE, onClick = onShare) }
                     }
-                    item { ActionChip(iconResId = R.drawable.ic_delete_24dp, label = stringResource(R.string.delete), onClick = onDelete, isDestructive = true) }
+                    item { ActionChip(iconResId = R.drawable.ic_delete_24dp, label = stringResource(R.string.delete), onClick = onDelete, position = CardPosition.BOTTOM, isDestructive = true) }
 
                     item { Spacer(Modifier.height(8.dp)) }
                 }
@@ -1281,14 +1323,26 @@ fun FileActionsDialog(
 private fun ActionChip(
     iconResId: Int,
     label: String,
+    position: CardPosition,
     onClick: () -> Unit,
     isDestructive: Boolean = false
 ) {
+    val largeCornerRadius = 24.dp
+    val smallCornerRadius = 4.dp
+
+    val shape = when (position) {
+        CardPosition.TOP -> RoundedCornerShape(topStart = largeCornerRadius, topEnd = largeCornerRadius, bottomStart = smallCornerRadius, bottomEnd = smallCornerRadius)
+        CardPosition.MIDDLE -> RoundedCornerShape(smallCornerRadius)
+        CardPosition.BOTTOM -> RoundedCornerShape(topStart = smallCornerRadius, topEnd = smallCornerRadius, bottomStart = largeCornerRadius, bottomEnd = largeCornerRadius)
+        CardPosition.SINGLE -> RoundedCornerShape(largeCornerRadius)
+    }
+
     Chip(
         modifier = Modifier
             .fillMaxWidth(),
         icon = { Icon(painterResource(id = iconResId), contentDescription = null) },
         label = { Text(label) },
+        shape = shape,
         onClick = onClick,
         colors = if (isDestructive) ChipDefaults.primaryChipColors(
             backgroundColor = MaterialTheme.colorScheme.errorContainer,

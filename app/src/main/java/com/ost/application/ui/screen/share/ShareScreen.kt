@@ -133,8 +133,8 @@ fun ShareScreen(
 
     var showSuccessAnimation by remember { mutableStateOf(false) }
 
-    val sentSuccessPrefix = context.getString(R.string.sent_multi_success).substringBefore("%").trim()
-    val receivedSuccessPrefix = context.getString(R.string.received_multi_success).substringBefore("%").trim()
+    val sentSuccessPrefix = stringResource(R.string.sent_multi_success).substringBefore("%").trim()
+    val receivedSuccessPrefix = stringResource(R.string.received_multi_success).substringBefore("%").trim()
 
     LaunchedEffect(transferStatus, isTransferActive, isReceivingActive) {
         if (!isTransferActive && !isReceivingActive) {
@@ -261,18 +261,17 @@ fun ShareScreen(
                 Snackbar(
                     modifier = Modifier.padding(12.dp),
                     action = { data.visuals.actionLabel?.let { actionLabel -> Button(onClick = { data.performAction() }) { Text(actionLabel) } } },
-                    containerColor = if (data.visuals.message.startsWith(context.getString(R.string.error_prefix))) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.inverseSurface,
-                    contentColor = if (data.visuals.message.startsWith(context.getString(R.string.error_prefix))) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.inverseOnSurface
+                    containerColor = if (data.visuals.message.startsWith(stringResource(R.string.error_prefix))) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.inverseSurface,
+                    contentColor = if (data.visuals.message.startsWith(stringResource(R.string.error_prefix))) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.inverseOnSurface
                 ) { Text(text = data.visuals.message) }
             }
         }
-    ) { paddingValues ->
+    ) { _ ->
         val bottomSpacing = LocalBottomSpacing.current
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
         ) {
             if (incomingTransferRequest != null) {
@@ -290,7 +289,7 @@ fun ShareScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp, horizontal = 16.dp),
+                    .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(vertical = 5.dp)) {

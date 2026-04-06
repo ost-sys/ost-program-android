@@ -5,4 +5,6 @@
     <locale android:name="uk"/>
     <locale android:name="es"/>
     <locale android:name="be"/>
+    <locale android:name="lez"/>
+    <locale android:name="tt"/>
 </locale-config>

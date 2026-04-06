@@ -4,7 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    private const val BASE_URL = "https://api.github.com/"
+    private const val BASE_URL = "https://api.github.com/repos/ost-sys/ost-program-android/releases/"
 
     val instance: GitHubApiService by lazy {
         Retrofit.Builder()

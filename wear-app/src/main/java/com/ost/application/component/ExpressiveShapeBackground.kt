@@ -1,5 +1,6 @@
-package com.ost.application.ui.component
+package com.ost.application.component
 
+import android.annotation.SuppressLint
 import android.graphics.Matrix
 import android.graphics.Path
 import android.graphics.RectF
@@ -12,9 +13,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.MaterialShapes
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -29,18 +27,20 @@ import androidx.graphics.shapes.Morph
 import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.circle
 import androidx.graphics.shapes.toPath
+import androidx.wear.compose.material3.MaterialTheme
+import com.google.android.material.shape.MaterialShapes
 import kotlinx.coroutines.launch
 
+// === КОНСТАНТЫ РАЗМЕРА ===
 private const val SCALE_HUGE = 2.0f
 private const val SCALE_LARGE = 1.8f
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 enum class ExpressiveShapeType(val visualScale: Float) {
-    CIRCLE(SCALE_LARGE),
-    SQUARE(SCALE_LARGE),
-    ARCH(SCALE_LARGE),
-    OVAL(SCALE_LARGE),
-    PILL(SCALE_LARGE),
+    CIRCLE(SCALE_HUGE),
+    SQUARE(SCALE_HUGE),
+    ARCH(SCALE_HUGE),
+    OVAL(SCALE_HUGE),
+    PILL(SCALE_HUGE),
     COOKIE_4(SCALE_HUGE),
     COOKIE_9(SCALE_HUGE),
     CLOVER_4(SCALE_HUGE),
@@ -173,17 +173,17 @@ private class ShapeState {
     var morph: Morph = Morph(startPolygon, endPolygon)
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@SuppressLint("RestrictedApi")
 private fun getM3Shape(type: ExpressiveShapeType): RoundedPolygon {
     return when (type) {
-        ExpressiveShapeType.CIRCLE -> MaterialShapes.Circle
-        ExpressiveShapeType.SQUARE -> MaterialShapes.Square
-        ExpressiveShapeType.ARCH -> MaterialShapes.Arch
-        ExpressiveShapeType.OVAL -> MaterialShapes.Oval
-        ExpressiveShapeType.PILL -> MaterialShapes.Pill
-        ExpressiveShapeType.COOKIE_4 -> MaterialShapes.Cookie4Sided
-        ExpressiveShapeType.COOKIE_9 -> MaterialShapes.Cookie9Sided
-        ExpressiveShapeType.CLOVER_4 -> MaterialShapes.Clover4Leaf
-        ExpressiveShapeType.CLOVER_8 -> MaterialShapes.Clover8Leaf
+        ExpressiveShapeType.CIRCLE -> MaterialShapes.CIRCLE
+        ExpressiveShapeType.SQUARE -> MaterialShapes.SQUARE
+        ExpressiveShapeType.ARCH -> MaterialShapes.ARCH
+        ExpressiveShapeType.OVAL -> MaterialShapes.OVAL
+        ExpressiveShapeType.PILL -> MaterialShapes.PILL
+        ExpressiveShapeType.COOKIE_4 -> MaterialShapes.COOKIE_4
+        ExpressiveShapeType.COOKIE_9 -> MaterialShapes.COOKIE_9
+        ExpressiveShapeType.CLOVER_4 -> MaterialShapes.CLOVER_4
+        ExpressiveShapeType.CLOVER_8 -> MaterialShapes.CLOVER_8
     }
 }

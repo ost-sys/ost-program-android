@@ -74,8 +74,10 @@ fun TimeCalculatorPage(
         yearRange = 1900..Calendar.getInstance().get(Calendar.YEAR) + 100
     )
 
-    val calendar1 = remember { Calendar.getInstance() }.apply { timeInMillis = uiState.firstDateTimeMillis }
-    val calendar2 = remember { Calendar.getInstance() }.apply { timeInMillis = uiState.secondDateTimeMillis }
+    val calendar1 =
+        remember { Calendar.getInstance() }.apply { timeInMillis = uiState.firstDateTimeMillis }
+    val calendar2 =
+        remember { Calendar.getInstance() }.apply { timeInMillis = uiState.secondDateTimeMillis }
 
     val timePickerState1 = rememberTimePickerState(
         initialHour = calendar1.get(Calendar.HOUR_OF_DAY),
@@ -101,8 +103,7 @@ fun TimeCalculatorPage(
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp),
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
@@ -153,7 +154,7 @@ fun TimeCalculatorPage(
                 onClick = { showTimePicker1 = true }
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             SectionTitle(stringResource(R.string.subtrahend))
 
@@ -177,55 +178,91 @@ fun TimeCalculatorPage(
 
     if (showDatePicker1) {
         DatePickerDialog(
-            onDismissRequest = { },
+            onDismissRequest = { showDatePicker1 = false },
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState1.selectedDateMillis?.let { millis ->
                         val cal = Calendar.getInstance().apply { timeInMillis = millis }
-                        viewModel.updateFirstDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+                        viewModel.updateFirstDate(
+                            cal.get(Calendar.YEAR),
+                            cal.get(Calendar.MONTH),
+                            cal.get(Calendar.DAY_OF_MONTH)
+                        )
                     }
+                    showDatePicker1 = false
                 }) { Text(stringResource(android.R.string.ok)) }
             },
-            dismissButton = { TextButton(onClick = { showDatePicker1 = false }) { Text(stringResource(android.R.string.cancel)) } }
+            dismissButton = {
+                TextButton(onClick = { showDatePicker1 = false }) {
+                    Text(
+                        stringResource(android.R.string.cancel)
+                    )
+                }
+            }
         ) { DatePicker(state = datePickerState1) }
     }
 
     if (showTimePicker1) {
         TimePickerDialog(
-            onDismissRequest = { },
+            onDismissRequest = { showTimePicker1 = false },
             confirmButton = {
                 TextButton(onClick = {
                     viewModel.updateFirstTime(timePickerState1.hour, timePickerState1.minute)
+                    showTimePicker1 = false
                 }) { Text(stringResource(android.R.string.ok)) }
             },
-            dismissButton = { TextButton(onClick = { showTimePicker1 = false }) { Text(stringResource(android.R.string.cancel)) } }
+            dismissButton = {
+                TextButton(onClick = { showTimePicker1 = false }) {
+                    Text(
+                        stringResource(android.R.string.cancel)
+                    )
+                }
+            }
         ) { TimePicker(state = timePickerState1, modifier = Modifier.padding(16.dp)) }
     }
 
     if (showDatePicker2) {
         DatePickerDialog(
-            onDismissRequest = { },
+            onDismissRequest = { showDatePicker2 = false },
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState2.selectedDateMillis?.let { millis ->
                         val cal = Calendar.getInstance().apply { timeInMillis = millis }
-                        viewModel.updateSecondDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+                        viewModel.updateSecondDate(
+                            cal.get(Calendar.YEAR),
+                            cal.get(Calendar.MONTH),
+                            cal.get(Calendar.DAY_OF_MONTH)
+                        )
                     }
+                    showDatePicker2 = false
                 }) { Text(stringResource(android.R.string.ok)) }
             },
-            dismissButton = { TextButton(onClick = { showDatePicker2 = false }) { Text(stringResource(android.R.string.cancel)) } }
+            dismissButton = {
+                TextButton(onClick = { showDatePicker2 = false }) {
+                    Text(
+                        stringResource(android.R.string.cancel)
+                    )
+                }
+            }
         ) { DatePicker(state = datePickerState2) }
     }
 
     if (showTimePicker2) {
         TimePickerDialog(
-            onDismissRequest = { },
+            onDismissRequest = { showTimePicker2 = false },
             confirmButton = {
                 TextButton(onClick = {
                     viewModel.updateSecondTime(timePickerState2.hour, timePickerState2.minute)
+                    showTimePicker2 = false
                 }) { Text(stringResource(android.R.string.ok)) }
             },
-            dismissButton = { TextButton(onClick = { showTimePicker2 = false }) { Text(stringResource(android.R.string.cancel)) } }
+            dismissButton = {
+                TextButton(onClick = { showTimePicker2 = false }) {
+                    Text(
+                        stringResource(android.R.string.cancel)
+                    )
+                }
+            }
         ) { TimePicker(state = timePickerState2, modifier = Modifier.padding(16.dp)) }
     }
 }

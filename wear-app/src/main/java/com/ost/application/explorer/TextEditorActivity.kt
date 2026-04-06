@@ -45,7 +45,8 @@ import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.material.Vignette
 import androidx.wear.compose.material.VignettePosition
 import com.ost.application.R
-import com.ost.application.util.ConfirmationDialog
+import com.ost.application.theme.OSTToolsTheme
+import com.ost.application.util.FailDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -75,7 +76,7 @@ class TextEditorActivity : ComponentActivity() {
         }
 
         setContent {
-            MaterialTheme {
+            OSTToolsTheme {
                 TextEditorScreen()
             }
         }
@@ -239,7 +240,7 @@ class TextEditorActivity : ComponentActivity() {
 
             currentDialog?.let { state ->
                 val iconRes = if (state.isError) R.drawable.ic_error_24dp else R.drawable.ic_check_circle_24dp
-                ConfirmationDialog(
+                FailDialog(
                     message = state.message,
                     iconResId = iconRes,
                     onDismiss = { dialogState.value = null },

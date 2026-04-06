@@ -1,6 +1,6 @@
 <img src="banner.png" width="100%"/>
 
-# <center> The project is based on the Jetpack Compose Material Design 3. </center>
+# <center> The project is based on the Jetpack Compose Material Design 3</center>
 ### Functions:
 - Some information about the phone
 - Reboot to different modes (Recovery, Fastboot, Download Mode)
@@ -51,26 +51,8 @@
 
 ## Usage
 - Get your token here - https://github.com/settings/tokens
-- Put your token to local.propreties:
-```properties
-github.token=token_here
-```
-- Put your repos in NetworkDataSource.kt
-```kt
-private suspend fun getStargazersInternal(): List<Stargazer> = withContext(Dispatchers.IO) {
-    Log.d(TAG, "Starting getStargazersInternal...")
-    val repoList = listOf(
-        "ost-sys.github.io", // here
-        "ost-program-android" // and here
-    )
-...
-```
-- Put your GitHub username
-```kt
-val result = service.getStargazers("your_username", repoName).map { stargazer ->
-    stargazer to repoName
-}
-```
+- Put your token in app
+
 ### How to install app on WearOS and grand permissions:
 - Pair your watch with PC using Wireless ADB ([Guildeline (XDA)](https://xdaforums.com/t/guide-how-to-connect-adb-over-wifi.3368602/))
 - Install app

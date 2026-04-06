@@ -85,8 +85,7 @@ fun TimeZoneConverterPage(
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp),
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
@@ -129,7 +128,7 @@ fun TimeZoneConverterPage(
                 onClick = { showSourceZonePicker = true }
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             SectionTitle(stringResource(R.string.second_time_zone))
 
@@ -153,10 +152,11 @@ fun TimeZoneConverterPage(
 
     if (showTimePicker) {
         TimePickerDialog(
-            onDismissRequest = { },
+            onDismissRequest = { showTimePicker = false },
             confirmButton = {
                 TextButton(onClick = {
                     viewModel.setSelectedTime(timePickerState.hour, timePickerState.minute)
+                    showTimePicker = false
                 }) { Text(stringResource(android.R.string.ok)) }
             },
             dismissButton = {
@@ -174,6 +174,7 @@ fun TimeZoneConverterPage(
             onDismiss = { showSourceZonePicker = false },
             onZoneSelected = { zone ->
                 viewModel.setSourceTimeZone(zone)
+                showSourceZonePicker = false
             }
         )
     }
@@ -185,6 +186,7 @@ fun TimeZoneConverterPage(
             onDismiss = { showTargetZonePicker = false},
             onZoneSelected = { zone ->
                 viewModel.setTargetTimeZone(zone)
+                showTargetZonePicker = false
             }
         )
     }

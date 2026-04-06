@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ost.application.R
 import com.ost.application.ui.screen.converters.currency.CurrencyConverterPage
@@ -32,6 +34,7 @@ import com.ost.application.ui.state.FabSize
 import com.ost.application.ui.state.LocalFabController
 import kotlinx.coroutines.launch
 
+@ExperimentalMaterial3ExpressiveApi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConvertersScreen(modifier: Modifier = Modifier) {
@@ -98,6 +101,7 @@ fun ConvertersScreen(modifier: Modifier = Modifier) {
                         Text(
                             text = title,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                            fontSize = if (isSelected) 16.sp else 14.sp,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )

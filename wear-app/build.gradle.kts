@@ -12,8 +12,8 @@ android {
         applicationId = "com.ost.application"
         minSdk = 30
         targetSdk = 36
-        versionCode = 202
-        versionName = "2.1.0-beta01"
+        versionCode = 300
+        versionName = "3.0.0-beta2"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -26,8 +26,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     buildFeatures {
         compose = true
@@ -38,7 +38,7 @@ android {
         includeInApk = true
         includeInBundle = true
     }
-    buildToolsVersion = "35.0.1"
+    buildToolsVersion = "36.1.0"
 
     packaging  {
         resources {
@@ -47,25 +47,17 @@ android {
     }
 }
 
-kotlin {
-    compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
-    }
-}
-
 dependencies {
     val horologist = "0.8.3-alpha"
-    implementation("com.squareup.retrofit2:retrofit:3.0.0")
-    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
     implementation("com.squareup.okhttp3:logging-interceptor:5.3.2")
-    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
-    implementation("io.coil-kt.coil3:coil-network-okhttp:3.3.0")
+    implementation(libs.coil.compose.v340)
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.session)
     implementation(libs.androidx.media3.ui)
     implementation("org.nanohttpd:nanohttpd:2.3.1")
-    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation(libs.coil.compose)
     implementation("com.google.android.horologist:horologist-media-ui-model:$horologist")
     implementation("com.google.android.horologist:horologist-audio-ui-model:$horologist")
     implementation("com.google.android.horologist:horologist-audio-ui-material3:$horologist")

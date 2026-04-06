@@ -19,10 +19,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.wear.compose.material3.MaterialTheme
-
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.ost.application.theme.OSTToolsTheme
 import java.io.File
 
 class ImageActivity : ComponentActivity() {
@@ -38,7 +37,7 @@ class ImageActivity : ComponentActivity() {
         }
 
         setContent {
-            MaterialTheme {
+            OSTToolsTheme {
                 ImageViewerScreen(
                     imagePath = imagePath,
                     onDismiss = { finish() }

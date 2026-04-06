@@ -2,7 +2,7 @@
 
 package com.ost.application.ui.screen.applist
 
-import android.annotation.SuppressLint
+import android.app.Application
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.provider.Settings
@@ -40,7 +40,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -54,8 +53,7 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -76,8 +74,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.core.net.toUri
-import coil.Coil
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.ost.application.LocalBottomSpacing
 import com.ost.application.R
@@ -85,125 +85,109 @@ import com.ost.application.ui.state.FabSize
 import com.ost.application.ui.state.LocalFabController
 import com.ost.application.util.CardPosition
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterial3ExpressiveApi
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppListScreen(modifier: Modifier = Modifier) {
+fun AppListScreen(
+    modifier: Modifier = Modifier,
+    viewModel: AppListViewModel = viewModel(
+        factory = AppListViewModelFactory(LocalContext.current.applicationContext as Application)
+    )
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val bottomSpacing = LocalBottomSpacing.current
-
-    var appList by remember { mutableStateOf<List<AppInfo>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(true) }
-    var errorLoading by remember { mutableStateOf<String?>(null) }
-    var showSystemApps by remember { mutableStateOf(true) }
-    var searchQuery by remember { mutableStateOf("") }
-
-    val isRootAvailable by produceState(initialValue = false) {
-        value = RootUtils.isRootAvailable
-    }
-
     val snackbarHostState = remember { SnackbarHostState() }
+    val fabController = LocalFabController.current
+
     val showSnackbar: suspend (String, SnackbarDuration) -> Unit = { message, duration ->
         snackbarHostState.showSnackbar(message = message, duration = duration)
     }
 
-    val refreshAppList: suspend (showLoadingIndicator: Boolean) -> Unit = { showLoadingIndicator ->
-        if (showLoadingIndicator) isLoading = true
-        errorLoading = null
-        try {
-            val freshList = getInstalledApps(context)
-            appList = freshList
-        } catch (e: Exception) {
-            errorLoading = context.getString(R.string.error_loading_app_list, e.localizedMessage ?: "Unknown")
-            appList = emptyList()
-        } finally {
-            if (showLoadingIndicator) isLoading = false
-        }
-    }
-
-    val fabController = LocalFabController.current
     LaunchedEffect(Unit) {
         fabController.setFab(
             icon = R.drawable.ic_refresh_24dp,
             description = "Refresh",
             fabSize = FabSize.Small,
-            action = { coroutineScope.launch { refreshAppList(true) } }
+            action = { viewModel.refresh(true) }
         )
     }
 
-    LaunchedEffect(Unit) {
-        refreshAppList(true)
-    }
-
-    val filteredAppList = remember(appList, showSystemApps, searchQuery) {
-        val systemFiltered = if (showSystemApps) {
-            appList
-        } else {
-            appList.filter { !it.isSystemApp }
-        }
-        if (searchQuery.isBlank()) {
-            systemFiltered
-        } else {
-            systemFiltered.filter { appInfo ->
-                appInfo.name.contains(searchQuery, ignoreCase = true) ||
-                        appInfo.packageName.contains(searchQuery, ignoreCase = true)
-            }
-        }
-    }
-
-    val searchBarHeight = 72.dp
-
     Box(modifier = modifier.fillMaxSize()) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(
-                top = searchBarHeight + 16.dp,
-                bottom = bottomSpacing + 88.dp
-            ),
-            verticalArrangement = Arrangement.spacedBy(0.dp)
-        ) {
-            itemsIndexed(
-                items = filteredAppList,
-                key = { _, appInfo -> appInfo.packageName }
-            ) { index, appInfo ->
-                val position = when {
-                    filteredAppList.size == 1 -> CardPosition.SINGLE
-                    index == 0 -> CardPosition.TOP
-                    index == filteredAppList.lastIndex -> CardPosition.BOTTOM
-                    else -> CardPosition.MIDDLE
-                }
 
-                AppListItem(
-                    appInfo = appInfo,
-                    isRootAvailable = isRootAvailable,
-                    position = position,
-                    coroutineScope = coroutineScope,
-                    showSnackbar = { msg, dur ->
-                        coroutineScope.launch { showSnackbar(msg, dur) }
-                    },
-                    onActionTriggered = { packageName, isRootUninstall ->
-                        coroutineScope.launch {
-                            val delayMillis = if (isRootUninstall) 1500L else 3000L
-                            delay(delayMillis)
-                            refreshAppList(false)
-                        }
+        if (state.isLoading) {
+            CircularWavyProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        } else if (state.error != null) {
+            Column(
+                modifier = Modifier.align(Alignment.Center).padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(state.error!!, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.error)
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = { viewModel.refresh(true) }) { Text(stringResource(R.string.retry)) }
+            }
+        } else if (state.apps.isEmpty()) {
+            Text(
+                text = if (state.searchQuery.isNotBlank()) stringResource(R.string.no_results_found)
+                else stringResource(if (state.showSystemApps) R.string.no_apps_found else R.string.no_non_system_apps_found),
+                modifier = Modifier.align(Alignment.Center).padding(16.dp),
+                textAlign = TextAlign.Center
+            )
+        } else {
+            val searchBarHeight = 72.dp
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    top = searchBarHeight + 16.dp,
+                    bottom = bottomSpacing + 88.dp
+                ),
+                verticalArrangement = Arrangement.spacedBy(0.dp)
+            ) {
+                itemsIndexed(
+                    items = state.apps,
+                    key = { _, appInfo -> appInfo.packageName }
+                ) { index, appInfo ->
+                    val position = when {
+                        state.apps.size == 1 -> CardPosition.SINGLE
+                        index == 0 -> CardPosition.TOP
+                        index == state.apps.lastIndex -> CardPosition.BOTTOM
+                        else -> CardPosition.MIDDLE
                     }
-                )
+
+                    AppListItem(
+                        appInfo = appInfo,
+                        isRootAvailable = state.isRootAvailable,
+                        position = position,
+                        coroutineScope = coroutineScope,
+                        showSnackbar = showSnackbar,
+                        onRootUninstall = { pkg ->
+                            coroutineScope.launch {
+                                showSnackbar(context.getString(R.string.uninstalling_root, appInfo.name), SnackbarDuration.Short)
+                                viewModel.uninstallAppRoot(pkg) { success ->
+                                    coroutineScope.launch {
+                                        val msgId = if (success) R.string.uninstalled_root else R.string.failed_to_uninstall_root
+                                        showSnackbar(context.getString(msgId, appInfo.name), SnackbarDuration.Long)
+                                    }
+                                }
+                            }
+                        }
+                    )
+                }
             }
         }
 
         TopSearchBar(
-            searchQuery = searchQuery,
-            onQueryChange = { searchQuery = it },
+            searchQuery = state.searchQuery,
+            onQueryChange = viewModel::updateSearchQuery,
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp)
                 .height(56.dp)
+                .zIndex(1f)
         )
 
         Column(
@@ -214,15 +198,13 @@ fun AppListScreen(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             FloatingActionButton(
-                onClick = { showSystemApps = !showSystemApps },
-                containerColor = if (showSystemApps) MaterialTheme.colorScheme.secondaryContainer
-                else MaterialTheme.colorScheme.surfaceVariant,
-                contentColor = if (showSystemApps) MaterialTheme.colorScheme.onSecondaryContainer
-                else MaterialTheme.colorScheme.onSurfaceVariant
+                onClick = { viewModel.toggleSystemApps() },
+                containerColor = if (state.showSystemApps) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceVariant,
+                contentColor = if (state.showSystemApps) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
             ) {
                 Icon(
-                    painter = painterResource(if (showSystemApps) R.drawable.ic_visibility_off_24dp else R.drawable.ic_visibility_24dp),
-                    contentDescription = stringResource(if (showSystemApps) R.string.hide_system_apps else R.string.show_system_apps)
+                    painter = painterResource(if (state.showSystemApps) R.drawable.ic_visibility_off_24dp else R.drawable.ic_visibility_24dp),
+                    contentDescription = stringResource(if (state.showSystemApps) R.string.hide_system_apps else R.string.show_system_apps)
                 )
             }
         }
@@ -234,34 +216,6 @@ fun AppListScreen(modifier: Modifier = Modifier) {
                 .padding(bottom = bottomSpacing)
                 .imePadding()
         )
-
-        if (isLoading) {
-            CircularWavyProgressIndicator(modifier = Modifier.align(Alignment.Center))
-        } else if (errorLoading != null) {
-            Column(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(errorLoading ?: stringResource(R.string.unknown_error), textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.error)
-                Spacer(modifier = Modifier.height(8.dp))
-                Button(onClick = { coroutineScope.launch { refreshAppList(true) } }) { Text(stringResource(R.string.retry)) }
-            }
-        } else if (filteredAppList.isEmpty()) {
-            Text(
-                text = if (searchQuery.isNotBlank()) {
-                    stringResource(R.string.no_results_found)
-                } else {
-                    stringResource(if (showSystemApps) R.string.no_apps_found else R.string.no_non_system_apps_found)
-                },
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(16.dp),
-                textAlign = TextAlign.Center
-            )
-        }
     }
 }
 
@@ -312,7 +266,7 @@ fun TopSearchBar(
     }
 }
 
-private data class BackgroundIconInfo( val painter: Painter? = null, val imageVector: ImageVector? = null, val tint: Color, val alignment: Alignment, val contentDescription: String? )
+private data class BackgroundIconInfo(val painter: Painter? = null, val imageVector: ImageVector? = null, val tint: Color, val alignment: Alignment, val contentDescription: String?)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -322,7 +276,7 @@ fun AppListItem(
     position: CardPosition,
     coroutineScope: CoroutineScope,
     showSnackbar: suspend (String, SnackbarDuration) -> Unit,
-    onActionTriggered: (packageName: String, isRootUninstall: Boolean) -> Unit
+    onRootUninstall: (String) -> Unit
 ) {
     val context = LocalContext.current
     val packageManager = context.packageManager
@@ -344,65 +298,64 @@ fun AppListItem(
         CardPosition.BOTTOM -> PaddingValues(top = 1.dp, bottom = 4.dp)
     }
 
+    var lastActionTime by remember { mutableLongStateOf(0L) }
+
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = { dismissValue ->
+            if (dismissValue == SwipeToDismissBoxValue.Settled) return@rememberSwipeToDismissBoxState true
+
+            val now = System.currentTimeMillis()
+            if (now - lastActionTime < 1500L) {
+                return@rememberSwipeToDismissBoxState false
+            }
+            lastActionTime = now
+
             when (dismissValue) {
                 SwipeToDismissBoxValue.StartToEnd -> {
                     view.performHapticFeedback(HapticFeedbackConstants.TOGGLE_ON)
                     try {
-                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                        intent.data = "package:${appInfo.packageName}".toUri()
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            data = "package:${appInfo.packageName}".toUri()
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
                         context.startActivity(intent)
                     } catch (e: Exception) {
                         coroutineScope.launch { showSnackbar(context.getString(R.string.failed_to_open_settings), SnackbarDuration.Short) }
                     }
-                    return@rememberSwipeToDismissBoxState false
                 }
                 SwipeToDismissBoxValue.EndToStart -> {
                     view.performHapticFeedback(HapticFeedbackConstants.TOGGLE_OFF)
                     if (isRootAvailable) {
                         coroutineScope.launch {
                             if (appInfo.isSystemApp) {
-                                showSnackbar(context.getString(R.string.warning_uninstalling_system_app, appInfo.name), SnackbarDuration.Long); delay(1500)
+                                showSnackbar(context.getString(R.string.warning_uninstalling_system_app, appInfo.name), SnackbarDuration.Long)
                             }
-                            showSnackbar(context.getString(R.string.uninstalling_root, appInfo.name), SnackbarDuration.Short)
-                            val uninstallSuccess = RootUtils.uninstallAppRoot(appInfo.packageName)
-                            if (uninstallSuccess) {
-                                showSnackbar(context.getString(R.string.uninstalled_root, appInfo.name), SnackbarDuration.Long)
-                                onActionTriggered(appInfo.packageName, true)
-                            } else {
-                                showSnackbar(context.getString(R.string.failed_to_uninstall_root, appInfo.name), SnackbarDuration.Long)
-                            }
-                            Coil.reset()
                         }
+                        onRootUninstall(appInfo.packageName)
                     } else {
                         if (!appInfo.isSystemApp) {
                             try {
-                                val intent = Intent(Intent.ACTION_DELETE)
-                                intent.data = "package:${appInfo.packageName}".toUri()
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                val intent = Intent(Intent.ACTION_DELETE).apply {
+                                    data = "package:${appInfo.packageName}".toUri()
+                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                }
                                 context.startActivity(intent)
                                 coroutineScope.launch { showSnackbar(context.getString(R.string.uninstall_request_sent, appInfo.name), SnackbarDuration.Short) }
-                                onActionTriggered(appInfo.packageName, false)
                             } catch (e: ActivityNotFoundException) {
-                                coroutineScope.launch { showSnackbar(context.getString(R.string.failed_to_launch_uninstall), SnackbarDuration.Short)}
+                                coroutineScope.launch { showSnackbar(context.getString(R.string.failed_to_launch_uninstall), SnackbarDuration.Short) }
                             } catch (e: Exception) {
-                                coroutineScope.launch { showSnackbar(context.getString(R.string.uninstall_error), SnackbarDuration.Short)}
+                                coroutineScope.launch { showSnackbar(context.getString(R.string.uninstall_error), SnackbarDuration.Short) }
                             }
                         } else {
                             Log.w("AppListItem", "[STD] Uninstall action triggered for system app without root!")
                         }
-                        coroutineScope.launch { Coil.reset() }
                     }
-                    return@rememberSwipeToDismissBoxState false
                 }
-                SwipeToDismissBoxValue.Settled -> {
-                    return@rememberSwipeToDismissBoxState true
-                }
+                SwipeToDismissBoxValue.Settled -> {}
             }
+            return@rememberSwipeToDismissBoxState false
         },
-        positionalThreshold = { distance -> distance * 0.25f }
+        positionalThreshold = { distance -> distance * 0.40f }
     )
 
     LaunchedEffect(dismissState.currentValue, appInfo.packageName) {
@@ -438,16 +391,12 @@ fun AppListItem(
 
             val iconInfo = when (direction) {
                 SwipeToDismissBoxValue.StartToEnd -> BackgroundIconInfo(
-                    painter = infoIconPainter,
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                    alignment = Alignment.CenterStart,
-                    contentDescription = stringResource(R.string.information)
+                    painter = infoIconPainter, tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    alignment = Alignment.CenterStart, contentDescription = stringResource(R.string.information)
                 )
                 SwipeToDismissBoxValue.EndToStart -> BackgroundIconInfo(
-                    painter = uninstallIconPainter,
-                    tint = MaterialTheme.colorScheme.onErrorContainer,
-                    alignment = Alignment.CenterEnd,
-                    contentDescription = uninstallContentDesc
+                    painter = uninstallIconPainter, tint = MaterialTheme.colorScheme.onErrorContainer,
+                    alignment = Alignment.CenterEnd, contentDescription = uninstallContentDesc
                 )
                 SwipeToDismissBoxValue.Settled -> BackgroundIconInfo(
                     tint = Color.Transparent, alignment = Alignment.CenterStart, contentDescription = null
@@ -456,19 +405,14 @@ fun AppListItem(
 
             val progress = dismissState.progress
             val iconScale by animateFloatAsState(
-                targetValue = if (direction != SwipeToDismissBoxValue.Settled) progress.coerceIn(0.5f, 1f) else 0f,
-                label = "icon_scale_anim"
+                targetValue = if (direction != SwipeToDismissBoxValue.Settled) progress.coerceIn(0.5f, 1f) else 0f, label = "icon_scale_anim"
             )
             val iconAlpha by animateFloatAsState(
-                targetValue = if (direction != SwipeToDismissBoxValue.Settled) progress.coerceIn(0.5f, 1f) else 0f,
-                label = "icon_alpha_anim"
+                targetValue = if (direction != SwipeToDismissBoxValue.Settled) progress.coerceIn(0.5f, 1f) else 0f, label = "icon_alpha_anim"
             )
 
             Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(backgroundColor)
-                    .padding(horizontal = 20.dp),
+                Modifier.fillMaxSize().background(backgroundColor).padding(horizontal = 20.dp),
                 contentAlignment = iconInfo.alignment
             ) {
                 val tint = iconInfo.tint.copy(alpha = iconAlpha)
@@ -485,9 +429,9 @@ fun AppListItem(
                 val launchIntent: Intent? = packageManager.getLaunchIntentForPackage(appInfo.packageName)
                 if (launchIntent != null) {
                     try { context.startActivity(launchIntent) }
-                    catch (e: Exception) { coroutineScope.launch { showSnackbar( context.getString( R.string.failed_to_launch, appInfo.name ), SnackbarDuration.Short) } }
+                    catch (e: Exception) { coroutineScope.launch { showSnackbar(context.getString(R.string.failed_to_launch, appInfo.name), SnackbarDuration.Short) } }
                 } else {
-                    coroutineScope.launch { showSnackbar( context.getString( R.string.is_not_a_startup_application, appInfo.name ), SnackbarDuration.Short) }
+                    coroutineScope.launch { showSnackbar(context.getString(R.string.is_not_a_startup_application, appInfo.name), SnackbarDuration.Short) }
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -496,9 +440,7 @@ fun AppListItem(
             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(

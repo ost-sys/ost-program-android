@@ -222,7 +222,9 @@ class ProfileActivity : ComponentActivity() {
                                     ) {
                                         FilledTonalButton(
                                             onClick = { shareQrCode(context, bmp, isQuickShare = false) },
-                                            modifier = Modifier.weight(1f).height(56.dp),
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .height(56.dp),
                                             shape = RoundedCornerShape(
                                                 topStart = 24.dp,
                                                 topEnd = 4.dp,
@@ -237,7 +239,9 @@ class ProfileActivity : ComponentActivity() {
 
                                         ElevatedButton(
                                             onClick = { shareQrCode(context, bmp, isQuickShare = true) },
-                                            modifier = Modifier.weight(1f).height(56.dp),
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .height(56.dp),
                                             shape = RoundedCornerShape(
                                                 topStart = 4.dp,
                                                 topEnd = 24.dp,
@@ -393,7 +397,7 @@ fun ProfileContent(user: GitHubUser) {
         }
 
         val buttons = mutableListOf<ActionButton>()
-        buttons.add(ActionButton(R.drawable.ic_star_24dp) {
+        buttons.add(ActionButton(R.drawable.about_page_github) {
             context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(user.htmlUrl)))
         })
         if (!user.twitterUsername.isNullOrEmpty()) {
@@ -426,9 +430,9 @@ fun ProfileContent(user: GitHubUser) {
             if (!user.company.isNullOrEmpty()) {
                 details.add { position ->
                     CustomCardItem(
-                        title = "Company",
+                        title = stringResource(R.string.company),
                         summary = user.company,
-                        icon = R.drawable.ic_build_24dp,
+                        icon = R.drawable.ic_apartment_24dp,
                         position = position
                     )
                 }
@@ -437,7 +441,7 @@ fun ProfileContent(user: GitHubUser) {
             if (!user.location.isNullOrEmpty()) {
                 details.add { position ->
                     CustomCardItem(
-                        title = "Location",
+                        title = stringResource(R.string.location),
                         summary = user.location,
                         icon = R.drawable.ic_location_on_24dp,
                         position = position
@@ -468,7 +472,7 @@ fun ProfileContent(user: GitHubUser) {
                 }
 
                 CustomCardItem(
-                    title = "Description",
+                    title = stringResource(R.string.description),
                     summary = user.bio,
                     icon = R.drawable.ic_info_24dp,
                     position = CardPosition.SINGLE

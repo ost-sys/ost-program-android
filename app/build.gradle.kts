@@ -21,7 +21,7 @@ android {
         minSdk = 26
         targetSdk = 36
         versionCode = 400
-        versionName = "4.0.0-beta"
+        versionName = "4.0.0-beta2"
         ndk {
             abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
         }
@@ -61,6 +61,8 @@ android {
 }
 
 dependencies {
+    implementation("dev.chrisbanes.haze:haze:1.7.2")
+    implementation("dev.chrisbanes.haze:haze-materials:1.7.2")
     implementation(libs.androidx.graphics.shapes)
 
     implementation(libs.androidx.compose.material.icons.extended)
@@ -83,7 +85,6 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.coil.compose)
     implementation(libs.coil.video)
-    implementation(libs.coil3.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.lottie.compose)
     implementation(libs.volley)

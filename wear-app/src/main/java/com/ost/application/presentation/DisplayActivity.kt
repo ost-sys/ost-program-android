@@ -19,15 +19,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.net.toUri
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
-import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.PositionIndicator
-import androidx.wear.compose.material.Scaffold
-import androidx.wear.compose.material.TimeText
+import androidx.wear.compose.material3.AppScaffold
+import androidx.wear.compose.material3.MaterialTheme
+import androidx.wear.compose.material3.ScreenScaffold
+import androidx.wear.compose.material3.TimeText
 import com.ost.application.R
 import com.ost.application.presentation.tools.PixelTestActivity
-import com.ost.application.util.ConfirmationDialog
+import com.ost.application.theme.OSTToolsTheme
+import com.ost.application.util.CardPosition
+import com.ost.application.util.FailDialog
 import com.ost.application.util.InfoListScreenContent
 import com.ost.application.util.ListItem
 
@@ -38,7 +42,7 @@ class DisplayActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
+            OSTToolsTheme {
                 DisplayScreen()
             }
         }
@@ -60,14 +64,13 @@ class DisplayActivity : ComponentActivity() {
 
 @Composable
 fun DisplayScreen() {
-    val listState = rememberScalingLazyListState()
     val context = LocalContext.current
 
     var showPermissionDeniedDialog by remember { mutableStateOf(false) }
 
     val writeSettingsLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
+    ) { _ ->
         if (Settings.System.canWrite(context)) {
             Log.i("DisplayScreen", "WRITE_SETTINGS granted via launcher result.")
             startPixelTestActivity(context)
@@ -79,31 +82,36 @@ fun DisplayScreen() {
 
     val displayData = rememberDisplayData(context)
 
-    Scaffold(
-        timeText = { TimeText() },
-        positionIndicator = { PositionIndicator(scalingLazyListState = listState) },
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background),
+    AppScaffold(
+        timeText = { TimeText() }
     ) {
-        InfoListScreenContent(
-            listState = listState,
-            screenTitle = displayData.screenResolution,
-            items = displayData.listItems {
-                checkAndRequestWriteSettings(context, writeSettingsLauncher) { granted ->
-                    if (granted) {
-                        startPixelTestActivity(context)
-                    } else {
-                        showPermissionDeniedDialog = true
+        val listState = rememberScalingLazyListState()
+        ScreenScaffold(
+            scrollState = listState,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+        ) {
+            InfoListScreenContent(
+                listState = listState,
+                screenTitle = displayData.screenResolution,
+                items = displayData.listItems {
+                    checkAndRequestWriteSettings(context, writeSettingsLauncher) { granted ->
+                        if (granted) {
+                            startPixelTestActivity(context)
+                        } else {
+                            showPermissionDeniedDialog = true
+                        }
                     }
-                }
-            }
-        )
+                },
+                icon = R.drawable.ic_display_settings_24dp
+            )
+        }
     }
 
     if (showPermissionDeniedDialog) {
-        ConfirmationDialog(
-            message = "stringResource(R.string.write_settings_permission_required)",
+        FailDialog(
+            message = stringResource(R.string.write_settings_permission_required),
             iconResId = R.drawable.ic_error_24dp,
             onDismiss = { showPermissionDeniedDialog = false },
             showDialog = true
@@ -129,7 +137,7 @@ private fun rememberDisplayData(context: Context): DisplayInfoData {
 
         val refreshRate = try {
             context.display.refreshRate
-        } catch (e: Exception) { 0f }
+        } catch (_: Exception) { 0f }
 
         val xInches = widthPixels / xdpi
         val yInches = heightPixels / ydpi
@@ -140,10 +148,34 @@ private fun rememberDisplayData(context: Context): DisplayInfoData {
             screenResolution = screenResolution,
             listItems = { onPixelTestClick ->
                 listOf(
-                    ListItem(context.getString(R.string.refresh_rate), String.format("%.0f ${context.getString(R.string.hz)}", refreshRate), null, true, null),
-                    ListItem("DPI", "$densityDpi dpi", null, true, null),
-                    ListItem(context.getString(R.string.screen_diagonal), String.format("%.1f ${context.getString(R.string.inches)}", screenInches), null, true, null),
-                    ListItem(context.getString(R.string.check_for_dead_pixels), null, null, true, onPixelTestClick)
+                    ListItem(
+                        context.getString(R.string.refresh_rate),
+                        String.format("%.0f ${context.getString(R.string.hz)}", refreshRate),
+                        null,
+                        true,
+                        CardPosition.TOP,
+                        null),
+                    ListItem(
+                        "DPI",
+                        "$densityDpi DPI",
+                        null,
+                        true,
+                        CardPosition.MIDDLE,
+                        null),
+                    ListItem(
+                        context.getString(R.string.screen_diagonal),
+                        String.format("%.1f ${context.getString(R.string.inches)}", screenInches),
+                        null,
+                        true,
+                        CardPosition.BOTTOM,
+                        null),
+                    ListItem(
+                        context.getString(R.string.check_for_dead_pixels),
+                        null,
+                        null,
+                        true,
+                        CardPosition.SINGLE,
+                        onPixelTestClick)
                 )
             }
         )
@@ -180,4 +212,10 @@ private fun startPixelTestActivity(context: Context) {
     } catch (e: Exception) {
         Log.e("PixelTestLaunch", "Failed to start PixelTestActivity", e)
     }
+}
+
+@Preview(device = "id:wearos_small_round")
+@Composable
+fun DisplayPreview() {
+    DisplayScreen()
 }

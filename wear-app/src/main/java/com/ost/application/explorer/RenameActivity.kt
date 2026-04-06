@@ -13,15 +13,13 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,7 +31,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,18 +40,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
-import androidx.wear.compose.material.Button
-import androidx.wear.compose.material.ButtonDefaults
-import androidx.wear.compose.material.CircularProgressIndicator
-import androidx.wear.compose.material.Icon
-import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.Scaffold
-import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.TimeText
-import androidx.wear.compose.material.Vignette
-import androidx.wear.compose.material.VignettePosition
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.foundation.lazy.ScalingLazyListAnchorType
+import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.material3.AppScaffold
+import androidx.wear.compose.material3.Button
+import androidx.wear.compose.material3.ButtonDefaults
+import androidx.wear.compose.material3.CircularProgressIndicator
+import androidx.wear.compose.material3.EdgeButton
+import androidx.wear.compose.material3.Icon
+import androidx.wear.compose.material3.MaterialTheme
+import androidx.wear.compose.material3.ScreenScaffold
+import androidx.wear.compose.material3.Text
+import androidx.wear.compose.material3.TimeText
 import com.ost.application.R
-import com.ost.application.util.ConfirmationDialog
+import com.ost.application.theme.OSTToolsTheme
+import com.ost.application.util.FailDialog
+import com.ost.application.util.SuccessDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -67,7 +69,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 
-// --- Data Classes (могут быть и вложенными, но здесь оставлены на верхнем уровне файла для читаемости) ---
 data class RenameDialogState(val message: String, val isError: Boolean)
 
 data class RenameUiState(
@@ -77,10 +78,7 @@ data class RenameUiState(
     val currentDialog: RenameDialogState?,
     val isRenameButtonEnabled: Boolean
 )
-// ---------------------------------------------------------------------------------------------------
 
-
-// --- ActivityResultContract (остается без изменений) ---
 class RenameContract : ActivityResultContract<String, Boolean>() {
     override fun createIntent(context: Context, input: String): Intent {
         return Intent(context, RenameActivity::class.java).apply {
@@ -92,8 +90,6 @@ class RenameContract : ActivityResultContract<String, Boolean>() {
         return resultCode == Activity.RESULT_OK
     }
 }
-// ---------------------------------------------------------------------------------------------------
-
 
 class RenameActivity : ComponentActivity() {
 
@@ -101,13 +97,10 @@ class RenameActivity : ComponentActivity() {
         const val EXTRA_FILE_PATH = "file_path"
     }
 
-    // --- ViewModel (вложенный класс) ---
-    // Вложенный ViewModel получает Application Context через конструктор,
-    // чтобы иметь доступ к строковым ресурсам через getApplication().
     private class RenameViewModel(application: Application, private val originalFilePath: String) : ViewModel() {
 
         private val originalFile = File(originalFilePath)
-        private val appContext: Context = application.applicationContext // Сохраняем контекст для доступа к ресурсам
+        private val appContext: Context = application.applicationContext
 
         private val _uiState = MutableStateFlow(
             RenameUiState(
@@ -124,20 +117,16 @@ class RenameActivity : ComponentActivity() {
         val renameResultEvent = _renameResultEvent.receiveAsFlow()
 
         init {
-            // Проверка оригинального файла при инициализации ViewModel
             if (!originalFile.exists()) {
-                // Если файл не существует, сразу отправляем событие об отмене.
-                // Activity сама обработает это событие и завершится с RESULT_CANCELED.
                 viewModelScope.launch {
                     _renameResultEvent.send(false)
                 }
             } else {
-                updateRenameButtonState(originalFile.name) // Иначе, инициализируем состояние кнопки
+                updateRenameButtonState(originalFile.name)
             }
         }
 
         fun onNewNameChanged(newName: String) {
-            // Фильтруем недопустимые символы для имен файлов
             val filteredName = newName.trim().filter { it != '/' && it != '\\' }
             _uiState.value = _uiState.value.copy(newName = filteredName)
             updateRenameButtonState(filteredName)
@@ -173,10 +162,9 @@ class RenameActivity : ComponentActivity() {
                     _uiState.value = _uiState.value.copy(
                         currentDialog = RenameDialogState(appContext.getString(R.string.renamed_successfully), false)
                     )
-                    // Диалог успеха скрывается автоматически через 1.5 сек, затем Activity завершается
                     delay(1500)
                     _uiState.value = _uiState.value.copy(currentDialog = null)
-                    _renameResultEvent.send(true) // Сообщаем Activity о успехе
+                    _renameResultEvent.send(true)
                 } else {
                     Log.e("RenameViewModel", "Failed to rename", result.exceptionOrNull())
                     _uiState.value = _uiState.value.copy(
@@ -222,24 +210,16 @@ class RenameActivity : ComponentActivity() {
 
         fun onCancelClicked() {
             viewModelScope.launch {
-                _renameResultEvent.send(false) // Сообщаем Activity об отмене
+                _renameResultEvent.send(false)
             }
         }
     }
-    // ---------------------------------------------------------------------------------------------------
-
-    // --- ViewModel Factory (вложенный объект) ---
-    // Фабрика для ViewModel, чтобы передать ей Application и filePath
     private val renameViewModel: RenameViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 if (modelClass.isAssignableFrom(RenameViewModel::class.java)) {
                     val filePath = intent.getStringExtra(EXTRA_FILE_PATH)
-                    // На этом этапе filePath уже был проверен в onCreate,
-                    // но для безопасности можно добавить еще одну проверку
-                    if (filePath == null) {
-                        throw IllegalArgumentException("Missing file path for RenameViewModel")
-                    }
+                        ?: throw IllegalArgumentException("Missing file path for RenameViewModel")
                     @Suppress("UNCHECKED_CAST")
                     return RenameViewModel(application, filePath) as T
                 }
@@ -247,14 +227,10 @@ class RenameActivity : ComponentActivity() {
             }
         }
     }
-    // ---------------------------------------------------------------------------------------------------
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // **Важно:** Проверяем filePath до инициализации ViewModel,
-        // так как ViewModelProvider.Factory не может напрямую завершить Activity.
         val filePath = intent.getStringExtra(EXTRA_FILE_PATH)
         if (filePath == null) {
             Log.e("RenameActivity", "Missing file path in Intent")
@@ -271,11 +247,9 @@ class RenameActivity : ComponentActivity() {
         }
 
         setContent {
-            MaterialTheme {
-                // Собираем состояние UI из ViewModel
+            OSTToolsTheme {
                 val uiState by renameViewModel.uiState.collectAsStateWithLifecycle()
 
-                // Отслеживаем одноразовые события (например, завершение Activity)
                 LaunchedEffect(Unit) {
                     renameViewModel.renameResultEvent.collect { success ->
                         setResult(if (success) RESULT_OK else RESULT_CANCELED)
@@ -283,7 +257,6 @@ class RenameActivity : ComponentActivity() {
                     }
                 }
 
-                // Отображаем Compose UI
                 RenameScreen(
                     uiState = uiState,
                     onNewNameChanged = renameViewModel::onNewNameChanged,
@@ -295,8 +268,6 @@ class RenameActivity : ComponentActivity() {
         }
     }
 
-
-    // --- Composable UI (вложенная функция) ---
     @Composable
     private fun RenameScreen(
         uiState: RenameUiState,
@@ -308,77 +279,19 @@ class RenameActivity : ComponentActivity() {
         val focusRequester = remember { FocusRequester() }
         val focusManager = LocalFocusManager.current
 
-        Scaffold(
-            timeText = { TimeText() },
-            vignette = { Vignette(VignettePosition.TopAndBottom) }
+        AppScaffold(
+            timeText = { TimeText() }
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 28.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = stringResource(R.string.rename), // Заголовок
-                    style = MaterialTheme.typography.title3
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = uiState.originalFileName,
-                    style = MaterialTheme.typography.caption1,
-                    maxLines = 1,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-
-                BasicTextField(
-                    value = uiState.newName,
-                    onValueChange = onNewNameChanged,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(focusRequester)
-                        .border(1.dp, MaterialTheme.colors.onBackground.copy(alpha = 0.6f))
-                        .padding(horizontal = 10.dp, vertical = 6.dp),
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colors.onBackground,
-                        fontSize = 15.sp,
-                        textAlign = TextAlign.Center
-                    ),
-                    singleLine = true
-                )
-
-                // Запрашиваем фокус после небольшой задержки для надежности
-                LaunchedEffect(Unit) {
-                    delay(100)
-                    focusRequester.requestFocus()
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Button(
-                        onClick = onCancelClick,
-                        enabled = !uiState.isBusy,
-                        colors = ButtonDefaults.secondaryButtonColors(),
-                        modifier = Modifier.size(ButtonDefaults.DefaultButtonSize)
-                    ) {
-                        Icon(painter = painterResource(R.drawable.ic_cancel_24dp), contentDescription = null)
-                    }
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    Button(
+            val listState = rememberScalingLazyListState()
+            ScreenScaffold(
+                scrollState = listState,
+                edgeButton = {
+                    EdgeButton (
                         onClick = {
-                            focusManager.clearFocus() // Убираем фокус с текстового поля перед операцией
+                            focusManager.clearFocus()
                             onRenameClick()
                         },
                         enabled = !uiState.isBusy && uiState.isRenameButtonEnabled,
-                        modifier = Modifier.size(ButtonDefaults.DefaultButtonSize)
                     ) {
                         Box(contentAlignment = Alignment.Center) {
                             if (uiState.isBusy) {
@@ -392,21 +305,82 @@ class RenameActivity : ComponentActivity() {
                         }
                     }
                 }
-            }
+            ) {
+                ScalingLazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp, vertical = 28.dp)
+                        .focusRequester(focusRequester),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    anchorType = ScalingLazyListAnchorType.ItemCenter,
+                    ) {
+                    item {
+                        Button(
+                            onClick = onCancelClick,
+                            enabled = !uiState.isBusy,
+                            colors = ButtonDefaults.filledTonalButtonColors(),
+                        ) {
+                            Icon(painter = painterResource(R.drawable.ic_cancel_24dp), contentDescription = null)
+                        }
+                    }
+                    item { Spacer(modifier = Modifier.height(8.dp)) }
+                    item {
+                        Text(
+                            text = uiState.originalFileName,
+                            style = MaterialTheme.typography.titleMedium,
+                            maxLines = 1,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    item {
+                        BasicTextField(
+                            value = uiState.newName,
+                            onValueChange = onNewNameChanged,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .focusRequester(focusRequester)
+                                .border(1.dp, MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f), RoundedCornerShape(4.dp))
+                                .padding(horizontal = 10.dp, vertical = 6.dp),
+                            textStyle = TextStyle(
+                                color = MaterialTheme.colorScheme.onBackground,
+                                fontSize = 15.sp,
+                                textAlign = TextAlign.Center
+                            ),
+                            singleLine = true
+                        )
+                        LaunchedEffect(Unit) {
+                            delay(100)
+                            focusRequester.requestFocus()
+                        }
+                    }
 
-            uiState.currentDialog?.let { state ->
-                val iconRes = if (state.isError) R.drawable.ic_error_24dp else R.drawable.ic_check_circle_24dp
-                ConfirmationDialog(
-                    message = state.message,
-                    iconResId = iconRes,
-                    onDismiss = onDialogDismiss,
-                    showDialog = true
-                )
+                }
+
+                uiState.currentDialog?.let { state ->
+                    val iconRes = if (state.isError) R.drawable.ic_error_24dp else R.drawable.ic_check_circle_24dp
+                    if (state.isError) {
+                        FailDialog(
+                            message = state.message,
+                            iconResId = iconRes,
+                            onDismiss = onDialogDismiss,
+                            showDialog = true
+                        )
+                    } else {
+                        SuccessDialog(
+                            message = state.message,
+                            iconResId = iconRes,
+                            onDismiss = onDialogDismiss,
+                            showDialog = true
+                        )
+                    }
+                }
             }
         }
     }
 
-    @Preview(showBackground = true)
+    @Preview(showBackground = true, device = "id:wearos_xl_round")
     @Composable
     private fun PreviewRenameScreen() {
         MaterialTheme {
@@ -425,5 +399,4 @@ class RenameActivity : ComponentActivity() {
             )
         }
     }
-    // ---------------------------------------------------------------------------------------------------
 }

@@ -20,12 +20,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
-import androidx.wear.compose.material.MaterialTheme
-import androidx.wear.compose.material.PositionIndicator
-import androidx.wear.compose.material.Scaffold
-import androidx.wear.compose.material.TimeText
+import androidx.wear.compose.material3.MaterialTheme
+import androidx.wear.compose.material3.ScreenScaffold
+import androidx.wear.compose.material3.TimeText
+import com.google.android.horologist.compose.layout.AppScaffold
 import com.ost.application.R
+import com.ost.application.theme.OSTToolsTheme
+import com.ost.application.util.CardPosition
 import com.ost.application.util.InfoListScreenContent
 import com.ost.application.util.ListItem
 
@@ -33,7 +36,7 @@ class BatteryActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
+            OSTToolsTheme {
                 BatteryScreen()
             }
         }
@@ -103,24 +106,60 @@ fun BatteryScreen() {
 
     val items = remember(batteryHealth, batteryTemperature, batteryVoltage, batteryTechnology) {
         listOf(
-            ListItem(context.getString(R.string.health), batteryHealth, null, true, null),
-            ListItem(context.getString(R.string.temperature), batteryTemperature, null, true, null),
-            ListItem(context.getString(R.string.voltage), batteryVoltage, null, true, null),
-            ListItem(context.getString(R.string.technology), batteryTechnology, null, true, null)
+            ListItem(context.getString(R.string.health),
+                batteryHealth,
+                null,
+                true,
+                CardPosition.TOP,
+                null
+            ),
+            ListItem(
+                context.getString(R.string.temperature),
+                batteryTemperature,
+                null,
+                true,
+                CardPosition.MIDDLE,
+                null),
+            ListItem(
+                context.getString(R.string.voltage),
+                batteryVoltage,
+                null,
+                true,
+                CardPosition.MIDDLE,
+                null),
+            ListItem(
+                context.getString(R.string.technology),
+                batteryTechnology,
+                null,
+                true,
+                CardPosition.BOTTOM,
+                null
+            )
         )
     }
 
-    Scaffold(
-        timeText = { TimeText() },
-        positionIndicator = { PositionIndicator(scalingLazyListState = listState) },
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background),
+    AppScaffold(
+        timeText = { TimeText() }
     ) {
-        InfoListScreenContent(
-            listState = listState,
-            screenTitle = batteryStatusTitle,
-            items = items
-        )
+        ScreenScaffold(
+            scrollState = listState,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+        ) {
+            InfoListScreenContent(
+                listState = listState,
+                screenTitle = batteryStatusTitle,
+                items = items,
+                icon = R.drawable.ic_battery_24dp
+            )
+        }
     }
+}
+
+
+@Preview(device = "id:wearos_small_round")
+@Composable
+fun InfoListPreview() {
+    BatteryScreen()
 }

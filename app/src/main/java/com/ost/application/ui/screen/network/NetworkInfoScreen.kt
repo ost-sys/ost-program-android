@@ -39,7 +39,7 @@ import com.ost.application.R
 import com.ost.application.ui.component.ExpressiveShapeBackground
 import com.ost.application.util.CardPosition
 import com.ost.application.util.CustomCardItem
-import com.ost.application.util.Tip
+import com.ost.application.util.WarningTip
 import com.ost.application.util.WavyDivider
 
 private data class NetworkInfoRow(
@@ -163,7 +163,7 @@ fun NetworkInfoScreen(
             }
         }
         item {
-            Tip(
+            WarningTip(
                 title = stringResource(R.string.dont_worry),
                 summary = stringResource(R.string.privacy_text)
             )

@@ -7,5 +7,6 @@ data class ListItem(
     val summary: String?,
     @DrawableRes val icon: Int?,
     val status: Boolean,
+    val position: CardPosition = CardPosition.MIDDLE,
     val onClick: (() -> Unit)?
 )

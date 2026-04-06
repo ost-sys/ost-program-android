@@ -16,6 +16,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
@@ -48,6 +51,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
@@ -61,25 +65,30 @@ import androidx.wear.compose.material.Chip
 import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.ProgressIndicatorDefaults
-import androidx.wear.compose.material.TimeText
-import androidx.wear.compose.material.TimeTextDefaults
 import androidx.wear.compose.material.dialog.Confirmation
 import androidx.wear.compose.material3.AlertDialog
 import androidx.wear.compose.material3.AppScaffold
 import androidx.wear.compose.material3.Button
 import androidx.wear.compose.material3.ButtonDefaults
+import androidx.wear.compose.material3.EdgeButton
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.ScreenScaffold
 import androidx.wear.compose.material3.SwitchButton
 import androidx.wear.compose.material3.Text
+import androidx.wear.compose.material3.TimeText
 import androidx.wear.compose.material3.curvedText
+import androidx.wear.compose.material3.timeTextCurvedText
+import androidx.wear.compose.material3.timeTextSeparator
 import com.ost.application.R
 import com.ost.application.explorer.ImageActivity
 import com.ost.application.explorer.TextEditorActivity
 import com.ost.application.explorer.VideoActivity
 import com.ost.application.explorer.music.MusicActivity
 import com.ost.application.share.NotificationHelper.formatFileSize
+import com.ost.application.theme.OSTToolsTheme
+import com.ost.application.util.CardListItem
+import com.ost.application.util.CardPosition
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
@@ -235,35 +244,30 @@ fun ShareApp(
     val discoveredDevices by viewModel.discoveredDevices.collectAsState()
     val statusText by viewModel.statusText.collectAsState()
     val transferProgress by viewModel.transferProgress.collectAsState()
+    val transferTotalFiles by viewModel.transferTotalFiles.collectAsState()
     val lastReceivedFiles by viewModel.lastReceivedFiles.collectAsState()
     val incomingTransferRequest by viewModel.incomingTransferRequest.collectAsState()
     val uiConfirmationState by viewModel.uiConfirmationState.collectAsState()
     val context = LocalContext.current
-
     val isTransferring = transferProgress != null
     val isToggleEnabled = !isDiscovering && !isTransferring && !isSendMode && incomingTransferRequest == null
 
-    MaterialTheme {
+    OSTToolsTheme {
         AppScaffold (
             timeText = {
                 if (isTransferring && transferProgress != null) {
                     val progressText = "${transferProgress!!}%"
-                    val progressTextStyle =
-                        TimeTextDefaults.timeTextStyle(color = MaterialTheme.colorScheme.primary)
-                    TimeText(
-                        startLinearContent = {
-                            Text(
-                                text = progressText,
-                                style = progressTextStyle
+                    val curvedTextColor = MaterialTheme.colorScheme.primary
+                    TimeText { time ->
+                        curvedText(
+                            text = progressText,
+                            style = CurvedTextStyle(
+                                color = curvedTextColor
                             )
-                        },
-                        startCurvedContent = {
-                            curvedText(
-                                text = progressText,
-                                style = CurvedTextStyle(progressTextStyle)
-                            )
-                        }
-                    )
+                        )
+                        timeTextSeparator()
+                        timeTextCurvedText(time)
+                    }
                 } else {
                     TimeText()
                 }
@@ -271,17 +275,17 @@ fun ShareApp(
         ) {
             val currentStatus = statusText
             val isSending = isTransferring && (currentStatus.contains(
-                context.getString(R.string.sending_prefix),
+                stringResource(R.string.sending_prefix),
                 ignoreCase = true
             ) || currentStatus.contains(
-                context.getString(R.string.connecting_prefix),
+                stringResource(R.string.connecting_prefix),
                 ignoreCase = true
-            ) || currentStatus.contains(context.getString(R.string.sent_prefix), ignoreCase = true))
+            ) || currentStatus.contains(stringResource(R.string.sent_prefix), ignoreCase = true))
             val isReceiving = isTransferring && (currentStatus.contains(
-                context.getString(R.string.receiving_prefix),
+                stringResource(R.string.receiving_prefix),
                 ignoreCase = true
             ) || currentStatus.contains(
-                context.getString(R.string.incoming_prefix),
+                stringResource(R.string.incoming_prefix),
                 ignoreCase = true
             ))
             val showSendUI = isSendMode || isDiscovering || isSending
@@ -322,11 +326,12 @@ fun ShareApp(
                     }
 
                     if (isDiscovering || isTransferring) {
-                        val isIndeterminate =
-                            isDiscovering && !isTransferring || isTransferring && transferProgress == 0 && (isSending || isReceiving)
+                        val isIndeterminate = isDiscovering && !isTransferring || isTransferring && transferProgress == 0 && (isSending || isReceiving)
+
                         FixedCircularProgress(
                             isIndeterminate = isIndeterminate,
-                            progress = if (isIndeterminate) null else transferProgress
+                            progress = if (isIndeterminate) null else transferProgress,
+                            totalFiles = transferTotalFiles ?: 1 // Передаем количество файлов!
                         )
                     }
                 }
@@ -389,7 +394,8 @@ fun ShareApp(
                         Icon(
                             painter = painterResource(id = state.iconRes),
                             contentDescription = null,
-                            modifier = Modifier.size(48.dp)
+                            modifier = Modifier
+                                .size(48.dp)
                                 .wrapContentSize(align = Alignment.Center),
                             tint = if (state.isSuccess) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
                         )
@@ -432,80 +438,78 @@ fun SendUI(
         }
     }
 
-    ScalingLazyColumn(
-        modifier = Modifier.fillMaxSize()
-            .focusRequester(focusRequester)
-            .onRotaryScrollEvent {
-                if (!isDiscovering && !isSendingTransferActive) {
-                    coroutineScope.launch { scalingListState.scrollBy(it.verticalScrollPixels) }
-                    true
-                } else false
-            }
-            .focusable(),
-        state = scalingListState,
-        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        anchorType = ScalingLazyListAnchorType.ItemCenter
+    AppScaffold(
+        timeText = { null }
     ) {
-        item {
-            Text(text = stringResource(R.string.send_file), textAlign = TextAlign.Center)
-        }
-        item {
-            Text(text = statusText, textAlign = TextAlign.Center, fontSize = 12.sp, maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(horizontal = 8.dp))
-        }
-        item { Spacer(Modifier.height(4.dp)) }
-
-        if (discoveredDevices.isNotEmpty() && !isSendingTransferActive) {
-            items(items = discoveredDevices, key = { it.id }) { device ->
-                DeviceChip(device = device, onClick = {
-                    vibrator?.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
-                    if (device.isResolved) onDeviceSelected(device)
-                    else if (!device.isResolving) viewModel.resolveDevice(device.serviceInfo)
-                })
-            }
-        } else if (!isDiscovering && !isSendingTransferActive) {
-            item {
-                Column(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        painterResource(R.drawable.ic_search_off_24dp),
-                        contentDescription = stringResource(R.string.no_devices_found_cd),
-                        modifier = Modifier.size(48.dp),
-                        tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Text(stringResource(R.string.no_devices_found_hint), textAlign = TextAlign.Center)
-                    Spacer(Modifier.height(8.dp))
-                    Button(onClick = {
+        ScreenScaffold(
+            scrollState = scalingListState,
+            edgeButton = {
+                EdgeButton(
+                    onClick = {
                         vibrator?.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
-                        onScanClicked()
-                    }) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(painterResource(R.drawable.ic_refresh_24dp), contentDescription = stringResource(R.string.scan))
-                            Spacer(Modifier.width(4.dp))
-                            Text(stringResource(R.string.scan_again))
+                        onCancelClicked()
+                    }
+                ) {
+                    val iconRes = if (isSendingTransferActive || isDiscovering) R.drawable.ic_cancel_24dp else R.drawable.ic_close_24dp
+                    val contentDesc = stringResource(if (isSendingTransferActive || isDiscovering) R.string.cancel else R.string.close)
+                    Icon(painter = painterResource(iconRes), contentDescription = contentDesc)
+                }
+            }
+        ) {
+            ScalingLazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                state = scalingListState,
+                contentPadding = PaddingValues(horizontal = 8.dp),
+                anchorType = ScalingLazyListAnchorType.ItemCenter
+            ) {
+                item {
+                    Text(text = stringResource(R.string.send_file), textAlign = TextAlign.Center)
+                }
+                item {
+                    Text(text = statusText, textAlign = TextAlign.Center, fontSize = 12.sp, maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(horizontal = 8.dp))
+                }
+                item { Spacer(Modifier.height(4.dp)) }
+
+                if (discoveredDevices.isNotEmpty() && !isSendingTransferActive) {
+                    items(items = discoveredDevices, key = { it.id }) { device ->
+                        DeviceChip(device = device, onClick = {
+                            vibrator?.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+                            if (device.isResolved) onDeviceSelected(device)
+                            else if (!device.isResolving) viewModel.resolveDevice(device.serviceInfo)
+                        })
+                    }
+                } else if (!isDiscovering && !isSendingTransferActive) {
+                    item {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                painterResource(R.drawable.ic_search_off_24dp),
+                                contentDescription = stringResource(R.string.no_devices_found_cd),
+                                modifier = Modifier.size(48.dp),
+                                tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            Text(stringResource(R.string.no_devices_found_hint), textAlign = TextAlign.Center)
+                            Spacer(Modifier.height(8.dp))
+                            Button(onClick = {
+                                vibrator?.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+                                onScanClicked()
+                            }) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(painterResource(R.drawable.ic_refresh_24dp), contentDescription = stringResource(R.string.scan))
+                                    Spacer(Modifier.width(4.dp))
+                                    Text(stringResource(R.string.scan_again))
+                                }
+                            }
                         }
                     }
                 }
-            }
-        }
-        item { Spacer(Modifier.height(8.dp)) }
-
-        item {
-            Button(
-                onClick = {
-                    vibrator?.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
-                    onCancelClicked()
-                },
-                colors = ButtonDefaults.filledTonalButtonColors(),
-                modifier = Modifier.padding(top = 4.dp)
-            ) {
-                val iconRes = if (isSendingTransferActive || isDiscovering) R.drawable.ic_cancel_24dp else R.drawable.ic_close_24dp
-                val contentDesc = stringResource(if (isSendingTransferActive || isDiscovering) R.string.cancel else R.string.close)
-                Icon(painter = painterResource(iconRes), contentDescription = contentDesc)
+                item { Spacer(Modifier.height(8.dp)) }
             }
         }
     }
@@ -566,7 +570,8 @@ fun ReceiveUI(
     val maxRecentFilesToShow = 3
 
     ScalingLazyColumn(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .focusRequester(focusRequester)
             .onRotaryScrollEvent {
                 coroutineScope.launch { listState.scrollBy(it.verticalScrollPixels) }
@@ -598,7 +603,9 @@ fun ReceiveUI(
                 text = statusText,
                 textAlign = TextAlign.Center,
                 fontSize = 12.sp,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -609,38 +616,48 @@ fun ReceiveUI(
             val filesToDisplay = lastReceivedFiles.takeLast(maxRecentFilesToShow).reversed()
             val hasMoreFiles = lastReceivedFiles.size > maxRecentFilesToShow
 
+            val position = when {
+                lastReceivedFiles.size == 1 -> CardPosition.MIDDLE
+                lastReceivedFiles.isEmpty() -> CardPosition.TOP
+                lastReceivedFiles.size == lastReceivedFiles.lastIndex -> CardPosition.BOTTOM
+                else -> CardPosition.SINGLE
+            }
+
             items(filesToDisplay) { file ->
-                Chip(
-                    modifier = Modifier.fillMaxWidth(),
+                CardListItem(
                     onClick = { openFile(file) },
-                    label = {
-                        Text(
-                            text = file.name,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    },
-                    icon = {
-                        Icon(painterResource(id = getFileIcon(file.extension)), contentDescription = null)
-                    },
-                    colors = ChipDefaults.secondaryChipColors()
+                    title = file.name,
+                    icon = getFileIcon(file.extension),
+                    summary = null,
+                    position = position,
+                    status = true
                 )
             }
 
             if (hasMoreFiles) {
                 item {
-                    Chip(
-                        modifier = Modifier.fillMaxWidth(),
+                    CardListItem(
                         onClick = {
-                            vibrator?.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
-                            Toast.makeText(context, "TODO: Open full received files list", Toast.LENGTH_SHORT).show()
+                            vibrator?.vibrate(
+                                VibrationEffect.createOneShot(
+                                    50,
+                                    VibrationEffect.DEFAULT_AMPLITUDE
+                                )
+                            )
+                            Toast.makeText(
+                                context,
+                                "TODO: Open full received files list",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         },
-                        label = {
-                            Text(stringResource(R.string.view_all_received_files_count, lastReceivedFiles.size))
-                        },
-                        icon = {
-                            Icon(painterResource(R.drawable.ic_folder_24dp), contentDescription = stringResource(R.string.view_all_files_cd))
-                        },
-                        colors = ChipDefaults.primaryChipColors()
+                        title = stringResource(
+                            R.string.view_all_received_files_count,
+                            lastReceivedFiles.size
+                        ),
+                        icon = R.drawable.ic_folder_24dp,
+                        summary = null,
+                        status = true,
+                        position = position
                     )
                 }
             }
@@ -651,20 +668,50 @@ fun ReceiveUI(
 @Composable
 fun FixedCircularProgress(
     isIndeterminate: Boolean,
-    progress: Int?
+    progress: Int?,
+    totalFiles: Int
 ) {
-    val progressValue = if (isIndeterminate) 0f else (progress ?: 0) / 100f
-    CircularProgressIndicator(
-        modifier = Modifier
-            .fillMaxSize()
-            .clearAndSetSemantics {},
-        progress = progressValue,
-        startAngle = 295.5f,
-        endAngle = 245.5f,
-        indicatorColor = MaterialTheme.colorScheme.primary,
-        strokeWidth = ProgressIndicatorDefaults.FullScreenStrokeWidth,
-        trackColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
+    val targetProgress = if (isIndeterminate) 0f else (progress ?: 0) / 100f
+
+    val animatedProgress by animateFloatAsState(
+        targetValue = targetProgress,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioNoBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "ProgressAnimation"
     )
+
+    if (isIndeterminate) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .fillMaxSize()
+                .clearAndSetSemantics {},
+            startAngle = 230f,
+            endAngle = 230f,
+            progress = targetProgress,
+            indicatorColor = MaterialTheme.colorScheme.primary,
+            strokeWidth = ProgressIndicatorDefaults.FullScreenStrokeWidth,
+            trackColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
+        )
+    } else {
+        val safeSegmentCount = totalFiles.coerceAtLeast(1)
+
+        androidx.wear.compose.material3.SegmentedCircularProgressIndicator(
+            segmentCount = safeSegmentCount,
+            progress = { animatedProgress },
+            modifier = Modifier
+                .fillMaxSize()
+                .clearAndSetSemantics {},
+            startAngle = 230f,
+            endAngle = 230f,
+            colors = androidx.wear.compose.material3.ProgressIndicatorDefaults.colors(
+                indicatorColor = MaterialTheme.colorScheme.primary,
+                trackColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
+            ),
+            strokeWidth = ProgressIndicatorDefaults.FullScreenStrokeWidth
+        )
+    }
 }
 
 @Composable
@@ -677,4 +724,10 @@ fun getFileIcon(extension: String): Int {
         "apk" -> R.drawable.ic_android_24dp
         else -> R.drawable.ic_draft_24dp
     }
+}
+
+@Preview
+@Composable
+fun ProgressPreview() {
+
 }

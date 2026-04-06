@@ -33,6 +33,9 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"
         tools:ignore="RequestInstallPackagesPolicy" />
     <uses-permission
+        android:name="android.permission.REQUEST_DELETE_PACKAGES"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
         android:name="android.permission.DELETE_PACKAGES"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -45,9 +48,6 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.BIND_QUICK_SETTINGS_TILE"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID"
         tools:ignore="AdvertisingIdPolicy" />
@@ -96,20 +96,6 @@
             android:name=".ui.activity.about.AboutActivity"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize"
             android:exported="false" />
-        <activity
-            android:name=".ui.activity.playback.PlaybackActivity"
-            android:exported="true"
-            android:launchMode="singleTop"
-            android:icon="@drawable/ic_playback_shortcut">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:mimeType="audio/*" />
-                <data android:scheme="file" />
-                <data android:scheme="content" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".ui.screen.display.test.PixelTestActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
