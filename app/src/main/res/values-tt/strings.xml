@@ -355,4 +355,5 @@
     <string name="get_token">Токен алыгыз</string>
     <string name="load_repositories">Резервларны йөкләү</string>
     <string name="no_repositories_found">Резервлар юк</string>
+    <string name="min">мин</string>
 </resources>

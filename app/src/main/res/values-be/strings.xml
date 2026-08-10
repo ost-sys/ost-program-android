@@ -355,4 +355,5 @@
     <string name="get_token">Атрымаць токен</string>
     <string name="load_repositories">Загрузіць рэпазітары</string>
     <string name="no_repositories_found">Рэпазітароў няма</string>
+    <string name="min">хв</string>
 </resources>

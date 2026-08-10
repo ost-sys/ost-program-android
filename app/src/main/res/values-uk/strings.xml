@@ -358,4 +358,5 @@
     <string name="root_access">ROOT-доступ</string>
     <string name="ra_perm_info">Розблокування розширених функцій, які потребують прав суперкористувача</string>
     <string name="please_grant_all_essential_permissions_to_proceed_with_the_setup">Надайте всі необхідні дозволи для продовження налаштування</string>
+    <string name="min">хв</string>
 </resources>

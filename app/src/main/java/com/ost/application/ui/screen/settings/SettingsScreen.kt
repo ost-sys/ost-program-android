@@ -183,8 +183,8 @@ fun SettingsListContent(
                     title = stringResource(R.string.total_recovery_time),
                     summary = stringResource(R.string.recovery_time),
                     value = state.totalDuration,
-                    range = 1f..120f,
-                    steps = 58,
+                    range = 1f..121f,
+                    steps = 59,
                     onValueChange = onTotalDurationChange,
                     position = CardPosition.TOP
                 )
@@ -461,7 +461,7 @@ fun SliderSettingsItem(
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = "$value sec",
+                    text = if (value > 120) "∞" else "$value ${stringResource(R.string.min)}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold

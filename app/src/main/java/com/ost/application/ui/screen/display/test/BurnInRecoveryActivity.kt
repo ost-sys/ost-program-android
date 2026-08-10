@@ -184,7 +184,7 @@ class BurnInRecoveryActivity : ComponentActivity() {
             override fun run() {
                 if (!isRunning) return
                 val elapsedTime = System.currentTimeMillis() - startTime
-                if (elapsedTime >= totalDuration * 60 * 1000) {
+                if (totalDuration <= 120 && elapsedTime >= totalDuration * 60 * 1000) {
                     isRunning = false
                     Toast.makeText(
                         this@BurnInRecoveryActivity,
@@ -209,67 +209,82 @@ class BurnInRecoveryActivity : ComponentActivity() {
     }
     private class NoiseView(context: Context?) : View(context) {
         private val paint = Paint()
-        private val random = Random()
+        private val fastRandom = kotlin.random.Random.Default
         private var bitmap: Bitmap? = null
+        private var pixels = IntArray(0)
         private var mode: Int = MODE_NOISE
+
+        private var noiseBitmap: Bitmap? = null
+        private var noisePixels = IntArray(512 * 512)
+
         fun setMode(mode: Int) {
             this.mode = mode
             invalidate()
         }
+
         override fun onDraw(canvas: Canvas) {
             super.onDraw(canvas)
-            val width = getWidth()
-            val height = getHeight()
-            if (bitmap == null || bitmap!!.width != width || bitmap!!.height != height) {
-                bitmap = createBitmap(width, height, Bitmap.Config.RGB_565)
-            }
-            @SuppressLint("DrawAllocation") val pixels = IntArray(width * height)
+            val width = width
+            val height = height
+
+            if (width == 0 || height == 0) return
+
             when (mode) {
                 MODE_NOISE -> {
-                    var i = 0
-                    while (i < pixels.size) {
-                        pixels[i] =
-                            Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256))
-                        i++
+                    if (noiseBitmap == null) {
+                        noiseBitmap = createBitmap(512, 512, Bitmap.Config.RGB_565)
                     }
-                }
-                MODE_HORIZONTAL_LINES -> {
-                    var y = 0
-                    while (y < height) {
-                        val color =
-                            Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256))
-                        var x = 0
-                        while (x < width) {
-                            pixels[y * width + x] = color
-                            x++
-                        }
-                        y++
+                    for (i in noisePixels.indices) {
+                        noisePixels[i] = fastRandom.nextInt() or -0x1000000
                     }
-                }
-                MODE_VERTICAL_LINES -> {
-                    var x = 0
-                    while (x < width) {
-                        val color =
-                            Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256))
-                        var y = 0
-                        while (y < height) {
-                            pixels[y * width + x] = color
-                            y++
-                        }
-                        x++
-                    }
+                    noiseBitmap!!.setPixels(noisePixels, 0, 512, 0, 0, 512, 512)
+                    paint.shader = android.graphics.BitmapShader(noiseBitmap!!, android.graphics.Shader.TileMode.REPEAT, android.graphics.Shader.TileMode.REPEAT)
+                    canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+                    paint.shader = null
                 }
                 MODE_BLACK_WHITE_NOISE -> {
-                    var i = 0
-                    while (i < pixels.size) {
-                        val gray = random.nextInt(256)
-                        pixels[i] = Color.rgb(gray, gray, gray)
-                        i++
+                    if (noiseBitmap == null) {
+                        noiseBitmap = createBitmap(512, 512, Bitmap.Config.RGB_565)
                     }
+                    for (i in noisePixels.indices) {
+                        val gray = fastRandom.nextInt(256)
+                        noisePixels[i] = -0x1000000 or (gray shl 16) or (gray shl 8) or gray
+                    }
+                    noiseBitmap!!.setPixels(noisePixels, 0, 512, 0, 0, 512, 512)
+                    paint.shader = android.graphics.BitmapShader(noiseBitmap!!, android.graphics.Shader.TileMode.REPEAT, android.graphics.Shader.TileMode.REPEAT)
+                    canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+                    paint.shader = null
+                }
+                MODE_HORIZONTAL_LINES -> {
+                    if (bitmap == null || bitmap!!.width != width || bitmap!!.height != height) {
+                        bitmap = createBitmap(width, height, Bitmap.Config.RGB_565)
+                        pixels = IntArray(width * height)
+                    }
+                    for (y in 0 until height) {
+                        val color = fastRandom.nextInt() or -0x1000000
+                        val offset = y * width
+                        for (x in 0 until width) {
+                            pixels[offset + x] = color
+                        }
+                    }
+                    bitmap!!.setPixels(pixels, 0, width, 0, 0, width, height)
+                    canvas.drawBitmap(bitmap!!, 0f, 0f, paint)
+                }
+                MODE_VERTICAL_LINES -> {
+                    if (bitmap == null || bitmap!!.width != width || bitmap!!.height != height) {
+                        bitmap = createBitmap(width, height, Bitmap.Config.RGB_565)
+                        pixels = IntArray(width * height)
+                    }
+                    for (x in 0 until width) {
+                        val color = fastRandom.nextInt() or -0x1000000
+                        for (y in 0 until height) {
+                            pixels[y * width + x] = color
+                        }
+                    }
+                    bitmap!!.setPixels(pixels, 0, width, 0, 0, width, height)
+                    canvas.drawBitmap(bitmap!!, 0f, 0f, paint)
                 }
             }
-            bitmap!!.setPixels(pixels, 0, width, 0, 0, width, height)
-            canvas.drawBitmap(bitmap!!, 0f, 0f, paint)
             invalidate()
         }
     }

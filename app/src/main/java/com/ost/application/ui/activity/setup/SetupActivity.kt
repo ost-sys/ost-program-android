@@ -878,8 +878,8 @@ fun TimingsSetupScreen(
                 SeekBarPreference(
                     title = stringResource(R.string.total_recovery_time),
                     value = state.totalDuration,
-                    range = 1f..120f,
-                    steps = 58,
+                    range = 1f..121f,
+                    steps = 59,
                     onValueChange = onTotalDurationChange
                 )
                 SeekBarPreference(
@@ -1192,7 +1192,7 @@ fun SeekBarPreference(
                 modifier = Modifier.weight(1f)
             )
             Text(
-                text = value.toString(),
+                text = if (value > 120) "∞" else "$value ${stringResource(R.string.min)}",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
