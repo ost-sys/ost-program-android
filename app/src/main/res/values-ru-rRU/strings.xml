@@ -385,4 +385,5 @@
     <string name="resume_logs">Продолжить</string>
     <string name="logs_copied">Логи скопированы в буфер обмена</string>
     <string name="search_logs">Поиск логов…</string>
+    <string name="min">мин</string>
 </resources>
