@@ -102,8 +102,27 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".share.LocalSendActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="false">
+            <intent-filter>
+                <action android:name="com.ost.application.action.LOCALSEND_SEND_FILES" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
+
         <service
             android:name=".share.WearShareService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice">
+        </service>
+
+        <service
+            android:name=".share.LocalSendService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="connectedDevice">

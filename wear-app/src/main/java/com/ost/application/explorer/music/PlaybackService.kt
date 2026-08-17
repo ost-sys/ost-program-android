@@ -7,11 +7,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
-/**
- * Owns the ExoPlayer instance so playback survives every activity: the explorer's
- * single-file mode, the full player and the system media controls all talk to the
- * same session through MediaController.
- */
+
 @UnstableApi
 class PlaybackService : MediaSessionService() {
     private var mediaSession: MediaSession? = null
@@ -23,7 +19,7 @@ class PlaybackService : MediaSessionService() {
                     .setUsage(C.USAGE_MEDIA)
                     .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
                     .build(),
-                /* handleAudioFocus = */ true
+                 true
             )
             .setHandleAudioBecomingNoisy(true)
             .setSeekForwardIncrementMs(SEEK_INCREMENT_MS)

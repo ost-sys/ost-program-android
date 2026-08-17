@@ -16,6 +16,7 @@ local.properties
 .idea
 .codegraphy
 build_and_run.sh
+.ost_*
 .ost_build_config
 .agents
 .kotlin

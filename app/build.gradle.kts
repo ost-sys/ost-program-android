@@ -15,7 +15,7 @@ android {
         minSdk = 26
         targetSdk = 37
         versionCode = 400
-        versionName = "4.0.0-beta5"
+        versionName = "4.0.0-beta6"
         ndk {
             abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
         }
@@ -62,6 +62,8 @@ android {
     packaging  {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/INDEX.LIST"
+            excludes += "META-INF/io.netty.versions.properties"
         }
     }
 }
@@ -81,7 +83,6 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.video)
     implementation(libs.coil.network.okhttp)
-    implementation(libs.volley)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.gson)

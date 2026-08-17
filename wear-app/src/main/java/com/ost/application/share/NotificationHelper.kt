@@ -47,6 +47,77 @@ object NotificationHelper {
             notificationManager.createNotificationChannel(incomingChannel)
         }
     }
+    fun buildOngoingNotification(
+        context: Context,
+        notificationId: Int,
+        targetActivity: Class<*>,
+        title: String,
+        contentText: String,
+        statusText: String,
+        iconRes: Int = R.drawable.ic_notification_24dp,
+        progress: Int? = null,
+        totalSize: Long = 0L
+    ): NotificationCompat.Builder {
+        createNotificationChannel(context)
+        val builder = NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
+            .setContentTitle(title)
+            .setContentText(contentText)
+            .setSmallIcon(iconRes)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setOngoing(true)
+
+        if (progress != null && progress in 0..100) {
+            builder.setProgress(100, progress, false)
+        }
+
+        val activityIntent = Intent(context, targetActivity).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+        val activityPendingIntent = PendingIntent.getActivity(
+            context,
+            notificationId,
+            activityIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val ongoingActivityStatus = if (progress != null && progress in 0..100) {
+            if (totalSize > 0) {
+                Status.Builder()
+                    .addTemplate(
+                        context.getString(
+                            R.string.notif_progress_details,
+                            (progress / 100.0 * totalSize).toLong().formatFileSize(context),
+                            totalSize.formatFileSize(context),
+                            progress
+                        )
+                    )
+                    .build()
+            } else {
+                Status.Builder()
+                    .addTemplate("$statusText ($progress%)")
+                    .build()
+            }
+        } else {
+            Status.Builder()
+                .addTemplate(statusText)
+                .build()
+        }
+
+        val ongoingActivity = OngoingActivity.Builder(
+            context.applicationContext,
+            notificationId,
+            builder
+        )
+            .setStaticIcon(iconRes)
+            .setTouchIntent(activityPendingIntent)
+            .setStatus(ongoingActivityStatus)
+            .setTitle(title)
+            .build()
+
+        ongoingActivity.apply(context.applicationContext)
+        return builder
+    }
+
     fun buildForegroundServiceNotification(context: Context, contentText: String): NotificationCompat.Builder {
         createNotificationChannel(context)
         return NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
@@ -56,54 +127,36 @@ object NotificationHelper {
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
     }
+
     fun startOrUpdateOngoingActivity(
         context: Context,
-        notificationBuilder: NotificationCompat.Builder,
+        notificationId: Int,
+        targetActivity: Class<*>,
+        title: String,
+        contentText: String,
         statusText: String,
-        iconRes: Int,
+        iconRes: Int = R.drawable.ic_notification_24dp,
         progress: Int? = null,
-        totalSize: Long = 0L,
-        isSending: Boolean = false
+        totalSize: Long = 0L
     ) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val activityIntent = Intent(context, ShareActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            }
-            val activityPendingIntent = PendingIntent.getActivity(
-                context,
-                0,
-                activityIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-            )
-            val ongoingActivityStatus = if (progress != null && progress in 0..100) {
-                Status.Builder()
-                    .addTemplate(context.getString(R.string.notif_progress_details,
-                        (progress / 100.0 * totalSize).toLong().formatFileSize(context),
-                        totalSize.formatFileSize(context),
-                        progress))
-                    .build()
-            } else {
-                Status.Builder()
-                    .addTemplate(statusText)
-                    .build()
-            }
-            val ongoingActivity = OngoingActivity.Builder(
-                context.applicationContext,
-                Constants.NOTIFICATION_ID_SERVICE_FOREGROUND,
-                notificationBuilder
-            )
-                .setStaticIcon(iconRes)
-                .setTouchIntent(activityPendingIntent)
-                .setStatus(ongoingActivityStatus)
-                .build()
-            ongoingActivity.apply(context.applicationContext)
-        }
+        val builder = buildOngoingNotification(
+            context = context,
+            notificationId = notificationId,
+            targetActivity = targetActivity,
+            title = title,
+            contentText = contentText,
+            statusText = statusText,
+            iconRes = iconRes,
+            progress = progress,
+            totalSize = totalSize
+        )
         val notificationManager: NotificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(Constants.NOTIFICATION_ID_SERVICE_FOREGROUND, notificationBuilder.build())
+        notificationManager.notify(notificationId, builder.build())
     }
-    fun stopOngoingActivity(context: Context) {
-        cancelNotification(context, Constants.NOTIFICATION_ID_SERVICE_FOREGROUND)
+
+    fun stopOngoingActivity(context: Context, notificationId: Int = Constants.NOTIFICATION_ID_SERVICE_FOREGROUND) {
+        cancelNotification(context, notificationId)
     }
     fun showTransferNotification(context: Context, title: String, progress: Int, totalSize: Long, isSending: Boolean) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

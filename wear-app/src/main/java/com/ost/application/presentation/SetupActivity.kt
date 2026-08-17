@@ -513,7 +513,7 @@ private fun TimingsSetupScreen(
                 Slider(
                     value = state.timing.totalDuration,
                     onValueChange = onTotalDurationChange,
-                    valueProgression = 1..120,
+                    valueProgression = 1..121,
                     enabled = true
                 )
             }

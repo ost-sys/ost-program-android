@@ -69,7 +69,7 @@ private val EDITABLE_EXTENSIONS = setOf(
 private const val MAX_EDITABLE_BYTES = 1L * 1024 * 1024
 private const val PREVIEW_BYTES = 128 * 1024
 data class EditorDialogState(val message: String, val isError: Boolean)
-/** Abstracts the two input flavors: a plain path (internal) and a content/file URI (open-with). */
+
 private sealed class DocumentSource {
     abstract fun displayName(context: Context): String
     abstract fun sizeBytes(context: Context): Long

@@ -150,6 +150,11 @@ class WearShareService : Service() {
                 updateOngoingActivity()
             }
         }
+        serviceScope.launch {
+            transferProgress.collect {
+                updateOngoingActivity()
+            }
+        }
         updateOngoingActivity()
     }
     @SuppressLint("MissingPermission")
@@ -240,13 +245,30 @@ class WearShareService : Service() {
         }
     }
     private fun updateOngoingActivity() {
-        val titleText = when {
-            fileSender.isSendingActive.value -> getString(CoreR.string.transfer_active)
-            fileReceiver.isReceivingActive.value -> getString(CoreR.string.receiver_active_waiting)
-            nsdHandler.isDiscovering.value -> getString(CoreR.string.searching)
-            else -> getString(CoreR.string.receiver_stopped)
+        val isSending = fileSender.isSendingActive.value
+        val isReceiving = fileReceiver.transferProgress.value != null
+        val isTransferActive = isSending || isReceiving
+
+        val notifBuilder = if (isTransferActive) {
+            val progress = if (isSending) {
+                fileSender.transferProgress.value
+            } else {
+                fileReceiver.transferProgress.value
+            }
+            val statusText = getString(CoreR.string.transfer_active)
+            NotificationHelper.buildOngoingNotification(
+                context = this,
+                notificationId = Constants.NOTIFICATION_ID_SERVICE_FOREGROUND,
+                targetActivity = ShareActivity::class.java,
+                title = getString(R.string.app_name),
+                contentText = _statusText.value,
+                statusText = statusText,
+                iconRes = R.drawable.ic_notification_24dp,
+                progress = progress
+            )
+        } else {
+            NotificationHelper.buildForegroundServiceNotification(this, _statusText.value)
         }
-        val notifBuilder = NotificationHelper.buildForegroundServiceNotification(this, titleText)
         startForeground(Constants.NOTIFICATION_ID_SERVICE_FOREGROUND, notifBuilder.build())
     }
     override fun onBind(intent: Intent?): IBinder {
@@ -261,9 +283,9 @@ class WearShareService : Service() {
         fileSender.shutdown()
         nsdHandler.shutdown()
         serviceScope.cancel()
+        NotificationHelper.stopOngoingActivity(this, Constants.NOTIFICATION_ID_SERVICE_FOREGROUND)
         stopForeground(STOP_FOREGROUND_REMOVE)
         NotificationHelper.cancelNotification(this, Constants.NOTIFICATION_ID_TRANSFER)
-        NotificationHelper.cancelNotification(this, Constants.NOTIFICATION_ID_INCOMING_FILE)
         super.onDestroy()
     }
 }

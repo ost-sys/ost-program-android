@@ -89,11 +89,7 @@ object BatteryInfoProvider {
             cycleCount = cycleCount
         )
     }
-    /**
-     * Instantaneous current in mA. Positive while charging, negative while discharging
-     * (normalized: some vendors report µA, others mA, and some invert the sign —
-     * the magnitude heuristic converts µA to mA; sign is aligned with isCharging).
-     */
+
     fun getCurrentNowMilliAmps(context: Context, isCharging: Boolean): Long? {
         val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as? android.os.BatteryManager
             ?: return null
@@ -102,7 +98,7 @@ object BatteryInfoProvider {
         val milliAmps = if (kotlin.math.abs(raw) > 100_000) raw / 1000 else raw
         return if (isCharging) kotlin.math.abs(milliAmps) else -kotlin.math.abs(milliAmps)
     }
-    /** Estimated time until full charge in millis, or null when not charging/unknown. */
+
     fun getChargeTimeRemainingMillis(context: Context): Long? {
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.P) return null
         val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as? android.os.BatteryManager

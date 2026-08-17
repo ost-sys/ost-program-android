@@ -340,4 +340,18 @@
     <string name="no_track_selected">No track selected</string>
     <string name="error_no_music_file">Error: No music file specified.</string>
     <string name="error_unknown_launch_mode">Error: Unknown launch mode.</string>
+    <string name="protocol_ost_share" translatable="false">OST Share</string>
+    <string name="protocol_localsend" translatable="false">LocalSend</string>
+    <string name="localsend" translatable="false">LocalSend</string>
+    <string name="receive_files_question">Receive files?</string>
+    <string name="localsend_incoming_files_desc">%1$s wants to send %2$d file(s).</string>
+    <string name="no_localsend_devices_found">No LocalSend devices found</string>
+    <string name="status_resolved">Resolved</string>
+    <string name="status_resolving">Resolving…</string>
+    <string name="discoverable">Discoverable</string>
+    <string name="no_received_files">No received files</string>
+    <string name="today">Today</string>
+    <string name="older">Older</string>
+    <string name="localsend_active">LocalSend active</string>
+    <string name="receiving_progress">Receiving… %1$d%%</string>
 </resources>

@@ -17,12 +17,7 @@ import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
-/**
- * Single point of access to the GitHub personal access token. The token is stored
- * AES/GCM-encrypted with a key that lives in the Android Keystore, so the plaintext
- * never touches disk. Every write also syncs the token *presence* (never the token
- * itself) to the watch.
- */
+
 class GithubTokenRepository(context: Context, private val scope: CoroutineScope) {
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private val syncClient = SettingsSyncClient(context)

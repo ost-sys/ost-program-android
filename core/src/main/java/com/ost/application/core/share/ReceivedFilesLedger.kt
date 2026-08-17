@@ -42,7 +42,7 @@ object ReceivedFilesLedger {
         if (needsRewrite) {
             writeEntries(ledgerFile, validEntries)
         }
-        
+
         return validEntries.sortedByDescending { it.timestamp }
     }
 
@@ -70,11 +70,11 @@ object ReceivedFilesLedger {
 
         writeEntries(ledgerFile, currentEntries)
     }
-    
+
     fun removeEntry(dir: File, fileName: String) {
         val ledgerFile = File(dir, LEDGER_FILE_NAME)
         if (!ledgerFile.exists()) return
-        
+
         val entries = getValidEntries(dir).toMutableList()
         val removed = entries.removeAll { it.fileName == fileName }
         if (removed) {

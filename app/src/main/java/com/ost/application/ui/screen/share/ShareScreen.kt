@@ -47,6 +47,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -69,7 +70,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -140,6 +146,7 @@ fun ShareScreen(
     val view = LocalView.current
     val clipboardManager = LocalClipboardManager.current
 
+    val selectedProtocol    by viewModel.selectedProtocol.collectAsStateWithLifecycle()
     val isServiceRunning    by viewModel.isServiceRunning.collectAsStateWithLifecycle()
     val isServiceStuck      by viewModel.isServiceStuck.collectAsStateWithLifecycle()
     val discoveredDevices   by viewModel.discoveredDevices.collectAsStateWithLifecycle()
@@ -230,7 +237,6 @@ fun ShareScreen(
         )
     }
 
-    // Text Input Dialog
     if (showTextDialog) {
         AlertDialog(
             onDismissRequest = { showTextDialog = false },
@@ -278,7 +284,6 @@ fun ShareScreen(
         )
     }
 
-    // Add To Selection ModalBottomSheet
     if (showAddSheet) {
         ModalBottomSheet(
             onDismissRequest = { showAddSheet = false },
@@ -305,7 +310,7 @@ fun ShareScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    // File Option
+
                     SelectionOptionCard(
                         modifier = Modifier.weight(1f),
                         icon = { Icon(painterResource(R.drawable.ic_upload_file_24dp), contentDescription = null, modifier = Modifier.size(32.dp)) },
@@ -321,7 +326,6 @@ fun ShareScreen(
                         }
                     )
 
-                    // Text Option
                     SelectionOptionCard(
                         modifier = Modifier.weight(1f),
                         icon = { Icon(Icons.Default.EditNote, contentDescription = null, modifier = Modifier.size(32.dp)) },
@@ -331,7 +335,6 @@ fun ShareScreen(
                         }
                     )
 
-                    // Paste Option
                     SelectionOptionCard(
                         modifier = Modifier.weight(1f),
                         icon = { Icon(Icons.Default.ContentPaste, contentDescription = null, modifier = Modifier.size(32.dp)) },
@@ -374,7 +377,6 @@ fun ShareScreen(
         }
     }
 
-    // Edit Selection Dialog
     if (showEditDialog) {
         AlertDialog(
             onDismissRequest = { showEditDialog = false },
@@ -470,7 +472,56 @@ fun ShareScreen(
                 bottom = 16.dp + bottomSpacing
             )
         ) {
-            // Service Control notice if stuck
+
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 6.dp),
+                    horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)
+                ) {
+                    ToggleButton(
+                        checked = selectedProtocol == ShareProtocol.OST_SHARE,
+                        onCheckedChange = {
+                            view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
+                            viewModel.setProtocol(ShareProtocol.OST_SHARE)
+                        },
+                        shapes = ButtonGroupDefaults.connectedLeadingButtonShapes(),
+                        modifier = Modifier
+                            .weight(1f)
+                            .semantics { role = Role.RadioButton }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_share_24dp),
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(Modifier.width(ToggleButtonDefaults.IconSpacing))
+                        Text(text = stringResource(R.string.protocol_ost_share), maxLines = 1)
+                    }
+
+                    ToggleButton(
+                        checked = selectedProtocol == ShareProtocol.LOCALSEND,
+                        onCheckedChange = {
+                            view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
+                            viewModel.setProtocol(ShareProtocol.LOCALSEND)
+                        },
+                        shapes = ButtonGroupDefaults.connectedTrailingButtonShapes(),
+                        modifier = Modifier
+                            .weight(1f)
+                            .semantics { role = Role.RadioButton }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_device_24dp),
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(Modifier.width(ToggleButtonDefaults.IconSpacing))
+                        Text(text = stringResource(R.string.protocol_localsend), maxLines = 1)
+                    }
+                }
+            }
+
             if (isServiceStuck) {
                 item {
                     ServiceControlCard(
@@ -490,7 +541,6 @@ fun ShareScreen(
                 }
             }
 
-            // 1. STAGED SELECTION CARD
             item {
                 Card(
                     modifier = Modifier
@@ -547,7 +597,6 @@ fun ShareScreen(
                             )
                             Spacer(modifier = Modifier.height(12.dp))
 
-                            // Staged thumbnails row
                             LazyRow(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 modifier = Modifier.fillMaxWidth()
@@ -571,7 +620,6 @@ fun ShareScreen(
 
                             Spacer(modifier = Modifier.height(16.dp))
 
-                            // Action buttons: Edit & + Add
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.End,
@@ -598,7 +646,6 @@ fun ShareScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            // 2. NEARBY DEVICES SECTION HEADER WITH ACTIONS
             item {
                 Row(
                     modifier = Modifier
@@ -614,7 +661,7 @@ fun ShareScreen(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Refresh Discovery Button
+
                         IconButton(
                             onClick = {
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
@@ -628,7 +675,6 @@ fun ShareScreen(
                             )
                         }
 
-                        // Visibility Toggle Button
                         IconButton(
                             onClick = {
                                 view.performHapticFeedback(HapticFeedbackConstants.TOGGLE_ON)
@@ -642,7 +688,6 @@ fun ShareScreen(
                             )
                         }
 
-                        // Service Power Toggle Button
                         IconButton(
                             onClick = {
                                 view.performHapticFeedback(HapticFeedbackConstants.TOGGLE_ON)
@@ -659,7 +704,6 @@ fun ShareScreen(
                 }
             }
 
-            // 3. NEARBY DEVICES LIST OR TROUBLESHOOT HINT
             if (discoveredDevices.isEmpty()) {
                 item {
                     Card(
@@ -716,7 +760,6 @@ fun ShareScreen(
                 }
             }
 
-            // 4. ACTIVE TRANSFER CARD
             if (isTransferActive) {
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
@@ -755,7 +798,6 @@ fun ShareScreen(
                 }
             }
 
-            // 5. RECEIVED FILES HISTORY
             if (lastReceivedFiles.isNotEmpty()) {
                 item {
                     Spacer(modifier = Modifier.height(24.dp))

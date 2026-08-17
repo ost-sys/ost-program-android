@@ -487,4 +487,20 @@
     <string name="delete_all">Delete all</string>
     <string name="send">Send</string>
     <string name="view_all_received_files_count">All files (%d)</string>
+    <string name="protocol_ost_share" translatable="false">OST Share</string>
+    <string name="protocol_localsend" translatable="false">LocalSend</string>
+    <string name="localsend" translatable="false">LocalSend</string>
+    <string name="receive_files_question">Receive files?</string>
+    <string name="localsend_incoming_files_desc">%1$s wants to send %2$d file(s).</string>
+    <string name="no_localsend_devices_found">No LocalSend devices found</string>
+    <string name="scan_again">Scan again</string>
+    <string name="status_resolved">Resolved</string>
+    <string name="status_resolving">Resolving…</string>
+    <string name="tap_to_resolve">Tap to resolve</string>
+    <string name="discoverable">Discoverable</string>
+    <string name="no_received_files">No received files</string>
+    <string name="today">Today</string>
+    <string name="older">Older</string>
+    <string name="localsend_active">LocalSend active</string>
+    <string name="receiving_progress">Receiving… %1$d%%</string>
 </resources>

@@ -13,12 +13,7 @@ import java.security.MessageDigest
 import java.util.Collections
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
-/**
- * Small thumbnails for file-list card backgrounds: downscaled images and embedded
- * album art. Two cache levels — an in-memory LruCache for scroll performance and
- * JPEG files in cacheDir so thumbnails survive restarts without re-decoding.
- * Files without extractable art are remembered too, so they are probed only once.
- */
+
 object ThumbnailCache {
     private const val TAG = "ThumbnailCache"
     private const val THUMB_SIZE = 320
@@ -61,7 +56,7 @@ object ThumbnailCache {
         memoryCache.put(key, bitmap)
         bitmap
     }
-    /** Thumbnail for a content URI (e.g. MediaStore album art), cached under [cacheKey]. */
+
     suspend fun loadFromUri(context: Context, cacheKey: String, uri: android.net.Uri): Bitmap? =
         withContext(Dispatchers.IO) {
             memoryCache.get(cacheKey)?.let { return@withContext it }

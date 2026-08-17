@@ -107,7 +107,7 @@ class PowerMenuViewModel(application: Application) : AndroidViewModel(applicatio
                               File("/vendor/bin/su").exists()
             val isRooted = if (hasSuBinary) {
                 withTimeoutOrNull(2000) {
-                    runCatching { Shell.cmd("su -c echo success").exec().isSuccess }.getOrDefault(false)
+                    runCatching { Shell.isAppGrantedRoot() == true || Shell.cmd("echo success").exec().isSuccess }.getOrDefault(false)
                 } ?: false
             } else false
             val newState = if (isRooted) RootAccessState.GRANTED else RootAccessState.DENIED

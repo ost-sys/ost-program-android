@@ -1,39 +1,39 @@
-**Latest Phone Version:** v4.0.0-beta5
-**Latest Wear OS Version:** v3.0.0-beta5
+**Latest Phone Version:** v4.0.0-beta6
+**Latest Wear OS Version:** v3.0.0-beta6
 
 ---
 
-## Changelog — Android (v4.0.0-beta5)
+## Changelog — Android (v4.0.0-beta6)
 
 ### New Features & Improvements
-- Redesigned Battery Info Screen: Introduced a Material 3 Hero Unit with CircularWavyProgressIndicator, Sparkline Metric Graphs for temperature/voltage history, and Health & Cycle Count M3 cards.
-- Advanced Device Info: Expanded Device Info screen to display Security Patch Level, Kernel Version, Bootloader Version, Baseband/Radio Version, Partition Style, Project Treble Support, and System Uptime.
-- Detailed Network Metrics: Expanded Network Info screen to show DNS Servers, Gateway IP, Network Interface Name, and Active VPN Status via ConnectivityManager.
-- Regional Settings & Temperature Units: Linked regional temperature unit selection (Celsius/Fahrenheit) across CPU Info and Battery Info screens with dynamic conversion.
-- MiniGames & Minesweeper Modernization: Wired MiniGames launch button directly into MainActivity's TopAppBar and completely redesigned the Minesweeper game board to be fully responsive across smartphones, tablets, foldables, and landscape modes.
-- Experimental Features & Beta Badging: Integrated custom BetaBadge components with cross-platform navigation support, tagging ROM, RAM, and Minigames in mobile bottom sheets, top app bars, and tablet/desktop side navigation drawers.
-- Architecture Refactoring: Extracted SharedPreferences logic out of ViewModels into dedicated repositories (PhoneTimingSettingsRepository, GithubTokenRepository).
-- Permissions Expansion: Massively updated AndroidManifest.xml to support new system integrations, including permissions for Bluetooth, Media (Audio/Images/Video), Package Installation & Deletion, Biometrics, Notifications, and Activity Recognition.
-- Codebase Cleanup & Localization: Consolidated hardcoded text into strings.xml resource files and simplified the Android CI/CD workflow.
+- **LocalSend Cross-Platform Sharing (Protocol v2.1)**: Full integration of LocalSend Protocol v2.1, enabling bidirectional file transfers with official LocalSend clients on iOS, macOS, Windows, Linux, Android, and Wear OS.
+- **Continuous Multi-Subnet Discovery**: Added automated parallel subnet scanning (`SubnetScanner`) across all active network interfaces with automatic bidirectional device registration (`/api/localsend/v2/register`).
+- **Encrypted TLS File Server**: Integrated embedded Netty HTTPS server with dynamic PKCS12 SSL certificate generation, SHA-256 fingerprint verification, and streaming multi-file upload handling.
+- **System-as-Root Detection**: Added System-as-Root partition architecture detection to Device Information.
+- **Infinite Burn-In Recovery**: Updated Fix Dead Pixels / Burn-In Recovery tool to support infinite duration mode.
+- **Localization Updates**: Consolidated and updated translation resources across all supported language locales (including Belarusian, Spanish, Russian, Ukrainian, and English).
 
-### Bug Fixes
-- Merged community PR fixing a navbar background glitch in MainActivity.
+### Bug Fixes & Stability
+- **Burn-In Recovery 64-bit Fix (PR #5)**: Fixed a critical bug causing "Fix dead pixels" to break on 64-bit-only devices.
+- **Navbar Background Fix (PR #4)**: Resolved navigation bar background rendering glitch in MainActivity.
+- **R8 Release Startup Crash**: Fixed Ktor reflection crash (`CallableUtilsKt.executeModuleFunction` / `Array has more than one element`) by eliminating dynamic module reloading under R8.
+- **iOS/macOS Transfer Compatibility**: Mapped file metadata to strict standard protocol enums (`image`, `video`, `pdf`, `text`, `other`), eliminating transfer rejections from official iOS/macOS clients.
+- **Coroutine Body Parsing**: Resolved `NoSuchMethodError` during JSON body parsing in `LocalSendClient` with direct Gson deserialization.
 
 ---
 
-## Changelog — Wear OS (v3.0.0-beta5)
+## Changelog — Wear OS (v3.0.0-beta6)
 
 ### New Features & Improvements
-- Wear OS Player Overhaul: Complete redesign of the media player adhering strictly to official Google Horologist guidelines with a Material 3 Expressive UI.
-- Adaptive Color Palette: Added dynamic UI color extraction from track cover art using Palette/Bitmap color extraction, smoothly adapting background and playback controls.
-- File Explorer Image Thumbnails: The File Explorer now generates and caches image thumbnails, displaying previews instead of generic icons via ThumbnailCache.
-- File Explorer Hidden Files: Added an Explorer Settings dialog with a toggle to hide or show hidden files, persisting via shared preferences.
-- Direct APK Installation: Users can now tap on .apk files directly in the Wear OS File Explorer to trigger the system package installer.
-- Text Editor Upgrades: Improved the Text Editor UI with a BasicTextField border and a functional save action coupled with a loading spinner while saving.
-- PDF Reader URI Support: PdfReaderActivity can now open PDFs directly from content URIs in addition to absolute file paths.
-- Regional Settings & Temperature Units: Linked regional temperature unit selection (Celsius/Fahrenheit) across CPU Info and Battery Info screens.
-- Architecture Refactoring: Migrated SharedPreferences logic to WearTimingSettingsRepository.
-- Permissions Expansion: Updated AndroidManifest.xml to support package installation, Bluetooth, media reading, and foreground services.
-- Codebase Cleanup & Localization: Consolidated hardcoded text into strings.xml resource files.
+- **Standalone LocalSend for Smartwatches**: Full-featured LocalSend file transfer engine running natively on Wear OS without requiring a companion phone.
+- **Material 3 Wear OS Interface**: Custom interface featuring Rotary Crown hardware scrolling, circular transfer progress rings, and file acceptance confirmation dialogs.
+- **Standalone Wi-Fi Management**: Automatic Wi-Fi lock acquisition and network routing ensuring transfers remain connected on standalone watches.
+- **Continuous Subnet Scanning**: Background cyclic subnet discovery for instant detection of nearby mobile and desktop devices.
+- **Burn-In Recovery Updates (PR #5)**: Added 64-bit device compatibility and infinite duration recovery mode to Wear OS display tools.
+- **Localization Coverage**: Added full translations for all new Wear OS sharing and system features.
+
+### Bug Fixes & Stability
+- **ProGuard & Release Optimization**: Added comprehensive keep-rules and fixed Netty engine startup under R8 release minification.
+- **TLS & Network Hardening**: Enhanced SSL/TLS certificate handling and connection stability across local wireless networks.
 
 **This is a pre-release version! Bugs and instability are possible.**

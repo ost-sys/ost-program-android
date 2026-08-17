@@ -107,7 +107,7 @@ object CpuInfoProvider {
             ?: getSystemProperty("ro.board.platform")?.takeIf { it.isNotBlank() }
             ?: getSystemProperty("ro.hardware")?.takeIf { it.isNotBlank() }
     }
-    /** Cores sharing the same min/max frequency pair form one cluster (little/big/prime). */
+
     private fun groupClusters(cores: List<CpuCoreInfo>): List<CpuCluster> {
         return cores
             .groupBy { it.minFreqKhz to it.maxFreqKhz }

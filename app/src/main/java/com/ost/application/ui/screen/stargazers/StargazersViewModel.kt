@@ -58,10 +58,14 @@ class StargazersViewModel(application: Application) : AndroidViewModel(applicati
                 val tokenHeader = if (_userToken.value.startsWith("token ")) _userToken.value else "token ${_userToken.value}"
                 val loadedRepos = RetrofitClient.api.getUserRepos(token = tokenHeader)
                 _repos.value = loadedRepos
+            } catch (e: retrofit2.HttpException) {
+                _error.value = e.localizedMessage
+                if (e.code() == 401) {
+                    _userToken.value = ""
+                    tokenRepository.clearToken()
+                }
             } catch (e: Exception) {
                 _error.value = e.localizedMessage
-                _userToken.value = ""
-                tokenRepository.clearToken()
             } finally {
                 _isLoading.value = false
             }

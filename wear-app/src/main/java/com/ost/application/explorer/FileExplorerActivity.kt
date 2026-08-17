@@ -263,6 +263,32 @@ class FileExplorerActivity : ComponentActivity() {
             dialogInfo.value = FileDialogInfo(getString(R.string.error_preparing_file_for_sharing), isError = true)
         }
     }
+
+    private fun shareFileLocalSend(context: Context, file: File) {
+        dismissActionsDialog()
+        if (file.isDirectory) {
+            dialogInfo.value = FileDialogInfo(getString(R.string.cannot_share_folders), isError = true)
+            return
+        }
+        if (!file.exists()) {
+            dialogInfo.value = FileDialogInfo(getString(R.string.error_file_not_found), isError = true)
+            return
+        }
+        try {
+            val fileUri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+            val uris = ArrayList<Uri>().apply { add(fileUri) }
+            val intent = Intent().apply {
+                action = "com.ost.application.action.LOCALSEND_SEND_FILES"
+                setClassName(context.packageName, "com.ost.application.share.LocalSendActivity")
+                putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            Log.e(Constants.TAG, "Error sharing via LocalSend ${file.name}", e)
+            dialogInfo.value = FileDialogInfo(getString(R.string.error_preparing_file_for_sharing), isError = true)
+        }
+    }
     private fun renameFile(file: File) {
         dismissActionsDialog()
         renameFileLauncher.launch(file.absolutePath)
@@ -443,7 +469,8 @@ class FileExplorerActivity : ComponentActivity() {
                     onCut = { cutFile(fileToShowActionsFor) },
                     onRename = { renameFile(fileToShowActionsFor) },
                     onDelete = { deleteFile(fileToShowActionsFor) },
-                    onShare = { shareFile(this, fileToShowActionsFor) }
+                    onShare = { shareFile(this, fileToShowActionsFor) },
+                    onShareLocalSend = { shareFileLocalSend(this, fileToShowActionsFor) }
                 )
             }
             currentDialogInfo?.let { info ->
@@ -1036,7 +1063,8 @@ fun FileActionsDialog(
     onCut: () -> Unit,
     onRename: () -> Unit,
     onDelete: () -> Unit,
-    onShare: () -> Unit
+    onShare: () -> Unit,
+    onShareLocalSend: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val focusRequester = remember { FocusRequester() }
@@ -1080,6 +1108,7 @@ fun FileActionsDialog(
                     item { ActionChip(iconResId = R.drawable.ic_edit_24dp, label = stringResource(R.string.rename), position = CardPosition.MIDDLE, onClick = onRename) }
                     if (!file.isDirectory) {
                         item { ActionChip(iconResId = R.drawable.ic_share_24dp, label = stringResource(R.string.share), position = CardPosition.MIDDLE, onClick = onShare) }
+                        item { ActionChip(iconResId = R.drawable.ic_share_24dp, label = "LocalSend", position = CardPosition.MIDDLE, onClick = onShareLocalSend) }
                     }
                     item { ActionChip(iconResId = R.drawable.ic_delete_24dp, label = stringResource(R.string.delete), onClick = onDelete, position = CardPosition.BOTTOM, isDestructive = true) }
                     item { Spacer(Modifier.height(8.dp)) }

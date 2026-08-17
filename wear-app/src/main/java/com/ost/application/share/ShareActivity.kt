@@ -285,7 +285,7 @@ fun ShareApp(
                 ignoreCase = true
             ))
             val showSendUI = isSendMode || isDiscovering || isSending
-            
+
             if (showSendUI) {
                 ScreenScaffold {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -684,7 +684,7 @@ fun ReceivedFilesUI(
                 )
             }
         } else {
-            val today = java.util.Calendar.getInstance().apply { 
+            val today = java.util.Calendar.getInstance().apply {
                 set(java.util.Calendar.HOUR_OF_DAY, 0)
                 set(java.util.Calendar.MINUTE, 0)
             }.timeInMillis

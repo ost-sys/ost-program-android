@@ -95,7 +95,7 @@ fun SettingsScreen(viewModel: WearSettingsViewModel = viewModel()) {
                         Slider(
                             value = uiState.timing.totalDuration,
                             onValueChange = viewModel::onTotalDurationChange,
-                            valueProgression = 1..120,
+                            valueProgression = 1..121,
                             enabled = slidersEnabled
                         )
                     }

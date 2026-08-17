@@ -4,10 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import com.ost.application.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,12 +12,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.json.JSONObject
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 class CurrencyConverterViewModel(application: Application) : AndroidViewModel(application) {
     private val _uiState = MutableStateFlow(CurrencyConverterUiState())
     val uiState: StateFlow<CurrencyConverterUiState> = _uiState.asStateFlow()
-    private val requestQueue: RequestQueue = Volley.newRequestQueue(application)
+    private val okHttpClient = OkHttpClient.Builder()
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(15, TimeUnit.SECONDS)
+        .build()
     private var currencyRates: Map<String, Double> = emptyMap()
     private val sharedPreferences = application.getSharedPreferences("currency_cache", Context.MODE_PRIVATE)
     init {
@@ -33,22 +35,29 @@ class CurrencyConverterViewModel(application: Application) : AndroidViewModel(ap
     private fun fetchCurrencyData() {
         _uiState.update { it.copy(networkStatus = NetworkStatus.LOADING) }
         val url = "https://currency-rate-exchange-api.onrender.com/all"
-        val request = JsonObjectRequest(Request.Method.GET, url, null,
-            { response ->
-                viewModelScope.launch(Dispatchers.IO) {
-                    val ratesJsonString = response.getJSONObject("rates").getJSONObject("all").toString()
-                    saveRatesToCache(ratesJsonString)
-                    processRates(ratesJsonString)
-                    withContext(Dispatchers.Main) {
-                        _uiState.update { it.copy(networkStatus = NetworkStatus.CONNECTED) }
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val request = Request.Builder().url(url).build()
+                val response = okHttpClient.newCall(request).execute()
+                if (response.isSuccessful) {
+                    val responseBody = response.body?.string()
+                    if (!responseBody.isNullOrBlank()) {
+                        val json = JSONObject(responseBody)
+                        val ratesJsonString = json.getJSONObject("rates").getJSONObject("all").toString()
+                        saveRatesToCache(ratesJsonString)
+                        processRates(ratesJsonString)
+                        withContext(Dispatchers.Main) {
+                            _uiState.update { it.copy(networkStatus = NetworkStatus.CONNECTED) }
+                        }
+                        return@launch
                     }
                 }
-            },
-            { error ->
-                Log.e("CurrencyConverterVM", "Volley error: ${error.message}")
                 loadRatesFromCache()
-            })
-        requestQueue.add(request)
+            } catch (e: Exception) {
+                Log.e("CurrencyConverterVM", "OkHttp error: ${e.message}", e)
+                loadRatesFromCache()
+            }
+        }
     }
     private fun processRates(ratesJsonString: String) {
         try {

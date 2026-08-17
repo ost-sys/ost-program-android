@@ -12,7 +12,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.height
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,6 +32,7 @@ import androidx.wear.compose.foundation.lazy.ScalingLazyListAnchorType
 import androidx.wear.compose.foundation.lazy.ScalingLazyListState
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material3.AppScaffold
+import androidx.wear.compose.material3.Button
 import androidx.wear.compose.material3.ButtonDefaults
 import androidx.wear.compose.material3.EdgeButton
 import androidx.wear.compose.material3.Icon
@@ -41,6 +48,7 @@ import com.ost.application.presentation.DefaultActivity
 import com.ost.application.presentation.display.DisplayActivity
 import com.ost.application.presentation.SettingsActivity
 import com.ost.application.share.ShareActivity
+import com.ost.application.share.LocalSendActivity
 import com.ost.application.theme.OSTToolsTheme
 import androidx.wear.compose.material3.ListHeader
 import com.ost.application.util.CardListItem
@@ -67,7 +75,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainApp() {
     val context = LocalContext.current
-    val mainListItems = rememberMainListItems(context)
+    var showSharePicker by remember { mutableStateOf(false) }
+
+    val mainListItems = rememberMainListItems(context) { showSharePicker = true }
     AppScaffold(timeText = { TimeText() }) {
         val listState = rememberScalingLazyListState()
         ScreenScaffold(
@@ -84,10 +94,45 @@ fun MainApp() {
         ) {
             MainList(listState = listState, items = mainListItems)
         }
+
+        if (showSharePicker) {
+            androidx.compose.ui.window.Dialog(onDismissRequest = { showSharePicker = false }) {
+                androidx.compose.foundation.layout.Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text("Select Method", style = MaterialTheme.typography.titleMedium)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(
+                        onClick = {
+                            showSharePicker = false
+                            startActivity(context, ShareActivity::class.java)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("OST Share")
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(
+                        onClick = {
+                            showSharePicker = false
+                            startActivity(context, LocalSendActivity::class.java)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("LocalSend")
+                    }
+                }
+            }
+        }
     }
 }
 @Composable
-fun rememberMainListItems(context: Context): List<ListItem> {
+fun rememberMainListItems(context: Context, onShareClick: () -> Unit): List<ListItem> {
     return remember {
         listOf(
             ListItem(context.getString(R.string.about_the_watch), null, R.drawable.ic_watch_24dp, true, CardPosition.TOP) {
@@ -106,7 +151,7 @@ fun rememberMainListItems(context: Context): List<ListItem> {
                 startActivity(context, FileExplorerActivity::class.java)
             },
             ListItem(context.getString(R.string.share), null, R.drawable.ic_share_24dp, true, CardPosition.MIDDLE) {
-                startActivity(context, ShareActivity::class.java)
+                onShareClick()
             },
             ListItem(context.getString(R.string.ram_title), null, com.ost.application.core.R.drawable.ic_memory_alt_24dp, true, CardPosition.MIDDLE) {
                 startActivity(context, com.ost.application.presentation.memory.RamActivity::class.java)

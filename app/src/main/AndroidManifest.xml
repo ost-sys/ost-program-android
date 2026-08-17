@@ -125,6 +125,12 @@
             android:foregroundServiceType="connectedDevice" />
 
         <service
+            android:name=".ui.screen.share.LocalSendService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
+
+        <service
             android:name=".service.PhoneDataLayerListenerService"
             android:exported="true">
             <intent-filter>

@@ -31,7 +31,8 @@ import kotlinx.coroutines.sync.withLock
 class NsdHandler(
     private val context: Context,
     private val scope: CoroutineScope,
-    private val deviceType: String = Constants.VALUE_DEVICE_PHONE
+    private val deviceType: String = Constants.VALUE_DEVICE_PHONE,
+    private val serviceType: String = Constants.SERVICE_TYPE
 ) {
     private val nsdManager: NsdManager by lazy {
         context.getSystemService(Context.NSD_SERVICE) as NsdManager
@@ -74,8 +75,22 @@ class NsdHandler(
     private val _discoveredDevicesMap = MutableStateFlow<Map<String, DiscoveredDevice>>(emptyMap())
     val discoveredDevices: StateFlow<List<DiscoveredDevice>> = _discoveredDevicesMap
         .asStateFlow()
-        .map {
-            it.values.filter { d -> d.isResolved || d.isResolving }.sortedBy { device -> device.name }
+        .map { map ->
+            val unique = mutableMapOf<String, DiscoveredDevice>()
+            for (device in map.values) {
+                if (!device.isResolved && !device.isResolving) continue
+                val hostStr = device.ipAddress?.hostAddress ?: device.host
+                val key = when {
+                    device.id.isNotBlank() && device.id.length > 20 -> device.id
+                    !hostStr.isNullOrBlank() -> "$hostStr:${device.port}"
+                    else -> device.name
+                }
+                val existing = unique[key]
+                if (existing == null || (!existing.isResolved && device.isResolved)) {
+                    unique[key] = device
+                }
+            }
+            unique.values.sortedBy { it.name }
         }
         .stateIn(
             scope = scope,
@@ -96,10 +111,44 @@ class NsdHandler(
     private fun isMatchingServiceType(discoveredType: String?): Boolean {
         if (discoveredType.isNullOrBlank()) return false
         val normalizedDiscovered = discoveredType.trim().trimEnd('.').lowercase()
-        val normalizedExpected = Constants.SERVICE_TYPE.trim().trimEnd('.').lowercase()
+        val normalizedExpected = serviceType.trim().trimEnd('.').lowercase()
         return normalizedDiscovered.contains(normalizedExpected) || normalizedExpected.contains(normalizedDiscovered)
     }
+
+    fun addDiscoveredDevice(device: DiscoveredDevice) {
+        val current = _discoveredDevicesMap.value.toMutableMap()
+        val devIp = device.ipAddress?.hostAddress ?: device.host
+        val keysToRemove = current.filter { (_, existing) ->
+            val existIp = existing.ipAddress?.hostAddress ?: existing.host
+            (device.id.isNotBlank() && existing.id == device.id) ||
+            (!devIp.isNullOrBlank() && devIp == existIp && (device.port == existing.port || existing.port == 0)) ||
+            (existing.name == device.name && !devIp.isNullOrBlank() && devIp == existIp)
+        }.keys
+        keysToRemove.forEach { current.remove(it) }
+        val canonicalKey = device.id.ifBlank { if (!devIp.isNullOrBlank()) "$devIp:${device.port}" else device.name }
+        current[canonicalKey] = device
+        _discoveredDevicesMap.value = current
+        Log.d(Constants.TAG, "NSD: Injected device: ${device.name} @ $devIp:${device.port}")
+    }
+
     fun startServiceRegistration(port: Int, currentStatusUpdate: (String) -> Unit) {
+        val deviceName = Build.MODEL.replace(Regex("[^a-zA-Z0-9_]"), "_").take(20)
+        val randomSuffix = (1000..9999).random()
+        val serviceName = "${Constants.SERVICE_NAME_PREFIX}${deviceName}_${randomSuffix}"
+        startServiceRegistration(
+            port = port,
+            customServiceName = serviceName,
+            extraAttributes = mapOf(Constants.KEY_DEVICE_TYPE to deviceType),
+            currentStatusUpdate = currentStatusUpdate
+        )
+    }
+
+    fun startServiceRegistration(
+        port: Int,
+        customServiceName: String,
+        extraAttributes: Map<String, String>,
+        currentStatusUpdate: (String) -> Unit
+    ) {
         if (registrationListener != null) {
             Log.d(Constants.TAG, "NSD: Registration already active or listener exists. Unregistering existing before new registration.")
             stopServiceRegistration()
@@ -142,14 +191,11 @@ class NsdHandler(
                 _registrationStatus.value = NsdRegistrationStatus.Failed(context.getString(R.string.error_nsd_unregister_failed, errorCode.toString()))
             }
         }
-        val deviceName = Build.MODEL.replace(Regex("[^a-zA-Z0-9_]"), "_").take(20)
-        val randomSuffix = (1000..9999).random()
-        val serviceName = "${Constants.SERVICE_NAME_PREFIX}${deviceName}_${randomSuffix}"
         val serviceInfo = NsdServiceInfo().apply {
-            this.serviceName = serviceName
-            this.serviceType = Constants.SERVICE_TYPE
+            this.serviceName = customServiceName
+            this.serviceType = this@NsdHandler.serviceType
             this.port = port
-            setAttribute(Constants.KEY_DEVICE_TYPE, deviceType)
+            extraAttributes.forEach { (k, v) -> setAttribute(k, v) }
         }
         scope.launch(Dispatchers.Main) {
             try {
@@ -213,7 +259,8 @@ class NsdHandler(
             }
             override fun onServiceFound(service: NsdServiceInfo) {
                 if (service.serviceName == registeredServiceName) return
-                if (!isMatchingServiceType(service.serviceType) || !service.serviceName.startsWith("OST")) return
+                if (!isMatchingServiceType(service.serviceType)) return
+                if (serviceType == Constants.SERVICE_TYPE && !service.serviceName.startsWith("OST")) return
                 scope.launch(Dispatchers.Main.immediate) {
                     val currentMap = _discoveredDevicesMap.value
                     if (!currentMap.containsKey(service.serviceName) || currentMap[service.serviceName]?.isResolved == false) {
@@ -272,7 +319,7 @@ class NsdHandler(
         discoveryJob = scope.launch {
             try {
                 withContext(Dispatchers.Main) {
-                    nsdManager.discoverServices(Constants.SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, newListener)
+                    nsdManager.discoverServices(serviceType, NsdManager.PROTOCOL_DNS_SD, newListener)
                     Log.d(Constants.TAG, "NSD: discoverServices call issued successfully.")
                 }
                 while (isActive) {
@@ -360,10 +407,18 @@ class NsdHandler(
                             val name = resolvedServiceInfo.serviceName ?: "Unknown"
                             Log.d(Constants.TAG, "NSD: Service resolved: $name (IP: ${resolvedServiceInfo.host?.hostAddress}, Port: ${resolvedServiceInfo.port})")
                             val resolvedDevice = DiscoveredDevice(resolvedServiceInfo)
+                            val resIp = resolvedDevice.ipAddress?.hostAddress ?: resolvedDevice.host
                             scope.launch(Dispatchers.Main.immediate) {
-                                _discoveredDevicesMap.value = _discoveredDevicesMap.value.toMutableMap().apply {
-                                    this[name] = resolvedDevice
-                                }
+                                val current = _discoveredDevicesMap.value.toMutableMap()
+                                val keysToRemove = current.filter { (k, existing) ->
+                                    k == name ||
+                                    existing.serviceInfo?.serviceName == resolvedServiceInfo.serviceName ||
+                                    (!resIp.isNullOrBlank() && (existing.ipAddress?.hostAddress == resIp || existing.host == resIp) && (existing.port == resolvedDevice.port || existing.port == 0))
+                                }.keys
+                                keysToRemove.forEach { current.remove(it) }
+                                val canonicalKey = resolvedDevice.id.ifBlank { name }
+                                current[canonicalKey] = resolvedDevice
+                                _discoveredDevicesMap.value = current
                             }
                             deferred.complete(Unit)
                         }
